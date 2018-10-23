@@ -1,6 +1,4 @@
-<center>
-    <h1> ✨ Markdown Preview for Neovim ✨ </h1>
-</center>
+<h1 align="center"> ✨ Markdown Preview for Neovim ✨ </h1>
 
 > power by ❤️
 
