@@ -1,0 +1,24 @@
+{
+  "name": "markdown-preview.vim",
+  "version": "0.0.1",
+  "description": "markdown preview plugin for (neo)vim",
+  "bin": "./server.js",
+  "repository": "https://github.com/iamcco/markdown-preview.vim.git",
+  "author": "年糕小豆汤 <ooiss@qq.com>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "highlight.js": "^9.13.0",
+    "log4js": "^3.0.6",
+    "markdown-it": "^8.4.2",
+    "markdown-it-katex": "^2.0.3",
+    "markdown-it-plantuml": "^1.3.0",
+    "neovim": "^4.2.1",
+    "opener": "^1.5.1",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
+    "socket.io": "^2.1.1",
+    "socket.io-client": "^2.1.1",
+    "tslib": "^1.9.3"
+  }
+}

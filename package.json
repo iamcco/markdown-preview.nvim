@@ -1,0 +1,38 @@
+{
+  "name": "markdown-preview.vim",
+  "version": "0.0.1",
+  "description": "markdown preview plugin for (neo)vim",
+  "bin": "./app/server.js",
+  "repository": "https://github.com/iamcco/markdown-preview.vim.git",
+  "author": "年糕小豆汤 <ooiss@qq.com>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "watch": "tsc -w -p ./",
+    "build": "tsc -p ./ && cd app && rm -rf ./.next && next build && next export && yarn && pkg --out-path ./bin . && rm -rf ./node_modules yarn.lock ./.next"
+  },
+  "dependencies": {
+    "highlight.js": "^9.13.0",
+    "log4js": "^3.0.6",
+    "markdown-it": "^8.4.2",
+    "markdown-it-katex": "^2.0.3",
+    "markdown-it-plantuml": "^1.3.0",
+    "neovim": "^4.2.1",
+    "next": "^7.0.2",
+    "next-routes": "^1.4.2",
+    "opener": "^1.5.1",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
+    "socket.io": "^2.1.1",
+    "socket.io-client": "^2.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^10.11.7",
+    "prettier": "^1.14.3",
+    "tslint": "^5.11.0",
+    "tslint-config-prettier": "^1.15.0",
+    "tslint-plugin-prettier": "^2.0.0",
+    "typescript": "^3.1.3",
+    "yuuko-tsconfig": "^1.0.0"
+  }
+}
