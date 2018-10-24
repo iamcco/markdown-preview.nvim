@@ -4,7 +4,7 @@
 
 ### Introduction
 
-preview markdown on your mobile browser with sync scroll and flexible configuration
+preview markdown on your modern browser with sync scroll and flexible configuration
 
 main features:
 
