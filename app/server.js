@@ -11,6 +11,7 @@ const http = require('http')
 const websocket = require('socket.io')
 const opener = require('opener')
 const logger = require('./lib/util/logger')('app/server')
+const { getIP } = require('./lib/util/getIP')
 
 const routes = require('./routes')
 
@@ -48,10 +49,12 @@ io.on('connection', async (client) => {
     if (buffer.id === Number(bufnr)) {
       const cursor = await plugin.nvim.call('getpos', '.')
       const options = await plugin.nvim.getVar('mkdp_preview_options')
+      const name = await buffer.name
       const content = await buffer.getLines()
       client.emit('refresh_content', {
         options,
         cursor,
+        name,
         content
       })
     }
@@ -64,10 +67,12 @@ io.on('connection', async (client) => {
 })
 
 async function startServer () {
+  const openToTheWord = await plugin.nvim.getVar('mkdp_open_to_the_world')
+  const host = openToTheWord ? '0.0.0.0' : '127.0.0.1'
   let port = await plugin.nvim.getVar('mkdp_port')
   port = port || (8080 + Number(`${Date.now()}`.slice(-3)))
   server.listen({
-    host: 'localhost',
+    host,
     port
   }, function () {
     logger.info('server run: ', port)
@@ -101,7 +106,8 @@ async function startServer () {
       clients = {}
     }
     function openBrowser ({ bufnr }) {
-      const url = `http://localhost:${port}/page/${bufnr}`
+      const openHost = openToTheWord ? getIP() : '127.0.0.1'
+      const url = `http://${openHost}:${port}/page/${bufnr}`
       logger.info('open page: ', url)
       opener(url)
     }

@@ -9,9 +9,12 @@ preview markdown on your modern browser with sync scroll and flexible configurat
 main features:
 
 - sync scroll
-- async update
+- fast async update
 - typesetting math
 - plantuml
+- emoji
+- task list
+- local image
 - flexible configuration
 
 ### install & usage
@@ -82,8 +85,6 @@ command:
 
 ### todo
 
-- [ ] task list
-- [ ] preview page title use markdown file name
 - [ ] use bianry build without node and yarn
 
 ### reference

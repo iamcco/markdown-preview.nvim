@@ -3032,6 +3032,11 @@ map-visit@^1.0.0:
   dependencies:
     object-visit "^1.0.0"
 
+markdown-it-emoji@^1.4.0:
+  version "1.4.0"
+  resolved "http://registry.npm.taobao.org/markdown-it-emoji/download/markdown-it-emoji-1.4.0.tgz#9bee0e9a990a963ba96df6980c4fddb05dfb4dcc"
+  integrity sha1-m+4OmpkKljupbfaYDE/dsF37Tcw=
+
 markdown-it-katex@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/markdown-it-katex/-/markdown-it-katex-2.0.3.tgz#d7b86a1aea0b9d6496fab4e7919a18fdef589c39"
@@ -3043,6 +3048,11 @@ markdown-it-plantuml@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/markdown-it-plantuml/-/markdown-it-plantuml-1.3.0.tgz#a4eb7bcdc718f6b3b889840d974e5f9184a90102"
   integrity sha1-pOt7zccY9rO4iYQNl05fkYSpAQI=
+
+markdown-it-task-lists@^2.1.1:
+  version "2.1.1"
+  resolved "http://registry.npm.taobao.org/markdown-it-task-lists/download/markdown-it-task-lists-2.1.1.tgz#f68f4d2ac2bad5a2c373ba93081a1a6848417088"
+  integrity sha1-9o9NKsK61aLDc7qTCBoaaEhBcIg=
 
 markdown-it@^8.4.2:
   version "8.4.2"

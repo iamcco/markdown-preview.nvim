@@ -5,6 +5,9 @@ import MarkdownIt from 'markdown-it'
 import mk from 'markdown-it-katex'
 import hljs from 'highlight.js'
 import mkuml from 'markdown-it-plantuml'
+import emoji from 'markdown-it-emoji'
+import taskLists from 'markdown-it-task-lists'
+
 import linenumbers from './linenumbers'
 import image from './image'
 
@@ -55,6 +58,7 @@ export default class PreviewPage extends React.Component {
     super(props)
 
     this.state = {
+      name: '',
       cursor: '',
       content: ''
     }
@@ -93,7 +97,7 @@ export default class PreviewPage extends React.Component {
     window.close()
   }
 
-  onRefreshContent ({ options = {}, cursor, content }) {
+  onRefreshContent ({ options = {}, cursor, name = '', content }) {
     if (!this.md) {
       const { mkit = {}, katex = {}, uml = {} } = options
       // markdown-it
@@ -111,11 +115,14 @@ export default class PreviewPage extends React.Component {
           ...DEFAULT_OPTIONS.uml,
           ...uml
         })
+        .use(emoji)
+        .use(taskLists)
         .use(image)
         .use(linenumbers)
     }
     this.setState({
       cursor,
+      name: name.split(/\\|\//).pop().split('.')[0],
       content: this.md.render(content.join('\n'))
     }, () => {
       const line = cursor[1]
@@ -144,11 +151,12 @@ export default class PreviewPage extends React.Component {
   }
 
   render () {
-    const { content } = this.state
+    const { content, name } = this.state
     return (
       <React.Fragment>
         <Head>
-          <title>preview page</title>
+          <title>{`「${name || 'Preview Page'}」`}</title>
+          <link rel="shortcut icon" type="image/ico" href="/_static/favicon.ico" />
           <link rel="stylesheet" href="/_static/markdown.css" />
           <link rel="stylesheet" href="/_static/highlight.css" />
           <link rel="stylesheet" href="/_static/katex@0.5.1.css" />

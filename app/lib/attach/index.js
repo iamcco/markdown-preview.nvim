@@ -13,11 +13,13 @@ function default_1(options) {
         const buffer = buffers.find(b => b.id === bufnr);
         if (method === 'refresh_content') {
             const cursor = yield nvim.call('getpos', '.');
+            const name = yield buffer.name;
             const content = yield buffer.getLines();
             app.refreshPage({
                 bufnr,
                 data: {
                     cursor,
+                    name,
                     content
                 }
             });

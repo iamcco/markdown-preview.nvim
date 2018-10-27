@@ -197,3 +197,26 @@
 .markdown-body del {
   text-decoration: line-through;
 }
+.task-list-item {
+  list-style-type: none;
+}
+.task-list-item input {
+  font: 13px/1.4 Helvetica, arial, nimbussansl, liberationsans, freesans, clean, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  margin: 0 0.35em 0.25em -1.6em;
+  vertical-align: middle;
+}
+.task-list-item input[disabled] {
+  cursor: default;
+}
+.task-list-item input[type="checkbox"] {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 0;
+}
+.task-list-item input[type="radio"] {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 0;
+}
