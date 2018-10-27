@@ -1,3 +1,4 @@
+let s:mkdp_root_dir = expand('<sfile>:h:h:h')
 
 " echo message
 function! mkdp#util#echo_messages(hl, msgs)
@@ -58,5 +59,57 @@ function! mkdp#util#get_platform() abort
     return 'macos'
   endif
   return 'linux'
+endfunction
+
+function! mkdp#util#open_terminal(opts) abort
+  if get(a:opts, 'position', 'bottom') ==# 'bottom'
+    let p = '5new'
+  else
+    let p = 'vnew'
+  endif
+  execute 'belowright '.p.' +setl\ buftype=nofile '
+  setl buftype=nofile
+  setl winfixheight
+  setl norelativenumber
+  setl nonumber
+  setl bufhidden=wipe
+  let cmd = get(a:opts, 'cmd', '')
+  let autoclose = get(a:opts, 'autoclose', 1)
+  if empty(cmd)
+    throw 'command required!'
+  endif
+  let cwd = get(a:opts, 'cwd', '')
+  if !empty(cwd) | execute 'lcd '.cwd | endif
+  let keepfocus = get(a:opts, 'keepfocus', 0)
+  let bufnr = bufnr('%')
+  let Callback = get(a:opts, 'Callback', v:null)
+  if has('nvim')
+    call termopen(cmd, {
+          \ 'on_exit': function('s:OnExit', [autoclose, bufnr, Callback]),
+          \})
+  else
+    call term_start(cmd, {
+          \ 'exit_cb': function('s:OnExit', [autoclose, bufnr, Callback]),
+          \ 'curwin': 1,
+          \})
+  endif
+  if keepfocus
+    wincmd p
+  endif
+  return bufnr
+endfunction
+
+function! s:markdown_preview_installed() abort
+  echo '[markdown-preview.nvim]: install cpmpleted'
+endfunction
+
+function! mkdp#util#install()
+  let cmd = (mkdp#util#get_platform() ==# 'win' ? 'install.cmd' : './install.sh')
+  call mkdp#util#open_terminal({
+        \ 'cmd': cmd,
+        \ 'cwd': s:mkdp_root_dir . '/app',
+        \ 'Callback': function('s:markdown_preview_installed')
+        \})
+  wincmd p
 endfunction
 
