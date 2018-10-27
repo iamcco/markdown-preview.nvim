@@ -14,6 +14,8 @@
   margin-bottom: 0;
 }
 .markdown-body {
+  max-width: 900px;
+  margin: 0 auto;
   font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-size: 16px;
   color: #333;

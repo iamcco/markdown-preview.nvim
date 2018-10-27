@@ -17,6 +17,8 @@ main features:
 - local image
 - flexible configuration
 
+![screenshot](https://user-images.githubusercontent.com/5492542/47603494-28e90000-da1f-11e8-9079-30646e551e7a.gif)
+
 ### install & usage
 
 install by [vim-plug](https://github.com/junegunn/vim-plug):
