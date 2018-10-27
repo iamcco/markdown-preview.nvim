@@ -47,12 +47,16 @@ io.on('connection', async (client) => {
   const buffers = await plugin.nvim.buffers
   buffers.forEach(async (buffer) => {
     if (buffer.id === Number(bufnr)) {
+      const winline = await plugin.nvim.call('winline')
       const cursor = await plugin.nvim.call('getpos', '.')
       const options = await plugin.nvim.getVar('mkdp_preview_options')
       const name = await buffer.name
       const content = await buffer.getLines()
+      const currentBuffer = await plugin.nvim.buffer
       client.emit('refresh_content', {
         options,
+        isActive: currentBuffer.id === buffer.id,
+        winline,
         cursor,
         name,
         content

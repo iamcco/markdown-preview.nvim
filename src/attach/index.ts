@@ -39,12 +39,16 @@ export default function(options: Attach): IPlugin {
     const buffers = await nvim.buffers
     const buffer = buffers.find(b => b.id === bufnr)
     if (method === 'refresh_content') {
+      const winline = await nvim.call('winline')
       const cursor = await nvim.call('getpos', '.')
       const name = await buffer.name
       const content = await buffer.getLines()
+      const currentBuffer = await nvim.buffer
       app.refreshPage({
         bufnr,
         data: {
+          isActive: currentBuffer.id === buffer.id,
+          winline,
           cursor,
           name,
           content

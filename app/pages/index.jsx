@@ -10,6 +10,7 @@ import taskLists from 'markdown-it-task-lists'
 
 import linenumbers from './linenumbers'
 import image from './image'
+import scrollToLine from './scroll'
 
 const DEFAULT_OPTIONS = {
   mkit: {
@@ -97,7 +98,14 @@ export default class PreviewPage extends React.Component {
     window.close()
   }
 
-  onRefreshContent ({ options = {}, cursor, name = '', content }) {
+  onRefreshContent ({
+    options = {},
+    isActive,
+    winline,
+    cursor,
+    name = '',
+    content
+  }) {
     if (!this.md) {
       const { mkit = {}, katex = {}, uml = {} } = options
       // markdown-it
@@ -125,27 +133,9 @@ export default class PreviewPage extends React.Component {
       name: name.split(/\\|\//).pop().split('.')[0],
       content: this.md.render(content.join('\n'))
     }, () => {
-      const line = cursor[1]
-      const lineEle = document.querySelector(`[data-source-line="${line - 1}"]`)
-      if (lineEle) {
-        // eslint-disable-next-line
-        TweenLite.to(
-          document.body,
-          0.4,
-          {
-            scrollTop: lineEle.offsetTop - 100,
-            ease: Power2.easeOut // eslint-disable-line
-          }
-        )
-        // eslint-disable-next-line
-        TweenLite.to(
-          document.documentElement,
-          0.4,
-          {
-            scrollTop: lineEle.offsetTop - 100,
-            ease: Power2.easeOut // eslint-disable-line
-          }
-        )
+      if (isActive) {
+        const line = cursor[1] - winline
+        scrollToLine(line, content.length - 1)
       }
     })
   }
