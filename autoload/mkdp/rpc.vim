@@ -51,6 +51,7 @@ function! mkdp#rpc#preview_close() abort
   if exists('g:mkdp_node_channel_id') && g:mkdp_node_channel_id !=# -1
     call rpcnotify(g:mkdp_node_channel_id, 'close_page', { 'bufnr': bufnr('%') })
   endif
+  call mkdp#autocmd#clear_buf()
 endfunction
 
 function! mkdp#rpc#open_browser() abort

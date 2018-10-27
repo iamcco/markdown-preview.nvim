@@ -10,9 +10,13 @@ function! mkdp#autocmd#init() abort
     endif
     " autoclose autocmd
     if g:mkdp_auto_close
-      au BufLeave <buffer> call mkdp#rpc#preview_close()
+      autocmd BufLeave <buffer> call mkdp#rpc#preview_close()
     endif
     " server close autocmd
-    autocmd VimLeave * call mkdp#rpc#stop_server()
+    autocmd VimLeave <buffer> * call mkdp#rpc#stop_server()
   augroup END
+endfunction
+
+function! mkdp#autocmd#clear_buf() abort
+  execute 'autocmd! ' . 'MKDP_REFRESH_INIT' . bufnr('%')
 endfunction
