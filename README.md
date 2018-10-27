@@ -24,6 +24,11 @@ main features:
 install by [vim-plug](https://github.com/junegunn/vim-plug):
 
 ```vim
+" if you don't have nodejs and yarn
+" use pre build
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }}
+
+" have nodejs and yarn
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
 ```
 
@@ -84,10 +89,6 @@ command:
 " stop preview"
 :MarkdownPreviewStop
 ```
-
-### todo
-
-- [ ] use bianry build without node and yarn
 
 ### reference
 
