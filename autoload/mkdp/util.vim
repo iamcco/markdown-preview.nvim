@@ -61,6 +61,16 @@ function! mkdp#util#get_platform() abort
   return 'linux'
 endfunction
 
+function! s:OnExit(autoclose, bufnr, Callback, job_id, status, ...)
+  let content = join(getbufline(a:bufnr, 1, '$'), "\n")
+  if a:status == 0 && a:autoclose == 1
+    execute 'silent! bd! '.a:bufnr
+  endif
+  if !empty(a:Callback)
+    call call(a:Callback, [a:status, a:bufnr, content])
+  endif
+endfunction
+
 function! mkdp#util#open_terminal(opts) abort
   if get(a:opts, 'position', 'bottom') ==# 'bottom'
     let p = '5new'
@@ -99,7 +109,7 @@ function! mkdp#util#open_terminal(opts) abort
   return bufnr
 endfunction
 
-function! s:markdown_preview_installed() abort
+function! s:markdown_preview_installed(...) abort
   echo '[markdown-preview.nvim]: install cpmpleted'
 endfunction
 
