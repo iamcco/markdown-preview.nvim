@@ -1,4 +1,5 @@
 let s:mkdp_root_dir = expand('<sfile>:h:h:h')
+let s:package_file = s:mkdp_root_dir . '/package.json'
 
 " echo message
 function! mkdp#util#echo_messages(hl, msgs)
@@ -61,6 +62,16 @@ function! mkdp#util#get_platform() abort
   return 'linux'
 endfunction
 
+function! s:on_exit(autoclose, bufnr, Callback, job_id, status, ...)
+  let content = join(getbufline(a:bufnr, 1, '$'), "\n")
+  if a:status == 0 && a:autoclose == 1
+    execute 'silent! bd! '.a:bufnr
+  endif
+  if !empty(a:Callback)
+    call call(a:Callback, [a:status, a:bufnr, content])
+  endif
+endfunction
+
 function! mkdp#util#open_terminal(opts) abort
   if get(a:opts, 'position', 'bottom') ==# 'bottom'
     let p = '5new'
@@ -85,11 +96,11 @@ function! mkdp#util#open_terminal(opts) abort
   let Callback = get(a:opts, 'Callback', v:null)
   if has('nvim')
     call termopen(cmd, {
-          \ 'on_exit': function('s:OnExit', [autoclose, bufnr, Callback]),
+          \ 'on_exit': function('s:on_exit', [autoclose, bufnr, Callback]),
           \})
   else
     call term_start(cmd, {
-          \ 'exit_cb': function('s:OnExit', [autoclose, bufnr, Callback]),
+          \ 'exit_cb': function('s:on_exit', [autoclose, bufnr, Callback]),
           \ 'curwin': 1,
           \})
   endif
@@ -99,12 +110,17 @@ function! mkdp#util#open_terminal(opts) abort
   return bufnr
 endfunction
 
-function! s:markdown_preview_installed() abort
+function! s:markdown_preview_installed(status, ...) abort
+  if a:status != 0
+    call mkdp#util#echo_messages('Error', '[markdown-preview]: install fail')
+    return
+  endif
   echo '[markdown-preview.nvim]: install cpmpleted'
 endfunction
 
 function! mkdp#util#install()
-  let cmd = (mkdp#util#get_platform() ==# 'win' ? 'install.cmd' : './install.sh')
+  let obj = json_decode(join(readfile(s:package_file)))
+  let cmd = (mkdp#util#get_platform() ==# 'win' ? 'install.cmd' : './install.sh') . ' v'.obj['version']
   call mkdp#util#open_terminal({
         \ 'cmd': cmd,
         \ 'cwd': s:mkdp_root_dir . '/app',
