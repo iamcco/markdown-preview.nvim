@@ -1,0 +1,33 @@
+#page-ctn {
+  margin: 0 auto;
+  max-width: 900px;
+  color: #24292e;
+}
+
+#page-header {
+  padding: 8px;
+  background-color: #f6f8fa;
+  border-color: #d1d5da;
+  border-style: solid;
+  border-width: 1px 1px 0;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+}
+
+#page-header svg {
+  display: inline-block;
+  margin-right: 5px;
+  overflow: hidden;
+  fill: currentColor;
+}
+
+#page-header h3 {
+  display: flex;
+  align-items: center;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-right: 16px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
