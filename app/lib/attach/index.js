@@ -39,12 +39,12 @@ function default_1(options) {
             });
         }
     }));
-    nvim.on('request', (method, args, resp) => tslib_1.__awaiter(this, void 0, void 0, function* () {
+    nvim.on('request', (method, args, resp) => {
         if (method === 'close_all_pages') {
             app.closeAllPages();
         }
         resp.send();
-    }));
+    });
     nvim.channelId
         .then((channelId) => tslib_1.__awaiter(this, void 0, void 0, function* () {
         yield nvim.setVar('mkdp_node_channel_id', channelId);

@@ -65,7 +65,7 @@ export default function(options: Attach): IPlugin {
     }
   })
 
-  nvim.on('request', async (method: string, args: any, resp: any) => {
+  nvim.on('request', (method: string, args: any, resp: any) => {
     if (method === 'close_all_pages') {
       app.closeAllPages()
     }

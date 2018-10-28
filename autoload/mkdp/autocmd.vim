@@ -13,7 +13,7 @@ function! mkdp#autocmd#init() abort
       autocmd BufLeave <buffer> call mkdp#rpc#preview_close()
     endif
     " server close autocmd
-    autocmd VimLeave <buffer> * call mkdp#rpc#stop_server()
+    autocmd VimLeave * call mkdp#rpc#stop_server()
   augroup END
 endfunction
 

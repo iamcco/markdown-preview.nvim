@@ -1,4 +1,3 @@
-const path = require('path')
 // change cwd to ./app
 if (!/^\/snapshot/.test(__dirname)) {
   process.chdir(__dirname)
