@@ -1,5 +1,5 @@
 // change cwd to ./app
-if (!/^\/snapshot/.test(__dirname)) {
+if (!/^(\/|C:\\)snapshot/.test(__dirname)) {
   process.chdir(__dirname)
 } else {
   process.chdir(process.execPath.replace(/(markdown-preview.nvim.*?app).+?$/, '$1'))
