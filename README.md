@@ -8,6 +8,7 @@ preview markdown on your modern browser with sync scroll and flexible configurat
 
 main features:
 
+- cross platform (macos/linux/windows)
 - sync scroll
 - fast async update
 - typesetting math
