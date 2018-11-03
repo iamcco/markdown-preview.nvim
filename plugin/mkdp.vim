@@ -37,7 +37,8 @@ if !exists('g:mkdp_preview_options')
   let g:mkdp_preview_options = {
       \ 'mkit': {},
       \ 'katex': {},
-      \ 'uml': {}
+      \ 'uml': {},
+      \ 'maid': {}
       \ }
 endif
 

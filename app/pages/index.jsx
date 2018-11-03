@@ -113,8 +113,7 @@ export default class PreviewPage extends React.Component {
       const {
         mkit = {},
         katex = {},
-        uml = {},
-        maid = {}
+        uml = {}
       } = options
       // markdown-it
       this.md = new MarkdownIt({
@@ -145,7 +144,7 @@ export default class PreviewPage extends React.Component {
     }, () => {
       try {
         // eslint-disable-next-line
-        mermaid.init(maid, document.querySelector('.mermaid'))
+        mermaid.init(options.maid, document.querySelectorAll('.mermaid'))
       } catch (e) {}
 
       chart.render()

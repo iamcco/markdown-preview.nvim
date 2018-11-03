@@ -74,3 +74,77 @@ have a non-space character immediately to its left, and must not be followed
 immediately by a digit. Thus, $20,000 and $30,000 won’t parse as math. If for some
 reason you need to enclose text in literal $ characters, backslash-escape them and
 they won’t be treated as math delimiters.
+
+### chart and mermaid
+
+```chart
+{
+  "type": "pie",
+  "data": {
+    "labels": [
+      "Red",
+      "Blue",
+      "Yellow"
+    ],
+    "datasets": [
+      {
+        "data": [
+          300,
+          50,
+          100
+        ],
+        "backgroundColor": [
+          "#FF6384",
+          "#36A2EB",
+          "#FFCE56"
+        ],
+        "hoverBackgroundColor": [
+          "#FF6384",
+          "#36A2EB",
+          "#FFCE56"
+        ]
+      }
+    ]
+  },
+  "options": {}
+}
+```
+
+```mermaid
+graph LR
+A[Christmas] -->|Get money| B(Go shopping)
+```
+
+```mermaid
+graph TD
+A[Christmas] -->|Get money| B(Go shopping)
+B --> C{Let me think}
+C -->|One| D[Laptop]
+C -->|Two| E[iPhone]
+C -->|Three| F[Car]
+```
+
+```mermaid
+classDiagram
+Class01 <|-- AveryLongClass : Cool
+Class03 *-- Class04
+Class05 o-- Class06
+Class07 .. Class08
+Class09 --> C2 : Where am i?
+Class09 --* C3
+Class09 --|> Class07
+Class07 : equals()
+Class07 : Object[] elementData
+Class01 : size()
+Class01 : int chimp
+Class01 : int gorilla
+Class08 <--> C2: Cool label
+```
+
+```mermaid
+sequenceDiagram
+loop every day
+    Alice->>John: Hello John, how are you?
+    John-->>Alice: Great!
+end
+```

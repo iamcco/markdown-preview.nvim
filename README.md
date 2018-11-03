@@ -67,10 +67,12 @@ let g:mkdp_open_to_the_world = 0
 " mkit: markdown-it options for render
 " katex: katex options for math
 " uml: markdown-it-plantuml options
+" maid: mermaid options
 let g:mkdp_preview_options = {
     \ 'mkit': {},
     \ 'katex': {},
-    \ 'uml': {}
+    \ 'uml': {},
+    \ 'maid': {}
     \ }
 
 " use a custom markdown style must be absolute path
