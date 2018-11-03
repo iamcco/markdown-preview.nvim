@@ -8,10 +8,10 @@ if (!/^(\/|C:\\)snapshot/.test(__dirname)) {
 const { plugin } = require('./nvim')
 const http = require('http')
 const websocket = require('socket.io')
-const opener = require('opener')
+
+const opener = require('./lib/util/opener')
 const logger = require('./lib/util/logger')('app/server')
 const { getIP } = require('./lib/util/getIP')
-
 const routes = require('./routes')
 
 let clients = {}
@@ -108,11 +108,16 @@ async function startServer () {
       })
       clients = {}
     }
-    function openBrowser ({ bufnr }) {
+    async function openBrowser ({ bufnr }) {
       const openHost = openToTheWord ? getIP() : '127.0.0.1'
       const url = `http://${openHost}:${port}/page/${bufnr}`
-      logger.info('open page: ', url)
-      opener(url)
+      const browser = await plugin.nvim.getVar('mkdp_browser')
+      logger.info(`open page [${browser || 'default'}]: `, url)
+      if (browser !== '') {
+        opener(url, browser)
+      } else {
+        opener(url)
+      }
     }
     plugin.init({
       refreshPage,
@@ -126,4 +131,3 @@ async function startServer () {
 }
 
 startServer()
-

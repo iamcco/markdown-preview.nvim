@@ -33,6 +33,11 @@ if !exists('g:mkdp_open_to_the_world')
   let g:mkdp_open_to_the_world = 0
 endif
 
+" switch browser to open preview page
+if !exists('g:mkdp_browser')
+  let g:mkdp_browser = ''
+endif
+
 if !exists('g:mkdp_preview_options')
   let g:mkdp_preview_options = {
       \ 'mkit': {},

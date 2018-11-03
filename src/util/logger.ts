@@ -41,4 +41,3 @@ if (!isRoot) {
 module.exports = (name = 'mkdp'): log4js.Logger => {
   return log4js.getLogger(name)
 }
-

@@ -1,6 +1,6 @@
 {
   "name": "markdown-preview.vim",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "markdown preview plugin for (neo)vim",
   "bin": "./app/server.js",
   "repository": "https://github.com/iamcco/markdown-preview.vim.git",
@@ -25,7 +25,6 @@
     "neovim": "^4.2.1",
     "next": "^7.0.2",
     "next-routes": "^1.4.2",
-    "opener": "^1.5.1",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "socket.io": "^2.1.1",
