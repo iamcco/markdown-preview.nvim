@@ -11,8 +11,10 @@ main features:
 - cross platform (macos/linux/windows)
 - sync scroll
 - fast async update
-- typesetting math
-- plantuml
+- [katex](https://github.com/Khan/KaTeX) typesetting math
+- [plantuml](https://github.com/plantuml/plantuml)
+- [mermaid](https://github.com/knsv/mermaid)
+- [chart.js](https://github.com/chartjs/Chart.js)
 - emoji
 - task list
 - local image
@@ -94,6 +96,7 @@ command:
 ### reference
 
 - [coc.nvim](https://github.com/neoclide/coc.nvim)
+- [chart.js](https://github.com/chartjs/Chart.js)
 - [highlight](https://github.com/highlightjs/highlight.js)
 - [neovim/node-client](https://github.com/neovim/node-client)
 - [next.js](https://github.com/zeit/next.js)
@@ -101,6 +104,8 @@ command:
 - [markdown-it](https://github.com/markdown-it/markdown-it)
 - [markdown-it-katex](https://github.com/waylonflinn/markdown-it-katex)
 - [markdown-it-plantuml](https://github.com/gmunguia/markdown-it-plantuml)
+- [markdown-it-chart](https://github.com/tylingsoft/markdown-it-chart)
+- [mermaid](https://github.com/knsv/mermaid)
 - [opener](https://github.com/domenic/opener)
 - [socket.io](https://github.com/socketio/socket.io)
 

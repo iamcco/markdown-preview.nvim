@@ -7,7 +7,10 @@ import hljs from 'highlight.js'
 import mkuml from 'markdown-it-plantuml'
 import emoji from 'markdown-it-emoji'
 import taskLists from 'markdown-it-task-lists'
+import markdownItChart from 'markdown-it-chart'
 
+import chart from './chart'
+import mkitMermaid from './mermaid'
 import linenumbers from './linenumbers'
 import image from './image'
 import scrollToLine from './scroll'
@@ -107,7 +110,12 @@ export default class PreviewPage extends React.Component {
     content
   }) {
     if (!this.md) {
-      const { mkit = {}, katex = {}, uml = {} } = options
+      const {
+        mkit = {},
+        katex = {},
+        uml = {},
+        maid = {}
+      } = options
       // markdown-it
       this.md = new MarkdownIt({
         ...DEFAULT_OPTIONS.mkit,
@@ -127,12 +135,21 @@ export default class PreviewPage extends React.Component {
         .use(taskLists)
         .use(image)
         .use(linenumbers)
+        .use(mkitMermaid)
+        .use(markdownItChart)
     }
     this.setState({
       cursor,
       name: name.split(/\\|\//).pop().split('.')[0],
       content: this.md.render(content.join('\n'))
     }, () => {
+      try {
+        // eslint-disable-next-line
+        mermaid.init(maid, document.querySelector('.mermaid'))
+      } catch (e) {}
+
+      chart.render()
+
       if (isActive) {
         const line = cursor[1] - winline
         scrollToLine(line, content.length - 1)
@@ -152,6 +169,7 @@ export default class PreviewPage extends React.Component {
           <link rel="stylesheet" href="/_static/highlight.css" />
           <link rel="stylesheet" href="/_static/katex@0.5.1.css" />
           <script type="text/javascript" src="/_static/tweenlite.min.js"></script>
+          <script type="text/javascript" src="/_static/mermaid.min.js"></script>
         </Head>
         <div id="page-ctn">
           <header id="page-header">
@@ -183,4 +201,3 @@ export default class PreviewPage extends React.Component {
     )
   }
 }
-

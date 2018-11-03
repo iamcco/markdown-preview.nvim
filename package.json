@@ -9,12 +9,15 @@
   "private": true,
   "scripts": {
     "watch": "tsc -w -p ./",
+    "build-app": "cd app && rm -rf ./.next && next build && next export",
     "build": "tsc -p ./ && cd app && rm -rf ./.next && next build && next export && yarn && pkg --out-path ./bin . && rm -rf ./node_modules yarn.lock ./.next"
   },
   "dependencies": {
+    "chart.js": "^2.7.3",
     "highlight.js": "^9.13.0",
     "log4js": "^3.0.6",
     "markdown-it": "^8.4.2",
+    "markdown-it-chart": "^0.2.0",
     "markdown-it-emoji": "^1.4.0",
     "markdown-it-katex": "^2.0.3",
     "markdown-it-plantuml": "^1.3.0",
