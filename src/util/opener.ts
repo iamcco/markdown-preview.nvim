@@ -12,10 +12,6 @@ module.exports = function opener(
   let platform = process.platform
   args = [].concat(args)
 
-  if (tool) {
-    args.unshift(tool)
-  }
-
   // Attempt to detect Windows Subystem for Linux (WSL).
   // WSL  itself as Linux (which works in most cases), but in
   // this specific case we need to treat it as actually being Windows.
@@ -30,17 +26,21 @@ module.exports = function opener(
   switch (platform) {
     case 'win32': {
       command = 'cmd.exe'
+      if (tool) {
+        args.unshift(tool)
+      }
       break
     }
     case 'darwin': {
       command = 'open'
       if (tool) {
+        args.unshift(tool)
         args.unshift('-a')
       }
       break
     }
     default: {
-      command = 'xdg-open'
+      command = tool || 'xdg-open'
       break
     }
   }
