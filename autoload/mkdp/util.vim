@@ -41,7 +41,7 @@ function! mkdp#util#open_preview_page() abort
     call mkdp#rpc#start_server()
   elseif l:server_status ==# 0
     let s:try_count = 0
-    let s:try_id = timer_start(1000, s:try_open_preview_page)
+    let s:try_id = timer_start(1000, function('s:try_open_preview_page'))
   else
     call mkdp#util#open_browser()
   endif
