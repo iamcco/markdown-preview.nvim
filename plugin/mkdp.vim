@@ -33,6 +33,12 @@ if !exists('g:mkdp_open_to_the_world')
   let g:mkdp_open_to_the_world = 0
 endif
 
+" set to 1, echo preview page url in command line when open preview page
+" default is 0
+if !exists('g:mkdp_echo_preview_url')
+  let g:mkdp_echo_preview_url = 0
+endif
+
 " switch browser to open preview page
 if !exists('g:mkdp_browser')
   let g:mkdp_browser = ''

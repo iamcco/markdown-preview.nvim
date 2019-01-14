@@ -118,6 +118,10 @@ async function startServer () {
       } else {
         opener(url)
       }
+      const isEchoUrl = await plugin.nvim.getVar('mkdp_echo_preview_url')
+      if (isEchoUrl) {
+        plugin.nvim.call('mkdp#util#echo_url', [url])
+      }
     }
     plugin.init({
       refreshPage,

@@ -15,6 +15,12 @@ function! mkdp#util#echo_messages(hl, msgs)
   echohl None
 endfunction
 
+" echo url
+function! mkdp#util#echo_url(url)
+  let l:url = 'Preview page: ' . a:url
+  call mkdp#util#echo_messages('Type', l:url)
+endfunction
+
 " try open preview page
 function! s:try_open_preview_page(timer_id) abort
   let l:server_status = mkdp#rpc#get_server_status()

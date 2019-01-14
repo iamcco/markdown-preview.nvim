@@ -67,6 +67,10 @@ let g:mkdp_open_to_the_world = 0
 " default: ''
 let g:mkdp_browser = ''
 
+" set to 1, echo preview page url in command line when open preview page
+" default is 0
+let g:mkdp_echo_preview_url = 0
+
 " options for markdown render
 " mkit: markdown-it options for render
 " katex: katex options for math
@@ -98,6 +102,12 @@ command:
 " stop preview"
 :MarkdownPreviewStop
 ```
+
+### F&Q
+
+A: Why my sync scroll is slow reaction
+
+B: set `updatetime` to a small number, like `set updatetime=100`
 
 ### reference
 
