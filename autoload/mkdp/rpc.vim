@@ -10,23 +10,34 @@ function! s:mkdp_opts.on_stderr(chan_id, msgs, event) dict
   call mkdp#util#echo_messages('Error', a:msgs)
 endfunction
 function! s:mkdp_opts.on_exit(chan_id, code, event) dict
+  let s:mkdp_channel_id = -1
+  let g:mkdp_node_channel_id = -1
 endfunction
 
 function! mkdp#rpc#start_server() abort
   let l:mkdp_server_script = s:mkdp_root_dir . '/app/bin/markdown-preview-' . mkdp#util#get_platform()
   if executable(l:mkdp_server_script)
     let l:cmd = [l:mkdp_server_script]
-  else
+  elseif executable('node')
     let l:mkdp_server_script = s:mkdp_root_dir . '/app/server.js'
     let l:cmd = ['node', l:mkdp_server_script]
   endif
-  let s:mkdp_channel_id = jobstart(l:cmd, s:mkdp_opts)
+  if exists('l:cmd')
+    let s:mkdp_channel_id = jobstart(l:cmd, s:mkdp_opts)
+  else
+    call mkdp#util#echo_messages('Error', 'Pre build and node is not found')
+  endif
 endfunction
 
 function! mkdp#rpc#stop_server() abort
   if s:mkdp_channel_id !=# -1
-    call rpcrequest(g:mkdp_node_channel_id, 'close_all_pages')
-    call jobstop(s:mkdp_channel_id)
+    if exists('g:mkdp_node_channel_id')
+      call rpcrequest(g:mkdp_node_channel_id, 'close_all_pages')
+    endif
+    try
+      call jobstop(s:mkdp_channel_id)
+    catch /.*/
+    endtry
   endif
   let s:mkdp_channel_id = -1
   let g:mkdp_node_channel_id = -1
