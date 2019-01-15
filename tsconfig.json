@@ -1,12 +1,14 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
+    "resolveJsonModule": true,
     "composite": true,
     "target": "es2015",
     "module": "commonjs",
     "moduleResolution": "node",
     "esModuleInterop": true,
     "lib": [
+      "dom",
       "esnext"
     ],
     "baseUrl": ".",

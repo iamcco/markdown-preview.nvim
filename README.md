@@ -1,8 +1,10 @@
-<h1 align="center"> ✨ Markdown Preview for Neovim ✨ </h1>
+<h1 align="center"> ✨ Markdown Preview for (Neo)vim ✨ </h1>
 
 > power by ❤️
 
 ### Introduction
+
+> It only works on vim >= 8.1 and neovim
 
 preview markdown on your modern browser with sync scroll and flexible configuration
 
@@ -109,9 +111,16 @@ A: Why my sync scroll is slow reaction
 
 B: set `updatetime` to a small number, like `set updatetime=100`
 
+### About vim support
+
+vim support is power by [vim-node-rpc](https://github.com/neoclide/vim-node-rpc)
+
+> this plugin is integrate with vim-node-rpc, so you don't need to install vim-node-rpc
+
 ### reference
 
 - [coc.nvim](https://github.com/neoclide/coc.nvim)
+- [vim-node-rpc](https://github.com/neoclide/vim-node-rpc)
 - [chart.js](https://github.com/chartjs/Chart.js)
 - [highlight](https://github.com/highlightjs/highlight.js)
 - [neovim/node-client](https://github.com/neovim/node-client)

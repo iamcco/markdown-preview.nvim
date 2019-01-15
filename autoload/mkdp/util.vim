@@ -1,4 +1,5 @@
 let s:mkdp_root_dir = expand('<sfile>:h:h:h')
+let s:pre_build = s:mkdp_root_dir . '/app/bin/markdown-preview-'
 let s:package_file = s:mkdp_root_dir . '/package.json'
 
 " echo message
@@ -40,7 +41,6 @@ function! mkdp#util#open_preview_page() abort
   if l:server_status ==# -1
     call mkdp#rpc#start_server()
   elseif l:server_status ==# 0
-    let s:try_count = 0
     let s:try_id = timer_start(1000, function('s:try_open_preview_page'))
   else
     call mkdp#util#open_browser()
@@ -125,6 +125,11 @@ function! s:markdown_preview_installed(status, ...) abort
 endfunction
 
 function! mkdp#util#install()
+  let l:version = mkdp#util#pre_build_version()
+  let l:info = json_decode(join(readfile(s:mkdp_root_dir . '/package.json'), ''))
+  if trim(l:version) ==# trim(l:info.version)
+    return
+  endif
   let obj = json_decode(join(readfile(s:package_file)))
   let cmd = (mkdp#util#get_platform() ==# 'win' ? 'install.cmd' : './install.sh') . ' v'.obj['version']
   call mkdp#util#open_terminal({
@@ -133,5 +138,15 @@ function! mkdp#util#install()
         \ 'Callback': function('s:markdown_preview_installed')
         \})
   wincmd p
+endfunction
+
+function! mkdp#util#pre_build_version() abort
+  let l:pre_build = s:pre_build . mkdp#util#get_platform()
+  if filereadable(l:pre_build)
+    let l:info = system(l:pre_build . ' --version')
+    let l:info = split(l:info, '\n')
+    return l:info[0]
+  endif
+  return ''
 endfunction
 

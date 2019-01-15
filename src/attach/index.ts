@@ -34,7 +34,7 @@ export default function(options: Attach): IPlugin {
   const nvim: NeovimClient = attach(options)
 
   nvim.on('notification', async (method: string, args: any[]) => {
-    const opts = args[0]
+    const opts = args[0] || args
     const bufnr = opts.bufnr
     const buffers = await nvim.buffers
     const buffer = buffers.find(b => b.id === bufnr)
@@ -87,4 +87,3 @@ export default function(options: Attach): IPlugin {
     }
   }
 }
-
