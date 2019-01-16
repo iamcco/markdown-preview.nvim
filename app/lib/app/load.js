@@ -19,10 +19,23 @@ function load(scriptPath) {
             if (preloadmodules_1.default[name]) {
                 return preloadmodules_1.default[name];
             }
-            return userModule.require(name);
+            try {
+                return userModule.require(name);
+            }
+            catch (e) {
+                let loadScript = path_1.default.join(path_1.default.dirname(scriptPath), name);
+                if (fs_1.default.existsSync(loadScript) && fs_1.default.statSync(loadScript).isDirectory()) {
+                    loadScript = path_1.default.join(loadScript, 'index.js');
+                }
+                else if (!fs_1.default.existsSync(loadScript)) {
+                    loadScript = `${loadScript}.js`;
+                }
+                return load(loadScript);
+            }
         },
         __filename: userModule.filename,
-        __dirname: path_1.default.dirname(scriptPath)
+        __dirname: path_1.default.dirname(scriptPath),
+        process,
     });
     vm_1.default.runInContext(moduleCode, sanbox, { filename: userModule.filename });
     return userModule.exports;
