@@ -15,6 +15,7 @@ export default function load(scriptPath) {
   userModule.require = userModule.require.bind(userModule)
 
   const sanbox = vm.createContext({
+    ...global,
     exports: userModule.exports,
     module: userModule,
     require: name => {

@@ -3,5 +3,6 @@ declare const _default: {
     log4js: any;
     tslib: any;
     'socket.io': any;
+    'msgpack-lite': any;
 };
 export default _default;

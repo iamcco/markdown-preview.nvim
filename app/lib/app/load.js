@@ -12,10 +12,7 @@ function load(scriptPath) {
     userModule.paths = module_1.default._nodeModulePaths(path_1.default.dirname(scriptPath));
     const moduleCode = fs_1.default.readFileSync(userModule.filename, 'utf-8');
     userModule.require = userModule.require.bind(userModule);
-    const sanbox = vm_1.default.createContext({
-        exports: userModule.exports,
-        module: userModule,
-        require: name => {
+    const sanbox = vm_1.default.createContext(Object.assign({}, global, { exports: userModule.exports, module: userModule, require: name => {
             if (preloadmodules_1.default[name]) {
                 return preloadmodules_1.default[name];
             }
@@ -32,11 +29,7 @@ function load(scriptPath) {
                 }
                 return load(loadScript);
             }
-        },
-        __filename: userModule.filename,
-        __dirname: path_1.default.dirname(scriptPath),
-        process,
-    });
+        }, __filename: userModule.filename, __dirname: path_1.default.dirname(scriptPath), process }));
     vm_1.default.runInContext(moduleCode, sanbox, { filename: userModule.filename });
     return userModule.exports;
 }
