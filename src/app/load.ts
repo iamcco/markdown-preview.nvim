@@ -21,10 +21,21 @@ export default function load(scriptPath) {
       if (modules[name]) {
         return modules[name]
       }
-      return userModule.require(name)
+      try {
+        return userModule.require(name)
+      } catch (e) {
+        let loadScript = path.join(path.dirname(scriptPath), name)
+        if (fs.existsSync(loadScript) && fs.statSync(loadScript).isDirectory()) {
+          loadScript = path.join(loadScript, 'index.js')
+        } else if (!fs.existsSync(loadScript)) {
+          loadScript = `${loadScript}.js`
+        }
+        return load(loadScript)
+      }
     },
     __filename: userModule.filename,
-    __dirname: path.dirname(scriptPath)
+    __dirname: path.dirname(scriptPath),
+    process,
   })
 
   vm.runInContext(moduleCode, sanbox, { filename: userModule.filename })
