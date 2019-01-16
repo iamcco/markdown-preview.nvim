@@ -11,5 +11,5 @@ if (param === PATH) {
 }
 else if (param === VERSION) {
     // tslint:disable-next-line
-    console.log('markdown-preview pre build version: 0.0.6');
+    console.log('0.0.7');
 }
