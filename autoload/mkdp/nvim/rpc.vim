@@ -1,7 +1,7 @@
-if exists('g:did_node_rpc_loaded') || v:version < 800 || has('nvim')
+if exists('g:did_mkdp_node_rpc_loaded') || v:version < 800 || has('nvim')
   finish
 endif
-let g:did_node_rpc_loaded = 1
+let g:did_mkdp_node_rpc_loaded = 1
 
 let s:is_win = has("win32") || has("win64")
 let s:clientIds = []
@@ -11,19 +11,19 @@ let s:root_dir = resolve(expand('<sfile>:h:h:h:h'))
 let s:script = s:root_dir . '/app/vimNodeRpc.js'
 
 " env used only for testing purpose
-if !empty($NVIM_LISTEN_ADDRESS)
-  call delete($NVIM_LISTEN_ADDRESS)
-  let s:tempname = $NVIM_LISTEN_ADDRESS
+if !empty($MKDP_NVIM_LISTEN_ADDRESS)
+  call delete($MKDP_NVIM_LISTEN_ADDRESS)
+  let s:tempname = $MKDP_NVIM_LISTEN_ADDRESS
 else
   let s:tempname = tempname()
   if s:is_win
-    let $NVIM_LISTEN_ADDRESS = '\\?\pipe\'.s:tempname
+    let $MKDP_NVIM_LISTEN_ADDRESS = '\\?\pipe\'.s:tempname
   else
-    let $NVIM_LISTEN_ADDRESS = s:tempname
+    let $MKDP_NVIM_LISTEN_ADDRESS = s:tempname
   endif
 endif
 
-if get(g:, 'coc_node_rpc_debug', 0)
+if get(g:, 'mkdp_node_rpc_debug', 0)
   call ch_logfile(s:logfile, 'w')
 endif
 
@@ -82,7 +82,7 @@ function! mkdp#nvim#rpc#start_server() abort
         \ 'close_cb': function('s:on_exit'),
         \ 'timeout': 3000,
         \ 'env': {
-        \   'NVIM_LISTEN_ADDRESS': $NVIM_LISTEN_ADDRESS
+        \   'MKDP_NVIM_LISTEN_ADDRESS': $MKDP_NVIM_LISTEN_ADDRESS
         \ }
         \}
   if has("patch-8.1.350")

@@ -16,7 +16,7 @@ function! s:on_exit(chan_id, code, ...) abort
 endfunction
 
 function! s:start_vim_node_rpc() abort
-  if empty($NVIM_LISTEN_ADDRESS)
+  if empty($MKDP_NVIM_LISTEN_ADDRESS)
     let command = mkdp#nvim#rpc#get_command()
     if empty(command) | return | endif
     call mkdp#nvim#rpc#start_server()
@@ -32,7 +32,7 @@ function! s:start_vim_server(cmd) abort
         \ 'exit_cb': function('s:on_exit'),
         \ 'env': {
         \   'VIM_NODE_RPC': 1,
-        \   'NVIM_LISTEN_ADDRESS': $NVIM_LISTEN_ADDRESS,
+        \   'MKDP_NVIM_LISTEN_ADDRESS': $MKDP_NVIM_LISTEN_ADDRESS,
         \ }
         \}
   if has("patch-8.1.350")

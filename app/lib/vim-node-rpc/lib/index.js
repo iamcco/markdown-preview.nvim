@@ -7,7 +7,7 @@ const server_1 = tslib_1.__importDefault(require('./model/server'))
 const logger = require('./logger')('index')
 const conn = new connection_1.default(process.stdin, process.stdout)
 const request = new request_1.default(conn)
-const sockFile = process.env.NVIM_LISTEN_ADDRESS
+const sockFile = process.env.MKDP_NVIM_LISTEN_ADDRESS
 const server = new server_1.default(sockFile, request)
 server.on('ready', () => {
   conn.notify('ready')
