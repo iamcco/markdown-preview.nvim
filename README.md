@@ -65,7 +65,7 @@ let g:mkdp_command_for_global = 0
 " default: 0
 let g:mkdp_open_to_the_world = 0
 
-" switch browser to open preview page
+" specify browser to open preview page
 " default: ''
 let g:mkdp_browser = ''
 
