@@ -106,12 +106,18 @@ exports.run = function () {
       async function openBrowser ({ bufnr }) {
         const openHost = openToTheWord ? getIP() : '127.0.0.1'
         const url = `http://${openHost}:${port}/page/${bufnr}`
-        const browser = await plugin.nvim.getVar('mkdp_browser')
-        logger.info(`open page [${browser || 'default'}]: `, url)
-        if (browser !== '') {
-          opener(url, browser)
+        const browserfunc = await plugin.nvim.getVar('mkdp_browserfunc')
+        if (browserfunc !== '') {
+          logger.info(`open page [${browserfunc}]: `, url)
+          plugin.nvim.call(browserfunc, [url])
         } else {
-          opener(url)
+          const browser = await plugin.nvim.getVar('mkdp_browser')
+          logger.info(`open page [${browser || 'default'}]: `, url)
+          if (browser !== '') {
+            opener(url, browser)
+          } else {
+            opener(url)
+          }
         }
         const isEchoUrl = await plugin.nvim.getVar('mkdp_echo_preview_url')
         if (isEchoUrl) {

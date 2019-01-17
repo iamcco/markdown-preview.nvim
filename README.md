@@ -73,6 +73,11 @@ let g:mkdp_browser = ''
 " default is 0
 let g:mkdp_echo_preview_url = 0
 
+" a custom vim function name to open preview page
+" this function will receive url as param
+" default is empty
+let g:mkdp_browserfunc = ''
+
 " options for markdown render
 " mkit: markdown-it options for render
 " katex: katex options for math

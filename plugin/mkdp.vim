@@ -39,7 +39,13 @@ if !exists('g:mkdp_echo_preview_url')
   let g:mkdp_echo_preview_url = 0
 endif
 
-" switch browser to open preview page
+" use custom vim function to open preview page
+" this function will receive url as param
+if !exists('g:mkdp_browserfunc')
+  let g:mkdp_browserfunc = ''
+endif
+
+" specify browser to open preview page
 if !exists('g:mkdp_browser')
   let g:mkdp_browser = ''
 endif
