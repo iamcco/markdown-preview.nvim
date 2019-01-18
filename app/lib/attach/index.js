@@ -14,12 +14,14 @@ function default_1(options) {
         if (method === 'refresh_content') {
             const winline = yield nvim.call('winline');
             const cursor = yield nvim.call('getpos', '.');
+            const options = yield nvim.getVar('mkdp_preview_options');
             const name = yield buffer.name;
             const content = yield buffer.getLines();
             const currentBuffer = yield nvim.buffer;
             app.refreshPage({
                 bufnr,
                 data: {
+                    options,
                     isActive: currentBuffer.id === buffer.id,
                     winline,
                     cursor,
