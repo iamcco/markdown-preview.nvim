@@ -124,7 +124,7 @@ function! s:markdown_preview_installed(status, ...) abort
   echo '[markdown-preview.nvim]: install cpmpleted'
 endfunction
 
-function! mkdp#util#install()
+function! mkdp#util#install(...)
   let l:version = mkdp#util#pre_build_version()
   let l:info = json_decode(join(readfile(s:mkdp_root_dir . '/package.json'), ''))
   if trim(l:version) ==# trim(l:info.version)
