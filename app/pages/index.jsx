@@ -149,7 +149,7 @@ export default class PreviewPage extends React.Component {
 
       chart.render()
 
-      if (isActive) {
+      if (isActive && !options.disable_sync_scroll) {
         const line = cursor[1] - winline
         scrollToLine(line, content.length - 1)
       }

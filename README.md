@@ -83,11 +83,13 @@ let g:mkdp_browserfunc = ''
 " katex: katex options for math
 " uml: markdown-it-plantuml options
 " maid: mermaid options
+" disable_sync_scroll: if disable sync scroll, default 0
 let g:mkdp_preview_options = {
     \ 'mkit': {},
     \ 'katex': {},
     \ 'uml': {},
-    \ 'maid': {}
+    \ 'maid': {},
+    \ 'disable_sync_scroll': 0
     \ }
 
 " use a custom markdown style must be absolute path
