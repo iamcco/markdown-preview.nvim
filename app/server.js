@@ -42,6 +42,7 @@ exports.run = function () {
     buffers.forEach(async (buffer) => {
       if (buffer.id === Number(bufnr)) {
         const winline = await plugin.nvim.call('winline')
+        const winheight = await plugin.nvim.call('winheight', bufnr)
         const cursor = await plugin.nvim.call('getpos', '.')
         const options = await plugin.nvim.getVar('mkdp_preview_options')
         const name = await buffer.name
@@ -51,6 +52,7 @@ exports.run = function () {
           options,
           isActive: currentBuffer.id === buffer.id,
           winline,
+          winheight,
           cursor,
           name,
           content

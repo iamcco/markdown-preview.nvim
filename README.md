@@ -84,12 +84,17 @@ let g:mkdp_browserfunc = ''
 " uml: markdown-it-plantuml options
 " maid: mermaid options
 " disable_sync_scroll: if disable sync scroll, default 0
+" sync_scroll_type: 'middle', 'top' or 'relative', default value is 'middle'
+"   middle: mean the cursor position alway show at the middle of the preview page
+"   top: mean the vim top viewport alway show at the top of the preview page
+"   relative: mean the cursor position alway show at the relative positon of the preview page
 let g:mkdp_preview_options = {
     \ 'mkit': {},
     \ 'katex': {},
     \ 'uml': {},
     \ 'maid': {},
-    \ 'disable_sync_scroll': 0
+    \ 'disable_sync_scroll': 0,
+    \ 'sync_scroll_type': 'middle'
     \ }
 
 " use a custom markdown style must be absolute path

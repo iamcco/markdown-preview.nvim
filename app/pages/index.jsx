@@ -105,6 +105,7 @@ export default class PreviewPage extends React.Component {
     options = {},
     isActive,
     winline,
+    winheight,
     cursor,
     name = '',
     content
@@ -150,8 +151,12 @@ export default class PreviewPage extends React.Component {
       chart.render()
 
       if (isActive && !options.disable_sync_scroll) {
-        const line = cursor[1] - winline
-        scrollToLine(line, content.length - 1)
+        scrollToLine[options.sync_scroll_type || 'middle']({
+          cursor: cursor[1],
+          winline,
+          winheight,
+          len: content.length
+        })
       }
     })
   }

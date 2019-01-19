@@ -56,7 +56,8 @@ if !exists('g:mkdp_preview_options')
       \ 'katex': {},
       \ 'uml': {},
       \ 'maid': {},
-      \ 'disable_sync_scroll': 0
+      \ 'disable_sync_scroll': 0,
+      \ 'sync_scroll_type': 'middle'
       \ }
 endif
 
