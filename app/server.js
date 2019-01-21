@@ -106,7 +106,8 @@ exports.run = function () {
         clients = {}
       }
       async function openBrowser ({ bufnr }) {
-        const openHost = openToTheWord ? getIP() : '127.0.0.1'
+        const openIp = await plugin.nvim.getVar('mkdp_open_ip')
+        const openHost = openIp !== '' ? openIp : (openToTheWord ? getIP() : '127.0.0.1')
         const url = `http://${openHost}:${port}/page/${bufnr}`
         const browserfunc = await plugin.nvim.getVar('mkdp_browserfunc')
         if (browserfunc !== '') {
