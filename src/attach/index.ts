@@ -40,7 +40,8 @@ export default function(options: Attach): IPlugin {
     const buffer = buffers.find(b => b.id === bufnr)
     if (method === 'refresh_content') {
       const winline = await nvim.call('winline')
-      const winheight = await nvim.call('winheight', bufnr)
+      const currentWindow = await nvim.window
+      const winheight = await nvim.call('winheight', currentWindow.id)
       const cursor = await nvim.call('getpos', '.')
       const renderOpts = await nvim.getVar('mkdp_preview_options')
       const name = await buffer.name
