@@ -13,7 +13,8 @@ function default_1(options) {
         const buffer = buffers.find(b => b.id === bufnr);
         if (method === 'refresh_content') {
             const winline = yield nvim.call('winline');
-            const winheight = yield nvim.call('winheight', bufnr);
+            const currentWindow = yield nvim.window;
+            const winheight = yield nvim.call('winheight', currentWindow.id);
             const cursor = yield nvim.call('getpos', '.');
             const renderOpts = yield nvim.getVar('mkdp_preview_options');
             const name = yield buffer.name;
