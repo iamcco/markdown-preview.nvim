@@ -33,6 +33,12 @@ if !exists('g:mkdp_open_to_the_world')
   let g:mkdp_open_to_the_world = 0
 endif
 
+" use custom ip to open preview page
+" default empty
+if !exists('g:mkdp_open_ip')
+  let g:mkdp_open_ip = ''
+endif
+
 " set to 1, echo preview page url in command line when open preview page
 " default is 0
 if !exists('g:mkdp_echo_preview_url')
