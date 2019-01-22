@@ -53,6 +53,7 @@ use((req, res, next) => {
 
 // images
 use(async (req, res, next) => {
+  logger.info('image route: ', req.asPath)
   const reg = /^\/_local_image_/
   if (reg.test(req.asPath)) {
     const plugin = req.plugin
@@ -60,8 +61,16 @@ use(async (req, res, next) => {
     const buffer = buffers.find(b => b.id === Number(req.bufnr))
     if (buffer) {
       const fileDir = await plugin.nvim.call('expand', `#${req.bufnr}:p:h`)
-      const imgPath = path.join(fileDir, req.asPath.replace(reg, ''))
-      return fs.createReadStream(imgPath).pipe(res)
+      logger.info('fileDir', fileDir)
+      let imgPath = decodeURIComponent(req.asPath.replace(reg, ''))
+      if (imgPath[0] !== '/' && imgPath[0] !== '\\') {
+        imgPath = path.join(fileDir, imgPath)
+      }
+      logger.info('imgPath', imgPath)
+      if (fs.existsSync(imgPath)) {
+        return fs.createReadStream(imgPath).pipe(res)
+      }
+      logger.error('image not exists: ', imgPath)
     }
   }
   next()
@@ -76,4 +85,3 @@ use((req, res) => {
 module.exports = function (req, res, next) {
   return routes.reduce((next, route) => route(req, res, next), next)()
 }
-

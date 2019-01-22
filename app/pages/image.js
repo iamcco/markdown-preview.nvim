@@ -4,10 +4,9 @@ function resolveImage (tokens, idx) {
   if (/^(http|\/\/|data:)/.test(src)) {
     return `<img src="${src}" alt="${alt}" />`
   }
-  return `<img src="/_local_image_${src}" alt="${alt}" />`
+  return `<img src="/_local_image_${encodeURIComponent(src)}" alt="${alt}" />`
 }
 
 export default function localImage (md) {
   md.renderer.rules.image = resolveImage
 }
-
