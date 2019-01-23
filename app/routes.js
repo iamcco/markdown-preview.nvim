@@ -55,14 +55,15 @@ use((req, res, next) => {
 use(async (req, res, next) => {
   logger.info('image route: ', req.asPath)
   const reg = /^\/_local_image_/
-  if (reg.test(req.asPath)) {
+  if (reg.test(req.asPath) && req.asPath !== '') {
     const plugin = req.plugin
     const buffers = await plugin.nvim.buffers
     const buffer = buffers.find(b => b.id === Number(req.bufnr))
     if (buffer) {
       const fileDir = await plugin.nvim.call('expand', `#${req.bufnr}:p:h`)
       logger.info('fileDir', fileDir)
-      let imgPath = decodeURIComponent(req.asPath.replace(reg, ''))
+      let imgPath = decodeURIComponent(decodeURIComponent(req.asPath.replace(reg, '')))
+      imgPath = imgPath.replace(/\\ /g, ' ')
       if (imgPath[0] !== '/' && imgPath[0] !== '\\') {
         imgPath = path.join(fileDir, imgPath)
       }
