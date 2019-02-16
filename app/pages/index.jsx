@@ -8,6 +8,7 @@ import mkuml from 'markdown-it-plantuml'
 import emoji from 'markdown-it-emoji'
 import taskLists from 'markdown-it-task-lists'
 import markdownItChart from 'markdown-it-chart'
+import footnote from 'markdown-it-footnote'
 
 import chart from './chart'
 import mkitMermaid from './mermaid'
@@ -133,6 +134,7 @@ export default class PreviewPage extends React.Component {
         })
         .use(emoji)
         .use(taskLists)
+        .use(footnote)
         .use(image)
         .use(linenumbers)
         .use(mkitMermaid)

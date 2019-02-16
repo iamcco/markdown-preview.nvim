@@ -84,6 +84,13 @@
   font-size: 1em;
   color: #777;
 }
+.markdown-body hr {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  height: 0;
+  border: 0;
+  border-top: 1px solid #eee;
+}
 .markdown-body ol,
 .markdown-body ul {
   padding-left: 2em;
