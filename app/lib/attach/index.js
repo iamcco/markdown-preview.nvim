@@ -17,6 +17,7 @@ function default_1(options) {
             const winheight = yield nvim.call('winheight', currentWindow.id);
             const cursor = yield nvim.call('getpos', '.');
             const renderOpts = yield nvim.getVar('mkdp_preview_options');
+            const pageTitle = yield nvim.getVar('mkdp_page_title');
             const name = yield buffer.name;
             const content = yield buffer.getLines();
             const currentBuffer = yield nvim.buffer;
@@ -28,6 +29,7 @@ function default_1(options) {
                     winline,
                     winheight,
                     cursor,
+                    pageTitle,
                     name,
                     content
                 }
