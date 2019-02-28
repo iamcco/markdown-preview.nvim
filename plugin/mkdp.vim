@@ -81,6 +81,12 @@ if !exists('g:mkdp_port')
   let g:mkdp_port = ''
 endif
 
+" preview page title
+" ${name} will be replace with the file name
+if !exists('g:mkdp_page_title')
+  let g:mkdp_page_title = '「${name}」'
+endif
+
 function! s:init_command() abort
   " mapping for user
   map <buffer> <silent> <Plug>MarkdownPreview :call mkdp#util#open_preview_page()<CR>

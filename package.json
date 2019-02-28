@@ -10,6 +10,7 @@
   "scripts": {
     "watch": "tsc -w -p ./",
     "build-app": "cd app && rm -rf ./.next && next build && next export",
+    "build-lib": "tsc -p ./",
     "build": "tsc -p ./ && cd app && rm -rf ./.next && next build && next export && yarn && pkg --targets node10-linux-x64,node10-macos-x64,node10-win-x64 --out-path ./bin . && rm -rf ./node_modules ./.next"
   },
   "dependencies": {

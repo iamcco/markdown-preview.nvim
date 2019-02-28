@@ -46,6 +46,7 @@ exports.run = function () {
         const winheight = await plugin.nvim.call('winheight', currentWindow.id)
         const cursor = await plugin.nvim.call('getpos', '.')
         const options = await plugin.nvim.getVar('mkdp_preview_options')
+        const pageTitle = await plugin.nvim.getVar('mkdp_page_title')
         const name = await buffer.name
         const content = await buffer.getLines()
         const currentBuffer = await plugin.nvim.buffer
@@ -55,6 +56,7 @@ exports.run = function () {
           winline,
           winheight,
           cursor,
+          pageTitle,
           name,
           content
         })

@@ -44,6 +44,7 @@ export default function(options: Attach): IPlugin {
       const winheight = await nvim.call('winheight', currentWindow.id)
       const cursor = await nvim.call('getpos', '.')
       const renderOpts = await nvim.getVar('mkdp_preview_options')
+      const pageTitle = await nvim.getVar('mkdp_page_title')
       const name = await buffer.name
       const content = await buffer.getLines()
       const currentBuffer = await nvim.buffer
@@ -55,6 +56,7 @@ export default function(options: Attach): IPlugin {
           winline,
           winheight,
           cursor,
+          pageTitle,
           name,
           content
         }

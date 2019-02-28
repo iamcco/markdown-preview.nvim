@@ -65,7 +65,8 @@ export default class PreviewPage extends React.Component {
     this.state = {
       name: '',
       cursor: '',
-      content: ''
+      content: '',
+      pageTitle: ''
     }
   }
 
@@ -108,6 +109,7 @@ export default class PreviewPage extends React.Component {
     winline,
     winheight,
     cursor,
+    pageTitle = '',
     name = '',
     content
   }) {
@@ -143,7 +145,8 @@ export default class PreviewPage extends React.Component {
     this.setState({
       cursor,
       name: name.split(/\\|\//).pop().split('.')[0],
-      content: this.md.render(content.join('\n'))
+      content: this.md.render(content.join('\n')),
+      pageTitle
     }, () => {
       try {
         // eslint-disable-next-line
@@ -164,11 +167,11 @@ export default class PreviewPage extends React.Component {
   }
 
   render () {
-    const { content, name } = this.state
+    const { content, name, pageTitle } = this.state
     return (
       <React.Fragment>
         <Head>
-          <title>{`「${name}」`}</title>
+          <title>{ pageTitle.replace(/\$\{name\}/, name) }</title>
           <link rel="shortcut icon" type="image/ico" href="/_static/favicon.ico" />
           <link rel="stylesheet" href="/_static/page.css" />
           <link rel="stylesheet" href="/_static/markdown.css" />
