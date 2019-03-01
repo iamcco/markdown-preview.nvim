@@ -121,7 +121,7 @@ function! s:markdown_preview_installed(status, ...) abort
     call mkdp#util#echo_messages('Error', '[markdown-preview]: install fail')
     return
   endif
-  echo '[markdown-preview.nvim]: install cpmpleted'
+  echo '[markdown-preview.nvim]: install completed'
 endfunction
 
 function! mkdp#util#install(...)
