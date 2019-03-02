@@ -110,6 +110,18 @@ they won’t be treated as math delimiters.
 }
 ```
 
+### Mermaid example
+
+```mermaid
+gantt
+    dateFormat DD-MM-YYY
+    axisFormat %m/%y
+
+    title Example
+    section example section
+    activity :active, 01-02-2019, 03-08-2019
+```
+
 ```mermaid
 graph LR
 A[Christmas] -->|Get money| B(Go shopping)
