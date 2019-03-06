@@ -150,7 +150,9 @@ export default class PreviewPage extends React.Component {
     }, () => {
       try {
         // eslint-disable-next-line
-        mermaid.init(options.maid, document.querySelectorAll('.mermaid'))
+        mermaid.initialize(options.maid || {})
+        // eslint-disable-next-line
+        mermaid.init(undefined, document.querySelectorAll('.mermaid'))
       } catch (e) {}
 
       chart.render()
