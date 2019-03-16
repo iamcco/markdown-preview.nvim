@@ -49,19 +49,19 @@ let g:mkdp_auto_start = 0
 " default: 1
 let g:mkdp_auto_close = 1
 
-" set to 1, the vim will just refresh markdown when save the buffer or
+" set to 1, the vim will refresh markdown when save the buffer or
 " leave from insert mode, default 0 is auto refresh markdown as you edit or
 " move the cursor
 " default: 0
 let g:mkdp_refresh_slow = 0
 
 " set to 1, the MarkdownPreview command can be use for all files,
-" by default it just can be use in markdown file
+" by default it can be use in markdown file
 " default: 0
 let g:mkdp_command_for_global = 0
 
 " set to 1, preview server available to others in your network
-" by default, the server only listens on localhost (127.0.0.1)
+" by default, the server listens on localhost (127.0.0.1)
 " default: 0
 let g:mkdp_open_to_the_world = 0
 
@@ -157,5 +157,7 @@ vim support is power by [vim-node-rpc](https://github.com/neoclide/vim-node-rpc)
 - [socket.io](https://github.com/socketio/socket.io)
 
 ### Buy Me A Coffee ☕️
+
+![btc](https://img.shields.io/keybase/btc/iamcco.svg?style=popout-square)
 
 ![image](https://user-images.githubusercontent.com/5492542/42771079-962216b0-8958-11e8-81c0-520363ce1059.png)
