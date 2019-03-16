@@ -6,6 +6,7 @@ import mk from 'markdown-it-katex'
 import hljs from 'highlight.js'
 import mkuml from 'markdown-it-plantuml'
 import emoji from 'markdown-it-emoji'
+import meta from 'markdown-it-meta'
 import taskLists from 'markdown-it-task-lists'
 import markdownItChart from 'markdown-it-chart'
 import footnote from 'markdown-it-footnote'
@@ -117,13 +118,17 @@ export default class PreviewPage extends React.Component {
       const {
         mkit = {},
         katex = {},
-        uml = {}
+        uml = {},
+        hide_yaml_meta: hideYamlMeta = 1
       } = options
       // markdown-it
       this.md = new MarkdownIt({
         ...DEFAULT_OPTIONS.mkit,
         ...mkit
       })
+      if (hideYamlMeta === 1) {
+        this.md.use(meta)
+      }
       // katex
       this.md
         .use(mk, {
