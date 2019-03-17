@@ -1,46 +1,53 @@
 <h1 align="center"> ✨ Markdown Preview for (Neo)vim ✨ </h1>
 
-> power by ❤️
+> Powered by ❤️
 
 ### Introduction
 
 > It only works on vim >= 8.1 and neovim
 
-preview markdown on your modern browser with sync scroll and flexible configuration
+Preview markdown on your modern browser with synchronised scrolling and flexible configuration
 
-main features:
+Main features:
 
-- cross platform (macos/linux/windows)
-- sync scroll
-- fast async update
-- [katex](https://github.com/Khan/KaTeX) typesetting math
-- [plantuml](https://github.com/plantuml/plantuml)
-- [mermaid](https://github.com/knsv/mermaid)
-- [chart.js](https://github.com/chartjs/Chart.js)
-- emoji
-- task list
-- local image
-- flexible configuration
+- Cross platform (macos/linux/windows)
+- Synchronised scrolling
+- Fast asynchronous updates
+- [Katex](https://github.com/Khan/KaTeX) for typesetting of math
+- [Plantuml](https://github.com/plantuml/plantuml)
+- [Mermaid](https://github.com/knsv/mermaid)
+- [Chart.js](https://github.com/chartjs/Chart.js)
+- Emoji
+- Task lists
+- Local images
+- Flexible configuration
 
 ![screenshot](https://user-images.githubusercontent.com/5492542/47603494-28e90000-da1f-11e8-9079-30646e551e7a.gif)
 
 ### install & usage
 
-install by [vim-plug](https://github.com/junegunn/vim-plug):
+Install with [vim-plug](https://github.com/junegunn/vim-plug):
 
 ```vim
-" if you don't have nodejs and yarn
+" If you don't have nodejs and yarn
 " use pre build
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }}
 
-" have nodejs and yarn
+" If you have nodejs and yarn
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
 ```
 
-config:
+Or install with [dein](https://github.com/Shougo/dein.vim):
 
 ```vim
-" set to 1, the nvim will open the preview window once enter the markdown buffer
+call dein#add('iamcco/markdown-preview.nvim', {'on_ft': ['markdown', 'pandoc.markdown', 'rmd'], 
+					\ 'build': 'cd app & yarn install' })
+```
+
+Config:
+
+```vim
+" set to 1, nvim will open the preview window after entering the markdown buffer
 " default: 0
 let g:mkdp_auto_start = 0
 
@@ -119,29 +126,29 @@ let g:mkdp_port = ''
 let g:mkdp_page_title = '「${name}」'
 ```
 
-command:
+Commands:
 
 ```vim
-" preview
+" Start the preview
 :MarkdownPreview
 
-" stop preview"
+" Stop the preview"
 :MarkdownPreviewStop
 ```
 
-### F&Q
+### FAQ
 
-A: Why my sync scroll is slow reaction
+Question: Why is the synchronised scrolling lagging?
 
-B: set `updatetime` to a small number, like `set updatetime=100`
+Answer: set `updatetime` to a small number, for instance: `set updatetime=100`
 
 ### About vim support
 
-vim support is power by [vim-node-rpc](https://github.com/neoclide/vim-node-rpc)
+Vim support is powered by [vim-node-rpc](https://github.com/neoclide/vim-node-rpc)
 
-> this plugin is integrate with vim-node-rpc, so you don't need to install vim-node-rpc
+> This plugin is integrated with vim-node-rpc, therefore you don't need to install vim-node-rpc
 
-### reference
+### Reference
 
 - [coc.nvim](https://github.com/neoclide/coc.nvim)
 - [vim-node-rpc](https://github.com/neoclide/vim-node-rpc)
