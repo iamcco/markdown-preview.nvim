@@ -136,12 +136,22 @@ function! mkdp#util#install(...)
   endif
   let obj = json_decode(join(readfile(s:package_file)))
   let cmd = (mkdp#util#get_platform() ==# 'win' ? 'install.cmd' : './install.sh') . ' v'.obj['version']
-  call mkdp#util#open_terminal({
-        \ 'cmd': cmd,
-        \ 'cwd': s:mkdp_root_dir . '/app',
-        \ 'Callback': function('s:markdown_preview_installed')
-        \})
-  wincmd p
+  if get(a:, '1', v:false) ==# v:true
+    execute 'lcd ' . s:mkdp_root_dir . '/app'
+    execute '!' . cmd
+  else
+    call mkdp#util#open_terminal({
+          \ 'cmd': cmd,
+          \ 'cwd': s:mkdp_root_dir . '/app',
+          \ 'Callback': function('s:markdown_preview_installed')
+          \})
+    wincmd p
+  endif
+endfunction
+
+
+function! mkdp#util#install_sync(...)
+  call mkdp#util#install(v:true)
 endfunction
 
 function! mkdp#util#pre_build_version() abort
