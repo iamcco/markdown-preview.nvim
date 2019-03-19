@@ -149,9 +149,12 @@ function! mkdp#util#install(...)
   endif
 endfunction
 
-
 function! mkdp#util#install_sync(...)
-  call mkdp#util#install(v:true)
+  if get(a:, '1', v:false) ==# v:true
+    silent call mkdp#util#install(v:true)
+  else
+    call mkdp#util#install(v:true)
+  endif
 endfunction
 
 function! mkdp#util#pre_build_version() abort
