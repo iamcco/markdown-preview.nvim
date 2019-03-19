@@ -34,7 +34,7 @@ endfunction
 function! s:on_notify(channel, result)
   let [event, data] = a:result
   if event ==# 'ready'
-    doautocmd User NvimRpcInit
+    doautocmd User NvimMkdpRpcInit
   elseif event ==# 'connect'
     call add(s:clientIds, data)
   elseif event ==# 'disconnect'
@@ -46,7 +46,7 @@ endfunction
 
 function! s:on_exit(channel)
   let s:channel = v:null
-  doautocmd User NvimRpcExit
+  doautocmd User NvimMkdpRpcExit
 endfunction
 
 function! mkdp#nvim#rpc#get_command() abort

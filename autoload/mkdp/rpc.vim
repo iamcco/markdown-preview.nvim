@@ -47,7 +47,7 @@ function! s:start_vim_server(cmd) abort
   let s:mkdp_channel_id = l:job
   if s:is_vim_node_rpc_ready ==# v:null
     let s:is_vim_node_rpc_ready = v:true
-    autocmd! User NvimRpcInit
+    autocmd! User NvimMkdpRpcInit
     unlet s:cb
   endif
 endfunction
@@ -67,7 +67,7 @@ function! mkdp#rpc#start_server() abort
     if s:is_vim
       if s:is_vim_node_rpc_ready ==# v:null
         let s:cb = function('s:start_vim_server', [l:cmd])
-        autocmd User NvimRpcInit call s:cb()
+        autocmd User NvimMkdpRpcInit call s:cb()
       else
         call s:start_vim_server(l:cmd)
       endif
