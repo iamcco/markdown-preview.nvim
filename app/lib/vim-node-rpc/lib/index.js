@@ -36,7 +36,7 @@ server.on('notification', (event, args) => {
   } else if (event == 'nvim_buf_set_var') {
     conn.call(true, 'setbufvar', [args[0].id, args[1], args[2]])
   } else if (event.startsWith('nvim_')) {
-    conn.call(true, 'nvim#api#call', [0, event.slice(0, 5), args])
+    conn.call(true, 'mkdp#nvim#api#call', [0, event.slice(0, 5), args])
   } else {
     logger.error(`Unknown event:`, event, args)
   }
