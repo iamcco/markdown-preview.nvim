@@ -7,8 +7,8 @@ const os_1 = tslib_1.__importDefault(require("os"));
 const path_1 = tslib_1.__importDefault(require("path"));
 const MAX_LOG_SIZE = 1024 * 1024;
 const MAX_LOG_BACKUPS = 10;
-const LOG_FILE_PATH = process.env.VIM_RPC_LOG_FILE || path_1.default.join(os_1.default.tmpdir(), 'vim-node-rpc.log');
-const level = process.env.VIM_RPC_LOG_LEVEL || 'info';
+const LOG_FILE_PATH = process.env.VIM_MKDP_RPC_LOG_FILE || path_1.default.join(os_1.default.tmpdir(), 'vim-node-rpc.log');
+const level = process.env.VIM_MKDP_RPC_LOG_LEVEL || 'info';
 if (level === 'debug') {
     fs_1.default.writeFileSync(LOG_FILE_PATH, '', 'utf8');
 }
