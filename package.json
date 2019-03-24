@@ -16,12 +16,12 @@
   "dependencies": {
     "chart.js": "^2.7.3",
     "highlight.js": "^9.13.0",
+    "katex": "^0.10.1",
     "log4js": "^3.0.6",
     "markdown-it": "^8.4.2",
     "markdown-it-chart": "^0.2.0",
     "markdown-it-emoji": "^1.4.0",
     "markdown-it-footnote": "^3.0.1",
-    "markdown-it-katex": "^2.0.3",
     "markdown-it-meta": "^0.0.1",
     "markdown-it-plantuml": "^1.3.0",
     "markdown-it-task-lists": "^2.1.1",

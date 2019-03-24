@@ -2,7 +2,6 @@ import React from 'react'
 import Head from 'next/head'
 import io from 'socket.io-client'
 import MarkdownIt from 'markdown-it'
-import mk from 'markdown-it-katex'
 import hljs from 'highlight.js'
 import mkuml from 'markdown-it-plantuml'
 import emoji from 'markdown-it-emoji'
@@ -11,6 +10,7 @@ import taskLists from 'markdown-it-task-lists'
 import markdownItChart from 'markdown-it-chart'
 import footnote from 'markdown-it-footnote'
 
+import mk from './katex'
 import chart from './chart'
 import mkitMermaid from './mermaid'
 import linenumbers from './linenumbers'
@@ -183,7 +183,7 @@ export default class PreviewPage extends React.Component {
           <link rel="stylesheet" href="/_static/page.css" />
           <link rel="stylesheet" href="/_static/markdown.css" />
           <link rel="stylesheet" href="/_static/highlight.css" />
-          <link rel="stylesheet" href="/_static/katex@0.5.1.css" />
+          <link rel="stylesheet" href="/_static/katex@0.10.1.css" />
           <script type="text/javascript" src="/_static/tweenlite.min.js"></script>
           <script type="text/javascript" src="/_static/mermaid.min.js"></script>
         </Head>
