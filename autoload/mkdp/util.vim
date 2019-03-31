@@ -159,6 +159,9 @@ endfunction
 
 function! mkdp#util#pre_build_version() abort
   let l:pre_build = s:pre_build . mkdp#util#get_platform()
+  if has('win32') || has('win64')
+    let l:pre_build .= '.exe'
+  endif
   if filereadable(l:pre_build)
     let l:info = system(l:pre_build . ' --version')
     let l:info = split(l:info, '\n')
