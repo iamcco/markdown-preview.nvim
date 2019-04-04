@@ -130,6 +130,9 @@ endfunction
 
 function! mkdp#util#install(...)
   let l:version = mkdp#util#pre_build_version()
+  if l:version ==# v:false
+    return
+  endif
   let l:info = json_decode(join(readfile(s:mkdp_root_dir . '/package.json'), ''))
   if s:trim(l:version) ==# s:trim(l:info.version)
     return
@@ -163,9 +166,14 @@ function! mkdp#util#pre_build_version() abort
     let l:pre_build .= '.exe'
   endif
   if filereadable(l:pre_build)
-    let l:info = system(l:pre_build . ' --version')
-    let l:info = split(l:info, '\n')
-    return l:info[0]
+    try
+      let l:info = system(l:pre_build . ' --version')
+      let l:info = split(l:info, '\n')
+      return l:info[0]
+    catch /.*/
+      call mkdp#util#echo_messages('Error', "[markdown-preview.nvim]: Can not execute pre build binary bundle (which only support 64-bit system), try install from source code.")
+      return v:false
+    endtry
   endif
   return ''
 endfunction
