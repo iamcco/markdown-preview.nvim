@@ -33,7 +33,7 @@ Install with [vim-plug](https://github.com/junegunn/vim-plug):
 ```vim
 " If you don't have nodejs and yarn
 " use pre build
-Plug 'iamcco/markdown-preview.nvim', { 'do': ':call mkdp#util#install()', 'for': 'markdown', 'on': 'MarkdownPreview' }
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
 
 " If you have nodejs and yarn
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }

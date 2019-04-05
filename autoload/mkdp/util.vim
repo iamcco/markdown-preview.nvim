@@ -164,8 +164,8 @@ function! mkdp#util#pre_build_version() abort
   endif
   if filereadable(l:pre_build)
     let l:info = system(l:pre_build . ' --version')
-    call mkdp#util#echo_messages('Type', "[markdown-preview.nvim]: Can not execute pre build binary bundle to get version, will download latest pre build binary bundle")
     if l:info ==# ''
+      call mkdp#util#echo_messages('Type', "[markdown-preview.nvim]: Can not execute pre build binary bundle to get version, will download latest pre build binary bundle")
       return ''
     endif
     let l:info = split(l:info, '\n')
