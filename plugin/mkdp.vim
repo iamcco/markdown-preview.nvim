@@ -90,19 +90,24 @@ endif
 
 function! s:init_command() abort
   " mapping for user
-  map <buffer> <silent> <Plug>MarkdownPreview :call mkdp#util#open_preview_page()<CR>
-  imap <buffer> <silent> <Plug>MarkdownPreview <Esc>:call mkdp#util#open_preview_page()<CR>a
-  map <buffer> <silent> <Plug>MarkdownPreviewStop :call mkdp#util#stop_preview()<CR>
-  imap <buffer> <silent> <Plug>MarkdownPreviewStop <Esc>:call mkdp#util#stop_preview()<CR>a
+  noremap <buffer> <silent> <Plug>MarkdownPreview :call mkdp#util#open_preview_page()<CR>
+  inoremap <buffer> <silent> <Plug>MarkdownPreview <Esc>:call mkdp#util#open_preview_page()<CR>a
+  noremap <buffer> <silent> <Plug>MarkdownPreviewStop :call mkdp#util#stop_preview()<CR>
+  inoremap <buffer> <silent> <Plug>MarkdownPreviewStop <Esc>:call mkdp#util#stop_preview()<CR>a
+  nnoremap <buffer> <silent> <Plug>MarkdownPreviewToggle :call mkdp#util#toggle_preview()<CR>
+  inoremap <buffer> <silent> <Plug>MarkdownPreviewToggle <Esc>:call mkdp#util#toggle_preview()<CR>
+endfunction
+
+function! s:MkdpAU() abort
+    command! -buffer MarkdownPreview call mkdp#util#open_preview_page()
+    call s:init_command()
 endfunction
 
 function! s:init() abort
   if g:mkdp_command_for_global
-    au BufEnter * command! -buffer MarkdownPreview call mkdp#util#open_preview_page()
-    call s:init_command()
+    au BufEnter * :call s:MkdpAU()
   else
-    au BufEnter *.{md,mkd,markdown,mdown,mkdn,mdwn} command! -buffer MarkdownPreview call mkdp#util#open_preview_page()
-    call s:init_command()
+    au BufEnter *.{md,mkd,markdown,mdown,mkdn,mdwn} :call s:MkdpAU()
   endif
   if g:mkdp_auto_start
     au BufEnter *.{md,mkd,markdown,mdown,mkdn,mdwn} call mkdp#util#open_preview_page()

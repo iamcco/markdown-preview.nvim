@@ -128,6 +128,20 @@ let g:mkdp_port = ''
 let g:mkdp_page_title = '「${name}」'
 ```
 
+Mappings:
+
+```vim
+" normal/insert
+<Plug>MarkdownPreview
+<Plug>MarkdownPreviewStop
+<Plug>MarkdownPreviewToggle
+
+" example
+nmap <C-s> <Plug>MarkdownPreview
+nmap <M-s> <Plug>MarkdownPreviewStop
+nmap <C-p> <Plug>MarkdownPreviewToggle
+```
+
 Commands:
 
 ```vim

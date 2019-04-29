@@ -174,3 +174,13 @@ function! mkdp#util#pre_build_version() abort
   return ''
 endfunction
 
+function! mkdp#util#toggle_preview() abort
+    if !get(b:, 'MarkdownPreviewToggleBool')
+        call mkdp#util#open_preview_page()
+        let b:MarkdownPreviewToggleBool=1
+    else
+        call mkdp#util#stop_preview()
+        let b:MarkdownPreviewToggleBool=0
+    endif
+endfunction
+
