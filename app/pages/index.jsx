@@ -5,7 +5,7 @@ import MarkdownIt from 'markdown-it'
 import hljs from 'highlight.js'
 import mkuml from 'markdown-it-plantuml'
 import emoji from 'markdown-it-emoji'
-import meta from 'markdown-it-meta'
+import meta from 'md-it-meta'
 import taskLists from 'markdown-it-task-lists'
 import markdownItChart from 'markdown-it-chart'
 import footnote from 'markdown-it-footnote'
@@ -127,7 +127,7 @@ export default class PreviewPage extends React.Component {
         ...mkit
       })
       if (hideYamlMeta === 1) {
-        this.md.use(meta)
+        this.md.use(meta([['---', '...'], ['---', '...']]))
       }
       // katex
       this.md
