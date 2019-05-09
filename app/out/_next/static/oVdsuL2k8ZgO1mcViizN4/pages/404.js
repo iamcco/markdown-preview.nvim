@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[3],{400:function(n,e,t){__NEXT_REGISTER_PAGE("/404",function(){return n.exports=t(401),{page:n.exports.default}})},401:function(n,e,t){"use strict";t.r(e);var u=t(3),o=t.n(u);e.default=function(){return o.a.createElement("div",null,"404")}}},[[400,1,0]]]);
