@@ -9,6 +9,7 @@ import meta from 'md-it-meta'
 import taskLists from 'markdown-it-task-lists'
 import markdownItChart from 'markdown-it-chart'
 import footnote from 'markdown-it-footnote'
+import mditAnchor from 'markdown-it-github-headings'
 
 import mk from './katex'
 import chart from './chart'
@@ -146,6 +147,9 @@ export default class PreviewPage extends React.Component {
         .use(linenumbers)
         .use(mkitMermaid)
         .use(markdownItChart)
+        .use(mditAnchor, {
+          prefixHeadingIds: false
+        })
     }
     this.setState({
       cursor,

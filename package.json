@@ -22,6 +22,7 @@
     "markdown-it-chart": "^0.2.0",
     "markdown-it-emoji": "^1.4.0",
     "markdown-it-footnote": "^3.0.1",
+    "markdown-it-github-headings": "^1.1.1",
     "markdown-it-plantuml": "^1.3.0",
     "markdown-it-task-lists": "^2.1.1",
     "md-it-meta": "^0.0.1",
