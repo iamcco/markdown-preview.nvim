@@ -1,6 +1,6 @@
 {
   "name": "markdown-preview.vim",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "markdown preview plugin for (neo)vim",
   "bin": "./app/server.js",
   "repository": "https://github.com/iamcco/markdown-preview.vim.git",
@@ -25,7 +25,7 @@
     "markdown-it-github-headings": "^1.1.1",
     "markdown-it-plantuml": "^1.3.0",
     "markdown-it-task-lists": "^2.1.1",
-    "md-it-meta": "^0.0.1",
+    "md-it-meta": "^0.0.2",
     "neovim": "^4.2.1",
     "next": "^7.0.2",
     "next-routes": "^1.4.2",
@@ -37,9 +37,9 @@
   "devDependencies": {
     "@types/node": "^10.11.7",
     "prettier": "^1.14.3",
-    "tslint": "^5.11.0",
-    "tslint-config-prettier": "^1.15.0",
-    "tslint-plugin-prettier": "^2.0.0",
+    "tslint": "^5.17.0",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-plugin-prettier": "^2.0.1",
     "typescript": "^3.1.3",
     "yuuko-tsconfig": "^1.0.0"
   }
