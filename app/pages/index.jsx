@@ -16,6 +16,7 @@ import chart from './chart'
 import mkitMermaid from './mermaid'
 import linenumbers from './linenumbers'
 import image from './image'
+import diagram, { renderDiagram } from './diagram'
 import scrollToLine from './scroll'
 
 const DEFAULT_OPTIONS = {
@@ -147,6 +148,7 @@ export default class PreviewPage extends React.Component {
         .use(linenumbers)
         .use(mkitMermaid)
         .use(markdownItChart)
+        .use(diagram)
         .use(mditAnchor, {
           prefixHeadingIds: false
         })
@@ -165,6 +167,7 @@ export default class PreviewPage extends React.Component {
       } catch (e) {}
 
       chart.render()
+      renderDiagram()
 
       if (isActive && !options.disable_sync_scroll) {
         scrollToLine[options.sync_scroll_type || 'middle']({
@@ -188,8 +191,13 @@ export default class PreviewPage extends React.Component {
           <link rel="stylesheet" href="/_static/markdown.css" />
           <link rel="stylesheet" href="/_static/highlight.css" />
           <link rel="stylesheet" href="/_static/katex@0.10.1.css" />
+          <link rel="stylesheet" href="/_static/sequence-diagram-min.css" />
+          <script type="text/javascript" src="/_static/underscore-min.js"></script>
+          <script type="text/javascript" src="/_static/webfont.js"></script>
+          <script type="text/javascript" src="/_static/snap.svg.min.js"></script>
           <script type="text/javascript" src="/_static/tweenlite.min.js"></script>
           <script type="text/javascript" src="/_static/mermaid.min.js"></script>
+          <script type="text/javascript" src="/_static/sequence-diagram-min.js"></script>
         </Head>
         <div id="page-ctn">
           <header id="page-header">
