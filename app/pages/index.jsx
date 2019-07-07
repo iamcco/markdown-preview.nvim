@@ -124,7 +124,8 @@ export default class PreviewPage extends React.Component {
         mkit = {},
         katex = {},
         uml = {},
-        hide_yaml_meta: hideYamlMeta = 1
+        hide_yaml_meta: hideYamlMeta = 1,
+        sequence_diagrams: sequenceDiagrams = {}
       } = options
       // markdown-it
       this.md = new MarkdownIt({
@@ -151,7 +152,9 @@ export default class PreviewPage extends React.Component {
         .use(linenumbers)
         .use(mkitMermaid)
         .use(markdownItChart)
-        .use(diagram)
+        .use(diagram, {
+          ...sequenceDiagrams
+        })
         .use(markdownItAnchor, {
           permalink: true,
           permalinkBefore: true,

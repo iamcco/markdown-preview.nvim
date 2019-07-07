@@ -17,6 +17,8 @@ Main features:
 - [Plantuml](https://github.com/plantuml/plantuml)
 - [Mermaid](https://github.com/knsv/mermaid)
 - [Chart.js](https://github.com/chartjs/Chart.js)
+- [sequence-diagrams](https://github.com/bramp/js-sequence-diagrams)
+- [Toc](https://github.com/nagaozen/markdown-it-toc-done-right)
 - Emoji
 - Task lists
 - Local images
@@ -104,6 +106,7 @@ let g:mkdp_browserfunc = ''
 "   top: mean the vim top viewport alway show at the top of the preview page
 "   relative: mean the cursor position alway show at the relative positon of the preview page
 " hide_yaml_meta: if hide yaml metadata, default is 1
+" sequence_diagrams: js-sequence-diagrams options
 let g:mkdp_preview_options = {
     \ 'mkit': {},
     \ 'katex': {},
@@ -111,7 +114,8 @@ let g:mkdp_preview_options = {
     \ 'maid': {},
     \ 'disable_sync_scroll': 0,
     \ 'sync_scroll_type': 'middle',
-    \ 'hide_yaml_meta': 1
+    \ 'hide_yaml_meta': 1,
+    \ 'sequence_diagrams': {}
     \ }
 
 " use a custom markdown style must be absolute path
@@ -152,6 +156,89 @@ Commands:
 :MarkdownPreviewStop
 ```
 
+### Custom Examples
+
+**Toc:**
+
+    ${toc}, [[toc]], [toc], [[_toc_]]
+
+**plantuml:**
+
+    @startuml
+    Bob -> Alice : hello
+    @enduml
+
+**katex:**
+
+    $\sqrt{3x-1}+(1+x)^2$
+
+    $$\begin{array}{c}
+
+    \nabla \times \vec{\mathbf{B}} -\, \frac1c\, \frac{\partial\vec{\mathbf{E}}}{\partial t} &
+    = \frac{4\pi}{c}\vec{\mathbf{j}}    \nabla \cdot \vec{\mathbf{E}} & = 4 \pi \rho \\
+
+    \nabla \times \vec{\mathbf{E}}\, +\, \frac1c\, \frac{\partial\vec{\mathbf{B}}}{\partial t} & = \vec{\mathbf{0}} \\
+
+    \nabla \cdot \vec{\mathbf{B}} & = 0
+
+    \end{array}$$
+
+**mermaid:**
+
+    ``` mermaid
+    gantt
+        dateFormat DD-MM-YYY
+        axisFormat %m/%y
+
+        title Example
+        section example section
+        activity :active, 01-02-2019, 03-08-2019
+    ```
+
+**js-sequence-diagrams:**
+
+    ``` sequence-diagrams
+    Andrew->China: Says
+    Note right of China: China thinks\nabout it
+    China-->Andrew: How are you?
+    Andrew->>China: I am good thanks!
+    ```
+
+**chart:**
+
+    ``` chart
+    {
+      "type": "pie",
+      "data": {
+        "labels": [
+          "Red",
+          "Blue",
+          "Yellow"
+        ],
+        "datasets": [
+          {
+            "data": [
+              300,
+              50,
+              100
+            ],
+            "backgroundColor": [
+              "#FF6384",
+              "#36A2EB",
+              "#FFCE56"
+            ],
+            "hoverBackgroundColor": [
+              "#FF6384",
+              "#36A2EB",
+              "#FFCE56"
+            ]
+          }
+        ]
+      },
+      "options": {}
+    }
+    ```
+
 ### FAQ
 
 Question: Why is the synchronised scrolling lagging?
@@ -179,6 +266,7 @@ Vim support is powered by [vim-node-rpc](https://github.com/neoclide/vim-node-rp
 - [markdown-it-chart](https://github.com/tylingsoft/markdown-it-chart)
 - [mermaid](https://github.com/knsv/mermaid)
 - [opener](https://github.com/domenic/opener)
+- [sequence-diagrams](https://github.com/bramp/js-sequence-diagrams)
 - [socket.io](https://github.com/socketio/socket.io)
 
 ### Buy Me A Coffee ☕️
