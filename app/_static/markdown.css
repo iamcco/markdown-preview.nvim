@@ -31,6 +31,12 @@
 .markdown-body > *:last-child {
   margin-bottom: 0 !important;
 }
+.markdown-body .table-of-contents ol {
+  list-style: none;
+}
+.markdown-body .table-of-contents > ol {
+  padding-left: 0;
+}
 .markdown-body * {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -53,8 +59,7 @@
 .markdown-body h4 .anchor,
 .markdown-body h5 .anchor,
 .markdown-body h6 .anchor {
-  margin-left: -20px;
-  margin-right: 4px;
+  margin-left: -24px;
   visibility: hidden;
 }
 .markdown-body h1:hover .anchor,
