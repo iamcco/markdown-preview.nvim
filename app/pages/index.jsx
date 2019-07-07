@@ -9,14 +9,18 @@ import meta from 'md-it-meta'
 import taskLists from 'markdown-it-task-lists'
 import markdownItChart from 'markdown-it-chart'
 import footnote from 'markdown-it-footnote'
-import mditAnchor from 'markdown-it-github-headings'
+import markdownItAnchor from 'markdown-it-anchor'
+import markdownItToc from 'markdown-it-toc-done-right'
 
 import mk from './katex'
 import chart from './chart'
 import mkitMermaid from './mermaid'
 import linenumbers from './linenumbers'
 import image from './image'
+import diagram, { renderDiagram } from './diagram'
 import scrollToLine from './scroll'
+
+const anchorSymbol = '<svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg>'
 
 const DEFAULT_OPTIONS = {
   mkit: {
@@ -120,7 +124,8 @@ export default class PreviewPage extends React.Component {
         mkit = {},
         katex = {},
         uml = {},
-        hide_yaml_meta: hideYamlMeta = 1
+        hide_yaml_meta: hideYamlMeta = 1,
+        sequence_diagrams: sequenceDiagrams = {}
       } = options
       // markdown-it
       this.md = new MarkdownIt({
@@ -147,8 +152,17 @@ export default class PreviewPage extends React.Component {
         .use(linenumbers)
         .use(mkitMermaid)
         .use(markdownItChart)
-        .use(mditAnchor, {
-          prefixHeadingIds: false
+        .use(diagram, {
+          ...sequenceDiagrams
+        })
+        .use(markdownItAnchor, {
+          permalink: true,
+          permalinkBefore: true,
+          permalinkSymbol: anchorSymbol,
+          permalinkClass: 'anchor'
+        })
+        .use(markdownItToc, {
+          listType: 'ul'
         })
     }
     this.setState({
@@ -165,6 +179,7 @@ export default class PreviewPage extends React.Component {
       } catch (e) {}
 
       chart.render()
+      renderDiagram()
 
       if (isActive && !options.disable_sync_scroll) {
         scrollToLine[options.sync_scroll_type || 'middle']({
@@ -188,8 +203,13 @@ export default class PreviewPage extends React.Component {
           <link rel="stylesheet" href="/_static/markdown.css" />
           <link rel="stylesheet" href="/_static/highlight.css" />
           <link rel="stylesheet" href="/_static/katex@0.10.1.css" />
+          <link rel="stylesheet" href="/_static/sequence-diagram-min.css" />
+          <script type="text/javascript" src="/_static/underscore-min.js"></script>
+          <script type="text/javascript" src="/_static/webfont.js"></script>
+          <script type="text/javascript" src="/_static/snap.svg.min.js"></script>
           <script type="text/javascript" src="/_static/tweenlite.min.js"></script>
           <script type="text/javascript" src="/_static/mermaid.min.js"></script>
+          <script type="text/javascript" src="/_static/sequence-diagram-min.js"></script>
         </Head>
         <div id="page-ctn">
           <header id="page-header">
