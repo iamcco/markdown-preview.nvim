@@ -18,7 +18,7 @@
     "highlight.js": "^9.13.0",
     "katex": "^0.10.1",
     "log4js": "^3.0.6",
-    "markdown-it": "^8.4.2",
+    "markdown-it": "^9.0.1",
     "markdown-it-anchor": "^5.2.4",
     "markdown-it-chart": "^0.2.0",
     "markdown-it-emoji": "^1.4.0",

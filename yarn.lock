@@ -2589,7 +2589,6 @@ lodash.debounce@^4.0.8:
 lodash@^4.17.10, lodash@^4.17.4, lodash@^4.17.5:
   version "4.17.14"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.14.tgz#9ce487ae66c96254fe20b599f21b6816028078ba"
-  integrity sha512-mmKYbW3GLuJeX+iGP+Y7Gp1AiGHGbXHCOh/jZmrawMmsE7MS4znI3RL2FsjbqOyMayHInjOeykW7PEajUk1/xw==
 
 log-update@^2.3.0:
   version "2.3.0"
@@ -2641,7 +2640,6 @@ map-visit@^1.0.0:
 markdown-it-anchor@^5.2.4:
   version "5.2.4"
   resolved "https://registry.yarnpkg.com/markdown-it-anchor/-/markdown-it-anchor-5.2.4.tgz#d39306fe4c199705b4479d3036842cf34dcba24f"
-  integrity sha512-n8zCGjxA3T+Mx1pG8HEgbJbkB8JFUuRkeTZQuIM8iPY6oQ8sWOPRZJDFC9a/pNg2QkHEjjGkhBEl/RSyzaDZ3A==
 
 markdown-it-chart@^0.2.0:
   version "0.2.0"
@@ -2666,11 +2664,10 @@ markdown-it-task-lists@^2.1.1:
 markdown-it-toc-done-right@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/markdown-it-toc-done-right/-/markdown-it-toc-done-right-4.0.1.tgz#ccff340eb3c89cb527306a8bb8205f10c00e7019"
-  integrity sha512-tUz5iY10YOYmuIZPD49gXB7xzLTFm7n81afg6UmOJ3ctImKVMHns5M3H7TdJEBd5qYXfO4W1BzkzMlc7/SANbA==
 
-markdown-it@^8.4.2:
-  version "8.4.2"
-  resolved "https://registry.yarnpkg.com/markdown-it/-/markdown-it-8.4.2.tgz#386f98998dc15a37722aa7722084f4020bdd9b54"
+markdown-it@^9.0.1:
+  version "9.0.1"
+  resolved "https://registry.yarnpkg.com/markdown-it/-/markdown-it-9.0.1.tgz#aafe363c43718720b6575fd10625cde6e4ff2d47"
   dependencies:
     argparse "^1.0.7"
     entities "~1.1.1"
