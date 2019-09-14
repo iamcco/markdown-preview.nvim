@@ -168,6 +168,12 @@ Commands:
     Bob -> Alice : hello
     @enduml
 
+Or
+
+    ``` plantuml
+    Bob -> Alice : hello
+    ```
+
 **katex:**
 
     $\sqrt{3x-1}+(1+x)^2$
