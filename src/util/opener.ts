@@ -6,8 +6,7 @@ import os from 'os'
 
 module.exports = function opener(
   args: string | string[],
-  tool: string | undefined,
-  callback: (() => any) | undefined
+  tool: string | undefined
 ) {
   let platform = process.platform
   args = [].concat(args)
@@ -62,5 +61,8 @@ module.exports = function opener(
     args = ['/c', 'start', '""'].concat(args)
   }
 
-  return childProcess.execFile(command, args, null, callback)
+  return childProcess.spawn(command, args, {
+    shell: false,
+    detached: true
+  })
 }

@@ -6,7 +6,7 @@ const tslib_1 = require("tslib");
  */
 const child_process_1 = tslib_1.__importDefault(require("child_process"));
 const os_1 = tslib_1.__importDefault(require("os"));
-module.exports = function opener(args, tool, callback) {
+module.exports = function opener(args, tool) {
     let platform = process.platform;
     args = [].concat(args);
     // Attempt to detect Windows Subystem for Linux (WSL).
@@ -56,5 +56,8 @@ module.exports = function opener(args, tool, callback) {
         });
         args = ['/c', 'start', '""'].concat(args);
     }
-    return child_process_1.default.execFile(command, args, null, callback);
+    return child_process_1.default.spawn(command, args, {
+        shell: false,
+        detached: true
+    });
 };
