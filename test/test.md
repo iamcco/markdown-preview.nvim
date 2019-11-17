@@ -160,3 +160,13 @@ loop every day
     John-->>Alice: Great!
 end
 ```
+
+``` mermaid
+stateDiagram
+[*] --> Still
+Still --> [*]
+Still --> Moving
+Moving --> Still
+Moving --> Crash
+Crash --> [*]
+```

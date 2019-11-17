@@ -16,7 +16,7 @@ const MermaidPlugin = (md) => {
   md.renderer.rules.fence = (tokens, idx, options, env, slf) => {
     const token = tokens[idx]
     const code = token.content.trim()
-    if (token.info === 'mermaid') {
+    if (typeof token.info === 'string' && token.info.trim() === 'mermaid') {
       return mermaidChart(code)
     }
     const firstLine = code.split(/\n/)[0].trim()
