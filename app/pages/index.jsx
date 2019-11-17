@@ -10,6 +10,7 @@ import markdownItChart from 'markdown-it-chart'
 import footnote from 'markdown-it-footnote'
 import markdownItAnchor from 'markdown-it-anchor'
 import markdownItToc from 'markdown-it-toc-done-right'
+import markdownDeflist from 'markdown-it-deflist';
 
 import mk from './katex'
 import chart from './chart'
@@ -148,6 +149,7 @@ export default class PreviewPage extends React.Component {
         })
         .use(emoji)
         .use(taskLists)
+        .use(markdownDeflist)
         .use(footnote)
         .use(image)
         .use(linenumbers)

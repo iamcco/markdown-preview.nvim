@@ -37,6 +37,7 @@
   },
   "devDependencies": {
     "@types/node": "^10.11.7",
+    "markdown-it-deflist": "^2.0.3",
     "prettier": "^1.14.3",
     "tslint": "^5.17.0",
     "tslint-config-prettier": "^1.18.0",
