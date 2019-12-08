@@ -6,7 +6,6 @@ import hljs from 'highlight.js'
 import mkuml from 'markdown-it-plantuml'
 import emoji from 'markdown-it-emoji'
 import taskLists from 'markdown-it-task-lists'
-import markdownItChart from 'markdown-it-chart'
 import footnote from 'markdown-it-footnote'
 import markdownItAnchor from 'markdown-it-anchor'
 import markdownItToc from 'markdown-it-toc-done-right'
@@ -154,7 +153,7 @@ export default class PreviewPage extends React.Component {
         .use(image)
         .use(linenumbers)
         .use(mkitMermaid)
-        .use(markdownItChart)
+        .use(chart.chartPlugin)
         .use(blockUml, {
           ...DEFAULT_OPTIONS.uml,
           ...uml

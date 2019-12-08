@@ -2641,10 +2641,6 @@ markdown-it-anchor@^5.2.4:
   version "5.2.4"
   resolved "https://registry.yarnpkg.com/markdown-it-anchor/-/markdown-it-anchor-5.2.4.tgz#d39306fe4c199705b4479d3036842cf34dcba24f"
 
-markdown-it-chart@^0.2.0:
-  version "0.2.0"
-  resolved "http://registry.npm.taobao.org/markdown-it-chart/download/markdown-it-chart-0.2.0.tgz#5b8a6ec8f44db11df7fabfd28acb3beca6f8b6ff"
-
 markdown-it-deflist@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/markdown-it-deflist/-/markdown-it-deflist-2.0.3.tgz#5727db04184d3cb2bc6ee4a9641e3a1091d5fd6f"
