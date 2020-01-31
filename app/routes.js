@@ -46,7 +46,12 @@ use((req, res, next) => {
 // /_static/path
 use((req, res, next) => {
   if (/\/_static/.test(req.asPath)) {
-    return fs.createReadStream(path.join('./', req.asPath)).pipe(res)
+    const fpath = path.join('./', req.asPath)
+    if (fs.existsSync(fpath)) {
+      return fs.createReadStream(fpath).pipe(res)
+    } else {
+      logger.error('No such file:', req.asPath, req.mkcss, req.hicss)
+    }
   }
   next()
 })
