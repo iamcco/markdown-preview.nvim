@@ -10,8 +10,6 @@ for rendering output.
 /* jslint node: true */
 'use strict'
 
-import katex from 'katex'
-
 // Test if potential opening or closing delimieter
 // Assumes that there is a "$" at state.src[pos]
 function isValidDelim (state, pos) {

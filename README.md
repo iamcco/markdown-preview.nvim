@@ -18,6 +18,7 @@ Main features:
 - [Mermaid](https://github.com/knsv/mermaid)
 - [Chart.js](https://github.com/chartjs/Chart.js)
 - [sequence-diagrams](https://github.com/bramp/js-sequence-diagrams)
+- [flowchart](https://github.com/adrai/flowchart.js)
 - [Toc](https://github.com/nagaozen/markdown-it-toc-done-right)
 - Emoji
 - Task lists
@@ -115,7 +116,8 @@ let g:mkdp_preview_options = {
     \ 'disable_sync_scroll': 0,
     \ 'sync_scroll_type': 'middle',
     \ 'hide_yaml_meta': 1,
-    \ 'sequence_diagrams': {}
+    \ 'sequence_diagrams': {},
+    \ 'flowchart_diagrams': {}
     \ }
 
 " use a custom markdown style must be absolute path
@@ -161,6 +163,12 @@ Commands:
 **Toc:**
 
     ${toc}, [[toc]], [toc], [[_toc_]]
+
+**Image Size:**
+
+``` markdown
+![image](https://user-images.githubusercontent.com/5492542/47603494-28e90000-da1f-11e8-9079-30646e551e7a.gif =400x200)
+```
 
 **plantuml:**
 
@@ -208,6 +216,25 @@ Or
     Note right of China: China thinks\nabout it
     China-->Andrew: How are you?
     Andrew->>China: I am good thanks!
+    ```
+**flowchart:**
+
+    ``` flowchart
+    st=>start: Start|past:>http://www.google.com[blank]
+    e=>end: End|future:>http://www.google.com
+    op1=>operation: My Operation|past
+    op2=>operation: Stuff|current
+    sub1=>subroutine: My Subroutine|invalid
+    cond=>condition: Yes
+    or No?|approved:>http://www.google.com
+    c2=>condition: Good idea|rejected
+    io=>inputoutput: catch something...|future
+
+    st->op1(right)->cond
+    cond(yes, right)->c2
+    cond(no)->sub1(left)->op1
+    c2(yes)->io->e
+    c2(no)->op2->e
     ```
 
 **chart:**
