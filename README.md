@@ -46,7 +46,7 @@ Or install with [dein](https://github.com/Shougo/dein.vim):
 
 ```vim
 call dein#add('iamcco/markdown-preview.nvim', {'on_ft': ['markdown', 'pandoc.markdown', 'rmd'],
-					\ 'build': 'cd app & yarn install' })
+					\ 'build': 'sh -c "cd app & yarn install"' })
 ```
 
 Config:
