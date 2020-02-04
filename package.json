@@ -1,5 +1,5 @@
 {
-  "name": "markdown-preview.vim",
+  "name": "markdown-preview-vim",
   "version": "0.0.9",
   "description": "markdown preview plugin for (neo)vim",
   "bin": "./app/server.js",
