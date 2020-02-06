@@ -20,7 +20,7 @@ export default (md, opts = {}) => {
   md.renderer.rules.fence = (tokens, idx, options, env, slf) => {
     const token = tokens[idx]
     try {
-      if (token.info && token.info.trim() === 'plantuml') {
+      if (token.info && token.info.indexOf('plantuml') != -1 ) {
         const code = token.content.trim()
         return `<img src="${generateSourceDefault(code, opts)}" alt="" />`
       }
