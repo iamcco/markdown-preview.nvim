@@ -18,6 +18,7 @@ import linenumbers from './linenumbers'
 import image from './image'
 import diagram, { renderDiagram } from './diagram'
 import flowchart, { renderFlowchart } from './flowchart'
+import dot, { renderDot } from './dot'
 import blockUml from './plantuml'
 import scrollToLine from './scroll'
 import { meta } from './meta';
@@ -54,7 +55,7 @@ const DEFAULT_OPTIONS = {
       if (lang && hljs.getLanguage(lang)) {
         try {
           return hljs.highlight(lang, str).value
-        } catch (__) {}
+        } catch (__) { }
       }
 
       return '' // use external default escaping
@@ -68,7 +69,7 @@ const DEFAULT_OPTIONS = {
 }
 
 export default class PreviewPage extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -79,7 +80,7 @@ export default class PreviewPage extends React.Component {
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     const socket = io({
       query: {
         bufnr: window.location.pathname.split('/')[2]
@@ -99,20 +100,20 @@ export default class PreviewPage extends React.Component {
     socket.on('close_page', this.onClose.bind(this))
   }
 
-  onConnect () {
+  onConnect() {
     console.log('connect success')
   }
 
-  onDisconnect () {
+  onDisconnect() {
     console.log('disconnect')
   }
 
-  onClose () {
+  onClose() {
     console.log('close')
     window.close()
   }
 
-  onRefreshContent ({
+  onRefreshContent({
     options = {},
     isActive,
     winline,
@@ -166,6 +167,7 @@ export default class PreviewPage extends React.Component {
           ...sequenceDiagrams
         })
         .use(flowchart, flowchartDiagrams)
+        .use(dot)
         .use(markdownItAnchor, {
           permalink: true,
           permalinkBefore: true,
@@ -180,7 +182,7 @@ export default class PreviewPage extends React.Component {
       cursor,
       name: ((name) => {
         let tokens = name.split(/\\|\//).pop().split('.');
-        return tokens.length > 1? tokens.slice(0, -1).join('.') : tokens[0];
+        return tokens.length > 1 ? tokens.slice(0, -1).join('.') : tokens[0];
       })(name),
       content: this.md.render(content.join('\n')),
       pageTitle
@@ -190,11 +192,12 @@ export default class PreviewPage extends React.Component {
         mermaid.initialize(options.maid || {})
         // eslint-disable-next-line
         mermaid.init(undefined, document.querySelectorAll('.mermaid'))
-      } catch (e) {}
+      } catch (e) { }
 
       chart.render()
       renderDiagram()
       renderFlowchart()
+      renderDot()
 
       if (isActive && !options.disable_sync_scroll) {
         scrollToLine[options.sync_scroll_type || 'middle']({
@@ -207,7 +210,7 @@ export default class PreviewPage extends React.Component {
     })
   }
 
-  render () {
+  render() {
     const { content, name, pageTitle } = this.state
     return (
       <React.Fragment>
@@ -229,6 +232,8 @@ export default class PreviewPage extends React.Component {
           <script type="text/javascript" src="/_static/mhchem.min.js"></script>
           <script type="text/javascript" src="/_static/raphael@2.3.0.min.js"></script>
           <script type="text/javascript" src="/_static/flowchart@1.13.0.min.js"></script>
+          <script type="text/javascript" src="/_static/viz.js"></script>
+          <script type="text/javascript" src="/_static/full.render.js"></script>
         </Head>
         <div id="page-ctn">
           <header id="page-header">
@@ -246,7 +251,7 @@ export default class PreviewPage extends React.Component {
                 >
                 </path>
               </svg>
-              { name }
+              {name}
             </h3>
           </header>
           <section
