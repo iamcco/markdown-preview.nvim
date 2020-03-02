@@ -106,14 +106,17 @@ function! s:MkdpAU() abort
 endfunction
 
 function! s:init() abort
-  if g:mkdp_command_for_global
-    au BufEnter * :call s:MkdpAU()
-  else
-    au BufEnter *.{md,mkd,markdown,mdown,mkdn,mdwn} :call s:MkdpAU()
-  endif
-  if g:mkdp_auto_start
-    au BufEnter *.{md,mkd,markdown,mdown,mkdn,mdwn} call mkdp#util#open_preview_page()
-  endif
+  augroup mkdp_init
+    autocmd!
+    if g:mkdp_command_for_global
+      autocmd BufEnter * :call s:MkdpAU()
+    else
+      autocmd BufEnter *.{md,mkd,markdown,mdown,mkdn,mdwn} :call s:MkdpAU()
+    endif
+    if g:mkdp_auto_start
+      autocmd BufEnter *.{md,mkd,markdown,mdown,mkdn,mdwn} call mkdp#util#open_preview_page()
+    endif
+  augroup END
 endfunction
 
 call s:init()
