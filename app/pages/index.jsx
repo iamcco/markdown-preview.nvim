@@ -60,7 +60,6 @@ const DEFAULT_OPTIONS = {
         } catch (__) {}
       }
 
-      console.log(this);
       return `<pre class="hljs"><code>${hljs.highlightAuto(str).value}</code></pre>`;
     },
   },
