@@ -54,12 +54,15 @@ const DEFAULT_OPTIONS = {
     highlight: function (str, lang) {
       if (lang && hljs.getLanguage(lang)) {
         try {
-          return hljs.highlight(lang, str).value
-        } catch (__) { }
+          return `<pre class="hljs"><code>${
+            hljs.highlight(lang, str, true).value
+          }</code></pre>`;
+        } catch (__) {}
       }
 
-      return '' // use external default escaping
-    }
+      console.log(this);
+      return `<pre class="hljs"><code>${hljs.highlightAuto(str).value}</code></pre>`;
+    },
   },
   katex: {
     'throwOnError': false,
