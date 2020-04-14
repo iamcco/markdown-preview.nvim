@@ -157,6 +157,7 @@ export default function math_plugin (md, options) {
   // Default options
 
   options = options || {}
+  options.macros = options.macros || {}
 
   // set KaTeX as the renderer for markdown-it-simplemath
   var katexInline = function (latex) {
