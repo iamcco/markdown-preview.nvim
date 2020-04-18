@@ -71,6 +71,16 @@ use(async (req, res, next) => {
       imgPath = imgPath.replace(/\\ /g, ' ')
       if (imgPath[0] !== '/' && imgPath[0] !== '\\') {
         imgPath = path.join(fileDir, imgPath)
+      } else if (!fs.existsSync(imgPath)) {
+        let tmpDirPath = fileDir
+        while (tmpDirPath !== '/' && tmpDirPath !== '\\') {
+          tmpDirPath = path.normalize(path.join(tmpDirPath, '..'))
+          let tmpImgPath = path.join(tmpDirPath, imgPath)
+          if (fs.existsSync(tmpImgPath)) {
+            imgPath = tmpImgPath
+            break
+          }
+        }
       }
       logger.info('imgPath', imgPath)
       if (fs.existsSync(imgPath)) {
