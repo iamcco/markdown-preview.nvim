@@ -88,7 +88,7 @@ function! mkdp#rpc#stop_server() abort
     if s:mkdp_channel_id !=# v:null
       let l:status = job_status(s:mkdp_channel_id)
       if l:status ==# 'run'
-        if exists('g:mkdp_node_channel_id')
+        if exists('g:mkdp_node_channel_id') && g:mkdp_node_channel_id !=# -1
           call mkdp#nvim#rpc#request(g:mkdp_node_channel_id, 'close_all_pages')
         endif
         try
@@ -101,7 +101,7 @@ function! mkdp#rpc#stop_server() abort
     let g:mkdp_node_channel_id = -1
   else
     if s:mkdp_channel_id !=# -1
-      if exists('g:mkdp_node_channel_id')
+      if exists('g:mkdp_node_channel_id') && g:mkdp_node_channel_id !=# -1
         call rpcrequest(g:mkdp_node_channel_id, 'close_all_pages')
       endif
       try
