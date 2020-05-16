@@ -84,6 +84,9 @@ use(async (req, res, next) => {
       }
       logger.info('imgPath', imgPath)
       if (fs.existsSync(imgPath)) {
+        if (imgPath.endsWith('svg')) {
+          res.setHeader('content-type', 'image/svg+xml')
+        }
         return fs.createReadStream(imgPath).pipe(res)
       }
       logger.error('image not exists: ', imgPath)

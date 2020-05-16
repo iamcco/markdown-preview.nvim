@@ -78,7 +78,8 @@ export default class PreviewPage extends React.Component {
       name: '',
       cursor: '',
       content: '',
-      pageTitle: ''
+      pageTitle: '',
+      contentEditable: false
     }
   }
 
@@ -132,7 +133,7 @@ export default class PreviewPage extends React.Component {
         uml = {},
         hide_yaml_meta: hideYamlMeta = 1,
         sequence_diagrams: sequenceDiagrams = {},
-        flowchart_diagrams: flowchartDiagrams = {}
+        flowchart_diagrams: flowchartDiagrams = {},
       } = options
       // markdown-it
       this.md = new MarkdownIt({
@@ -187,7 +188,8 @@ export default class PreviewPage extends React.Component {
         return tokens.length > 1 ? tokens.slice(0, -1).join('.') : tokens[0];
       })(name),
       content: this.md.render(content.join('\n')),
-      pageTitle
+      pageTitle,
+      contentEditable: options.content_editable
     }, () => {
       try {
         // eslint-disable-next-line
@@ -213,7 +215,7 @@ export default class PreviewPage extends React.Component {
   }
 
   render() {
-    const { content, name, pageTitle } = this.state
+    const { content, name, pageTitle, contentEditable } = this.state
     return (
       <React.Fragment>
         <Head>
@@ -237,7 +239,7 @@ export default class PreviewPage extends React.Component {
           <script type="text/javascript" src="/_static/viz.js"></script>
           <script type="text/javascript" src="/_static/full.render.js"></script>
         </Head>
-        <div id="page-ctn">
+        <div id="page-ctn" contentEditable={contentEditable ? 'true' : 'false'}>
           <header id="page-header">
             <h3>
               <svg

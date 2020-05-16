@@ -115,6 +115,7 @@ let g:mkdp_browserfunc = ''
 "   relative: mean the cursor position alway show at the relative positon of the preview page
 " hide_yaml_meta: if hide yaml metadata, default is 1
 " sequence_diagrams: js-sequence-diagrams options
+" content_editable: if enable content editable for preview page, default: v:false
 let g:mkdp_preview_options = {
     \ 'mkit': {},
     \ 'katex': {},
@@ -124,7 +125,8 @@ let g:mkdp_preview_options = {
     \ 'sync_scroll_type': 'middle',
     \ 'hide_yaml_meta': 1,
     \ 'sequence_diagrams': {},
-    \ 'flowchart_diagrams': {}
+    \ 'flowchart_diagrams': {},
+    \ 'content_editable': v:false
     \ }
 
 " use a custom markdown style must be absolute path
