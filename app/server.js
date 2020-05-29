@@ -11,6 +11,19 @@ exports.run = function () {
 
   let clients = {}
 
+  const openUrl = (url, browser) => {
+    const handler = opener(url, browser)
+    handler.on('error', (err) => {
+      const message = err.message || ''
+      const match = message.match(/\s*spawn\s+(.+)\s+ENOENT\s*/)
+      if (match) {
+        plugin.nvim.call('mkdp#util#echo_messages', ['Error', [`[markdown-preview.nvim]: Can not open browser by using ${match[1]} command`]])
+      } else {
+        plugin.nvim.call('mkdp#util#echo_messages', ['Error', [err.name, err.message]])
+      }
+    })
+  }
+
   // http server
   const server = http.createServer(async (req, res) => {
     // plugin
@@ -120,9 +133,9 @@ exports.run = function () {
           const browser = await plugin.nvim.getVar('mkdp_browser')
           logger.info(`open page [${browser || 'default'}]: `, url)
           if (browser !== '') {
-            opener(url, browser)
+            openUrl(url, browser)
           } else {
-            opener(url)
+            openUrl(url)
           }
         }
         const isEchoUrl = await plugin.nvim.getVar('mkdp_echo_preview_url')

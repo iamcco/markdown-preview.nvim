@@ -2,7 +2,7 @@ const attach = require('./lib/attach').default
 const logger = require('./lib/util/logger')('app/nvim')
 const address = process.env.MKDP_NVIM_LISTEN_ADDRESS || process.env.NVIM_LISTEN_ADDRESS || '/tmp/nvim'
 
-const MSG_PREFIX = '[markdown-preview.vim]'
+const MSG_PREFIX = '[markdown-preview.nvim]'
 
 const plugin = attach({
   socket: address

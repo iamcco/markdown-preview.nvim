@@ -328,6 +328,11 @@ Question: Why is the synchronised scrolling lagging?
 
 Answer: set `updatetime` to a small number, for instance: `set updatetime=100`
 
+*WSL 2 issue*: Can not open browser when using WSL 2 with terminal Vim.
+
+> if you are using Ubuntu you can install xdg-utils using `sudo apt-get install -y xdg-utils`
+> checkout [issue 199](https://github.com/iamcco/markdown-preview.nvim/issues/199) for more detail.
+
 ### About vim support
 
 Vim support is powered by [vim-node-rpc](https://github.com/neoclide/vim-node-rpc)
