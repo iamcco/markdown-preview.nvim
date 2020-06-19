@@ -4,6 +4,7 @@ const tslib_1 = require("tslib");
 const neovim_1 = require("neovim");
 const logger = require('../util/logger')('attach'); // tslint:disable-line
 let app;
+const bufferChangedticks = {};
 function default_1(options) {
     const nvim = neovim_1.attach(options);
     nvim.on('notification', (method, args) => tslib_1.__awaiter(this, void 0, void 0, function* () {
@@ -19,7 +20,11 @@ function default_1(options) {
             const renderOpts = yield nvim.getVar('mkdp_preview_options');
             const pageTitle = yield nvim.getVar('mkdp_page_title');
             const name = yield buffer.name;
-            const content = yield buffer.getLines();
+            const oldChangedTick = bufferChangedticks[bufnr];
+            const changedTick = yield buffer.getVar('changedtick');
+            // update changedTick
+            bufferChangedticks[bufnr] = changedTick;
+            const content = oldChangedTick === changedTick ? null : yield buffer.getLines();
             const currentBuffer = yield nvim.buffer;
             app.refreshPage({
                 bufnr,

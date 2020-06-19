@@ -30,6 +30,8 @@ interface IPlugin {
 
 let app: IApp
 
+const bufferChangedticks = {}
+
 export default function(options: Attach): IPlugin {
   const nvim: NeovimClient = attach(options)
 
@@ -46,7 +48,12 @@ export default function(options: Attach): IPlugin {
       const renderOpts = await nvim.getVar('mkdp_preview_options')
       const pageTitle = await nvim.getVar('mkdp_page_title')
       const name = await buffer.name
-      const content = await buffer.getLines()
+      const oldChangedTick = bufferChangedticks[bufnr]
+      const changedTick = await buffer.getVar('changedtick')
+      // update changedTick
+      bufferChangedticks[bufnr] = changedTick
+      const content =
+        oldChangedTick === changedTick ? null : await buffer.getLines()
       const currentBuffer = await nvim.buffer
       app.refreshPage({
         bufnr,

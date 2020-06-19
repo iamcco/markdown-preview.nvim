@@ -181,34 +181,42 @@ export default class PreviewPage extends React.Component {
           listType: 'ul'
         })
     }
+    const isContentChange = content !== null
     this.setState({
       cursor,
       name: ((name) => {
         let tokens = name.split(/\\|\//).pop().split('.');
         return tokens.length > 1 ? tokens.slice(0, -1).join('.') : tokens[0];
       })(name),
-      content: this.md.render(content.join('\n')),
+      ...(
+        isContentChange ? {
+          contentLength: content.length,
+          content: this.md.render(content.join('\n')),
+        } : {}
+      ),
       pageTitle,
       contentEditable: options.content_editable
     }, () => {
-      try {
-        // eslint-disable-next-line
-        mermaid.initialize(options.maid || {})
-        // eslint-disable-next-line
-        mermaid.init(undefined, document.querySelectorAll('.mermaid'))
-      } catch (e) { }
+      if (isContentChange) {
+        try {
+          // eslint-disable-next-line
+          mermaid.initialize(options.maid || {})
+          // eslint-disable-next-line
+          mermaid.init(undefined, document.querySelectorAll('.mermaid'))
+        } catch (e) { }
 
-      chart.render()
-      renderDiagram()
-      renderFlowchart()
-      renderDot()
+        chart.render()
+        renderDiagram()
+        renderFlowchart()
+        renderDot()
+      }
 
       if (isActive && !options.disable_sync_scroll) {
         scrollToLine[options.sync_scroll_type || 'middle']({
           cursor: cursor[1],
           winline,
           winheight,
-          len: content.length
+          len: this.state.contentLength
         })
       }
     })
