@@ -60,7 +60,7 @@ const DEFAULT_OPTIONS = {
         } catch (__) {}
       }
 
-      return `<pre class="hljs"><code>${hljs.highlightAuto(str).value}</code></pre>`;
+      return `<pre class="hljs"><code>${str}</code></pre>`;
     },
   },
   katex: {
