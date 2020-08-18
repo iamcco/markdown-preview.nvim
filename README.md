@@ -55,7 +55,7 @@ call dein#add('iamcco/markdown-preview.nvim', {'on_ft': ['markdown', 'pandoc.mar
 Or with minpac:
 
 ```vim
-call minpac#add('iamcco/markdown-preview.nvim', {'do': 'call mkdp#util#install()'})
+call minpac#add('iamcco/markdown-preview.nvim', {'do': 'packloadall! | call mkdp#util#install()'})
 ```
 
 Config:
