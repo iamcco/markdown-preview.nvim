@@ -112,7 +112,7 @@ function! s:init() abort
     if g:mkdp_command_for_global
       autocmd BufEnter * :call s:MkdpAU()
     else
-      autocmd BufEnter * if &filetype ==# 'markdown' | call s:MkdpAU() | endif
+      autocmd BufEnter,FileType * if &ft ==# 'markdown' | call s:MkdpAU() | endif
     endif
     if g:mkdp_auto_start
       autocmd BufEnter *.{md,mkd,markdown,mdown,mkdn,mdwn} call mkdp#util#open_preview_page()
