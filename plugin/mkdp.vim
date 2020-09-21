@@ -67,7 +67,8 @@ if !exists('g:mkdp_preview_options')
       \ 'hide_yaml_meta': 1,
       \ 'sequence_diagrams': {},
       \ 'flowchart_diagrams': {},
-      \ 'content_editable': v:false
+      \ 'content_editable': v:false,
+      \ 'disable_filename': 0
       \ }
 endif
 
