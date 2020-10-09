@@ -119,6 +119,7 @@ function! mkdp#rpc#stop_server() abort
     let s:mkdp_channel_id = -1
     let g:mkdp_node_channel_id = -1
   endif
+  let b:MarkdownPreviewToggleBool = 0
 endfunction
 
 function! mkdp#rpc#get_server_status() abort
@@ -150,6 +151,7 @@ function! mkdp#rpc#preview_close() abort
       call rpcnotify(g:mkdp_node_channel_id, 'close_page', { 'bufnr': bufnr('%') })
     endif
   endif
+  let b:MarkdownPreviewToggleBool = 0
   call mkdp#autocmd#clear_buf()
 endfunction
 
