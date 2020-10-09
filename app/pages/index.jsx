@@ -79,7 +79,8 @@ export default class PreviewPage extends React.Component {
       cursor: '',
       content: '',
       pageTitle: '',
-      contentEditable: false
+      contentEditable: false,
+      disableFilename: 1
     }
   }
 
@@ -241,7 +242,7 @@ export default class PreviewPage extends React.Component {
           <script type="text/javascript" src="/_static/full.render.js"></script>
         </Head>
         <div id="page-ctn" contentEditable={contentEditable ? 'true' : 'false'}>
-          { !disableFilename &&
+          { disableFilename == 0 &&
             <header id="page-header">
               <h3>
                 <svg
