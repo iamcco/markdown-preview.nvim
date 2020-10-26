@@ -60,7 +60,11 @@ const DEFAULT_OPTIONS = {
         } catch (__) {}
       }
 
-      return `<pre class="hljs"><code>${str}</code></pre>`;
+      // escape html content
+      const d = document.createElement('div')
+      d.appendChild(document.createTextNode(str))
+
+      return `<pre class="hljs"><code>${d.innerHTML}</code></pre>`;
     },
   },
   katex: {
