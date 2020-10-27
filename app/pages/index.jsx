@@ -146,7 +146,7 @@ export default class PreviewPage extends React.Component {
         ...mkit
       })
       if (hideYamlMeta === 1) {
-        this.md.use(meta([['---', '...'], ['---', '...']]))
+        this.md.use(meta([['---', '\\.\\.\\.'], ['---', '\\.\\.\\.']]))
       }
       // katex
       this.md
