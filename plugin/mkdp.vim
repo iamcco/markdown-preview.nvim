@@ -94,6 +94,11 @@ if !exists('g:mkdp_page_title')
   let g:mkdp_page_title = '「${name}」'
 endif
 
+" recognized filetypes
+if !exists('g:mkdp_filetypes')
+  let g:mkdp_filetypes = ['markdown']
+endif
+
 function! s:init_command() abort
   " mapping for user
   noremap <buffer> <silent> <Plug>MarkdownPreview :call mkdp#util#open_preview_page()<CR>
@@ -115,10 +120,10 @@ function! s:init() abort
     if g:mkdp_command_for_global
       autocmd BufEnter * :call s:MkdpAU()
     else
-      autocmd BufEnter,FileType * if &ft ==# 'markdown' | call s:MkdpAU() | endif
+      autocmd BufEnter,FileType * if index(g:mkdp_filetypes, &filetype) !=# -1 | call s:MkdpAU() | endif
     endif
     if g:mkdp_auto_start
-      autocmd BufEnter *.{md,mkd,markdown,mdown,mkdn,mdwn} call mkdp#util#open_preview_page()
+      execute 'autocmd BufEnter *.{md,mkd,mdown,mkdn,mdwn,' . join(g:mkdp_filetypes, ',') . '} call mkdp#util#open_preview_page()'
     endif
   augroup END
 endfunction
