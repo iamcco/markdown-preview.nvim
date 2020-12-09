@@ -16,7 +16,7 @@ module.exports = function opener(
   // this specific case we need to treat it as actually being Windows.
   // The "Windows-way" of opening things through cmd.exe works just fine here,
   // whereas using xdg-open does not, since there is no X Windows in WSL.
-  if (platform === 'linux' && os.release().indexOf('Microsoft') !== -1) {
+  if (platform === 'linux' && os.release().toLowerCase().indexOf('microsoft') !== -1) {
     platform = 'win32'
   }
 
