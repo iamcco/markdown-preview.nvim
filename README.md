@@ -58,6 +58,19 @@ Or with minpac:
 call minpac#add('iamcco/markdown-preview.nvim', {'do': 'packloadall! | call mkdp#util#install()'})
 ```
 
+Or with [Vundle](https://github.com/vundlevim/vundle.vim):
+
+Place this in your `.vimrc` or `init.vim`,
+```vim
+Plugin 'iamcco/markdown-preview.nvim' `
+```
+... then run the following in vim
+```vim
+:source %
+:PluginInstall
+:call mkdp#util#install()
+```
+
 Config:
 
 ```vim
