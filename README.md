@@ -62,7 +62,7 @@ Or with [Vundle](https://github.com/vundlevim/vundle.vim):
 
 Place this in your `.vimrc` or `init.vim`,
 ```vim
-Plugin 'iamcco/markdown-preview.nvim' `
+Plugin 'iamcco/markdown-preview.nvim' 
 ```
 ... then run the following in vim
 ```vim
