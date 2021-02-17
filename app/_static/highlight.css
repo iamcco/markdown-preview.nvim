@@ -3,10 +3,8 @@
 github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 
 */
-@media (prefers-color-scheme: light) {
-    :root {
-        --color-text-primary: #333;
-    }
+:root {
+    --color-text-primary: #333;
 }
 @media (prefers-color-scheme: dark) {
     :root {
