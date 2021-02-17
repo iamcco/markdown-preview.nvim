@@ -3,12 +3,22 @@
 github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 
 */
+@media (prefers-color-scheme: light) {
+    :root {
+        --color-text-primary: #333;
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-text-primary: #c9d1d9;
+    }
+}
 
 .hljs {
   display: block;
   overflow-x: auto;
   padding: 0.5em;
-  color: #333;
+  color: var(--color-text-primary);
   background: #f8f8f8;
 }
 
@@ -21,7 +31,7 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 .hljs-keyword,
 .hljs-selector-tag,
 .hljs-subst {
-  color: #333;
+  color: var(--color-text-primary);
   font-weight: bold;
 }
 
