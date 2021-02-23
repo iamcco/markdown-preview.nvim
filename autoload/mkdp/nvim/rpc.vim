@@ -3,7 +3,7 @@ if exists('g:did_mkdp_node_rpc_loaded') || v:version < 800 || has('nvim')
 endif
 let g:did_mkdp_node_rpc_loaded = 1
 
-let s:is_win = has("win32") || has("win64")
+let s:is_win = has("win32") || has("win64") || has("win32unix")
 let s:clientIds = []
 let s:logfile = tempname()
 let s:channel = v:null
