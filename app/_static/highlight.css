@@ -6,10 +6,8 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 :root {
     --color-text-primary: #333;
 }
-@media (prefers-color-scheme: dark) {
-    :root {
-        --color-text-primary: #c9d1d9;
-    }
+[data-theme="dark"] {
+    --color-text-primary: #c9d1d9;
 }
 
 .hljs {
