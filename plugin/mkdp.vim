@@ -100,27 +100,25 @@ if !exists('g:mkdp_filetypes')
 endif
 
 function! s:init_command() abort
+  command! -buffer MarkdownPreview call mkdp#util#open_preview_page()
+  command! -buffer MarkdownPreviewStop call mkdp#util#stop_preview()
+  command! -buffer MarkdownPreviewToggle call mkdp#util#toggle_preview()
   " mapping for user
-  noremap <buffer> <silent> <Plug>MarkdownPreview :call mkdp#util#open_preview_page()<CR>
-  inoremap <buffer> <silent> <Plug>MarkdownPreview <Esc>:call mkdp#util#open_preview_page()<CR>a
-  noremap <buffer> <silent> <Plug>MarkdownPreviewStop :call mkdp#util#stop_preview()<CR>
-  inoremap <buffer> <silent> <Plug>MarkdownPreviewStop <Esc>:call mkdp#util#stop_preview()<CR>a
-  nnoremap <buffer> <silent> <Plug>MarkdownPreviewToggle :call mkdp#util#toggle_preview()<CR>
-  inoremap <buffer> <silent> <Plug>MarkdownPreviewToggle <Esc>:call mkdp#util#toggle_preview()<CR>
-endfunction
-
-function! s:MkdpAU() abort
-    command! -buffer MarkdownPreview call mkdp#util#open_preview_page()
-    call s:init_command()
+  noremap <buffer> <silent> <Plug>MarkdownPreview :MarkdownPreview<CR>
+  inoremap <buffer> <silent> <Plug>MarkdownPreview <Esc>:MarkdownPreview<CR>a
+  noremap <buffer> <silent> <Plug>MarkdownPreviewStop :MarkdownPreviewStop<CR>
+  inoremap <buffer> <silent> <Plug>MarkdownPreviewStop <Esc>:MarkdownPreviewStop<CR>a
+  nnoremap <buffer> <silent> <Plug>MarkdownPreviewToggle :MarkdownPreviewToggle<CR>
+  inoremap <buffer> <silent> <Plug>MarkdownPreviewToggle <Esc>:MarkdownPreviewToggle<CR>
 endfunction
 
 function! s:init() abort
   augroup mkdp_init
     autocmd!
     if g:mkdp_command_for_global
-      autocmd BufEnter * :call s:MkdpAU()
+      autocmd BufEnter * :call s:init_command()
     else
-      autocmd BufEnter,FileType * if index(g:mkdp_filetypes, &filetype) !=# -1 | call s:MkdpAU() | endif
+      autocmd BufEnter,FileType * if index(g:mkdp_filetypes, &filetype) !=# -1 | call s:init_command() | endif
     endif
     if g:mkdp_auto_start
       execute 'autocmd BufEnter *.{md,mkd,mdown,mkdn,mdwn,' . join(g:mkdp_filetypes, ',') . '} call mkdp#util#open_preview_page()'
