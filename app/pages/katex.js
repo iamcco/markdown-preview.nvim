@@ -161,11 +161,16 @@ export default function math_plugin (md, options) {
 
   // set KaTeX as the renderer for markdown-it-simplemath
   var katexInline = function (latex) {
-    options.displayMode = false
+    const opt = {
+      ...options
+    }
+    if (opt.displayMode === undefined) {
+      opt.displayMode = false
+    }
     try {
-      return katex.renderToString(latex, options)
+      return katex.renderToString(latex, opt)
     } catch (error) {
-      if (options.throwOnError) { console.log(error) }
+      if (opt.throwOnError) { console.log(error) }
       return latex
     }
   }
@@ -175,11 +180,16 @@ export default function math_plugin (md, options) {
   }
 
   var katexBlock = function (latex) {
-    options.displayMode = true
+    const opt = {
+      ...options
+    }
+    if (opt.displayMode === undefined) {
+      opt.displayMode = true
+    }
     try {
-      return '<p>' + katex.renderToString(latex, options) + '</p>'
+      return '<p>' + katex.renderToString(latex, opt) + '</p>'
     } catch (error) {
-      if (options.throwOnError) { console.log(error) }
+      if (opt.throwOnError) { console.log(error) }
       return latex
     }
   }
