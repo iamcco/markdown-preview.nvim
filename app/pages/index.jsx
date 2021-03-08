@@ -81,9 +81,12 @@ export default class PreviewPage extends React.Component {
       content: '',
       pageTitle: '',
       theme: 'light',
+      themeModeIsVisible: false,
       contentEditable: false,
       disableFilename: 1
     }
+    this.showThemeButton = this.showThemeButton.bind(this)
+    this.hideThemeButton = this.hideThemeButton.bind(this)
     this.handleThemeChange = this.handleThemeChange.bind(this)
   }
 
@@ -92,6 +95,15 @@ export default class PreviewPage extends React.Component {
       theme: state.theme === 'light' ? 'dark' : 'light',
     }))
   }
+
+  showThemeButton() {
+    this.setState({ themeModeIsVisible: true })
+  }
+
+  hideThemeButton() {
+    this.setState({ themeModeIsVisible: false })
+  }
+
 
   componentDidMount() {
     if (
@@ -238,6 +250,7 @@ export default class PreviewPage extends React.Component {
       content,
       name,
       pageTitle,
+      themeModeIsVisible,
       contentEditable,
       disableFilename,
     } = this.state
@@ -268,7 +281,11 @@ export default class PreviewPage extends React.Component {
         <main data-theme={this.state.theme}>
           <div id="page-ctn" contentEditable={contentEditable ? 'true' : 'false'}>
             { disableFilename == 0 &&
-              <header id="page-header">
+              <header
+                id="page-header"
+                onMouseEnter={this.showThemeButton}
+                onMouseLeave={this.hideThemeButton}
+              >
                 <h3>
                   <svg
                     viewBox="0 0 16 16"
@@ -285,7 +302,8 @@ export default class PreviewPage extends React.Component {
                   </svg>
                   {name}
                 </h3>
-                <div id="toggle-theme">
+                { themeModeIsVisible && (
+                  <div id="toggle-theme">
                   <label for="theme">
                     <input
                       id="theme"
@@ -296,6 +314,7 @@ export default class PreviewPage extends React.Component {
                     Dark mode
                   </label>
                 </div>
+              )}
               </header>
             }
             <section
