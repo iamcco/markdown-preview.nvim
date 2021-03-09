@@ -357,10 +357,6 @@ Question: How can I change the dark/light theme?
 Answer: The default theme is based on your system preferences.
 There is a button hidden in the header to change the theme. Place your mouse over the header to reveal it.
 
-
-To change it, there is a hidden button on the
-header. To show it, just put your mouse on the header.
-
 ### About vim support
 
 Vim support is powered by [vim-node-rpc](https://github.com/neoclide/vim-node-rpc)
