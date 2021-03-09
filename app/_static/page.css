@@ -1,4 +1,5 @@
-body {
+html,body,#__next,main {
+  min-height: 100vh;
   margin: 0;
 }
 
@@ -23,10 +24,17 @@ main {
   background-color: var(--secondary-background-color);
 }
 
-#toggle-theme label {
+#toggle-theme {
   float: left;
+  vertical-align: middle;
+  height: 24px;
+  font-size: 14px;
+  line-height: 24px;
+  cursor: pointer;
 }
-#toggle-theme input {
+
+#toggle-theme input,
+#toggle-theme span {
   vertical-align: middle;
 }
 
@@ -46,6 +54,7 @@ main {
   border-width: 1px 1px 0;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
+  line-height: 24px;
 }
 
 #page-header svg {

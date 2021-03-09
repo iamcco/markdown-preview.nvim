@@ -302,19 +302,17 @@ export default class PreviewPage extends React.Component {
                   </svg>
                   {name}
                 </h3>
-                { themeModeIsVisible && (
-                  <div id="toggle-theme">
-                  <label for="theme">
+                {themeModeIsVisible && (
+                  <label id="toggle-theme" for="theme">
                     <input
                       id="theme"
                       type="checkbox"
                       checked={theme === "dark"}
                       onChange={this.handleThemeChange}
                     />
-                    Dark mode
+                    <span>Dark Mode</span>
                   </label>
-                </div>
-              )}
+               )}
               </header>
             }
             <section
