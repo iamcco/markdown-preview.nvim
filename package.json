@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "chart.js": "^2.7.3",
-    "highlight.js": "^9.13.0",
+    "highlight.js": "^10.4.1",
     "log4js": "^3.0.6",
     "markdown-it": "^9.0.1",
     "markdown-it-anchor": "^5.2.4",
