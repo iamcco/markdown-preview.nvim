@@ -45,7 +45,20 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': 
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 ```
 
-Or install with [dein](https://github.com/Shougo/dein.vim):
+or with [packer](https://github.com/wbthomason/packer.nvim)
+
+```lua
+-- with prebuild
+use {'iamcco/markdown-preview.nvim', config = "vim.call('mkdp#util#install')"}
+
+-- with nodejs/yarn
+use {'iamcco/markdown-preview.nvim', run = 'cd app && yarn'}
+
+-- with nodejs/npm
+use {'iamcco/markdown-preview.nvim', run = 'cd app && npm install'}
+```
+
+Or with [dein](https://github.com/Shougo/dein.vim):
 
 ```vim
 call dein#add('iamcco/markdown-preview.nvim', {'on_ft': ['markdown', 'pandoc.markdown', 'rmd'],
