@@ -60,6 +60,7 @@ exports.run = function () {
         const cursor = await plugin.nvim.call('getpos', '.')
         const options = await plugin.nvim.getVar('mkdp_preview_options')
         const pageTitle = await plugin.nvim.getVar('mkdp_page_title')
+        const theme = await plugin.nvim.getVar('mkdp_theme')
         const name = await buffer.name
         const content = await buffer.getLines()
         const currentBuffer = await plugin.nvim.buffer
@@ -70,6 +71,7 @@ exports.run = function () {
           winheight,
           cursor,
           pageTitle,
+          theme,
           name,
           content
         })
