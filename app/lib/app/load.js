@@ -12,7 +12,7 @@ function load(scriptPath) {
     userModule.paths = module_1.default._nodeModulePaths(path_1.default.dirname(scriptPath));
     const moduleCode = fs_1.default.readFileSync(userModule.filename, 'utf-8');
     userModule.require = userModule.require.bind(userModule);
-    const sanbox = vm_1.default.createContext(Object.assign({}, global, { exports: userModule.exports, module: userModule, require: name => {
+    const sanbox = vm_1.default.createContext(Object.assign(Object.assign({}, global), { exports: userModule.exports, module: userModule, require: name => {
             if (preloadmodules_1.default[name]) {
                 return preloadmodules_1.default[name];
             }
