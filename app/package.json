@@ -10,7 +10,7 @@
   "dependencies": {
     "log4js": "3.0.6",
     "neovim": "4.2.1",
-    "socket.io": "2.1.1",
+    "socket.io": "2.4.0",
     "tslib": "1.9.3",
     "vim-node-rpc": "0.1.24"
   }
