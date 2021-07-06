@@ -52,7 +52,7 @@ call dein#add('iamcco/markdown-preview.nvim', {'on_ft': ['markdown', 'pandoc.mar
 					\ 'build': 'sh -c "cd app && yarn install"' })
 ```
 
-Or with minpac:
+Or with [minpac](https://github.com/k-takata/minpac):
 
 ```vim
 call minpac#add('iamcco/markdown-preview.nvim', {'do': 'packloadall! | call mkdp#util#install()'})
@@ -68,7 +68,7 @@ Or with [Vundle](https://github.com/vundlevim/vundle.vim):
 
 Place this in your `.vimrc` or `init.vim`,
 ```vim
-Plugin 'iamcco/markdown-preview.nvim' 
+Plugin 'iamcco/markdown-preview.nvim'
 ```
 ... then run the following in vim
 ```vim
