@@ -58,6 +58,12 @@ Or with minpac:
 call minpac#add('iamcco/markdown-preview.nvim', {'do': 'packloadall! | call mkdp#util#install()'})
 ```
 
+Or with [Packer](https://github.com/wbthomason/packer.nvim):
+
+```lua
+use {'iamcco/markdown-preview.nvim', run = [[sh -c 'cd app && yarn install']]}
+```
+
 Or with [Vundle](https://github.com/vundlevim/vundle.vim):
 
 Place this in your `.vimrc` or `init.vim`,
