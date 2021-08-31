@@ -68,7 +68,8 @@ if !exists('g:mkdp_preview_options')
       \ 'sequence_diagrams': {},
       \ 'flowchart_diagrams': {},
       \ 'content_editable': v:false,
-      \ 'disable_filename': 0
+      \ 'disable_filename': 0,
+      \ 'theme': 'light'
       \ }
 elseif !has_key(g:mkdp_preview_options, 'disable_filename')
   let g:mkdp_preview_options['disable_filename'] = 0

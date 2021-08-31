@@ -132,6 +132,7 @@ let g:mkdp_browserfunc = ''
 " sequence_diagrams: js-sequence-diagrams options
 " content_editable: if enable content editable for preview page, default: v:false
 " disable_filename: if disable filename header for preview page, default: 0
+" theme: light or dark, default: light
 let g:mkdp_preview_options = {
     \ 'mkit': {},
     \ 'katex': {},
@@ -143,7 +144,8 @@ let g:mkdp_preview_options = {
     \ 'sequence_diagrams': {},
     \ 'flowchart_diagrams': {},
     \ 'content_editable': v:false,
-    \ 'disable_filename': 0
+    \ 'disable_filename': 0,
+    \ 'theme': 'light'
     \ }
 
 " use a custom markdown style must be absolute path

@@ -160,6 +160,7 @@ export default class PreviewPage extends React.Component {
         mkit = {},
         katex = {},
         uml = {},
+        theme = 'light',
         hide_yaml_meta: hideYamlMeta = 1,
         sequence_diagrams: sequenceDiagrams = {},
         flowchart_diagrams: flowchartDiagrams = {},
@@ -172,6 +173,7 @@ export default class PreviewPage extends React.Component {
       if (hideYamlMeta === 1) {
         this.md.use(meta([['---', '\\.\\.\\.'], ['---', '\\.\\.\\.']]))
       }
+      this.state.theme = theme === 'light' ? 'light' : 'dark'
       // katex
       this.md
         .use(mk, {
