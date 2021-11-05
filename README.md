@@ -42,7 +42,7 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': 
 
 
 " If you have nodejs and yarn
-Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
 ```
 
 Or install with [dein](https://github.com/Shougo/dein.vim):
@@ -64,7 +64,7 @@ Place this in your `.vimrc` or `init.vim`,
 ```vim
 Plugin 'iamcco/markdown-preview.nvim' 
 ```
-... then run the following in vim
+... then run the following in vim (to complete the `Plugin` installation):
 ```vim
 :source %
 :PluginInstall
