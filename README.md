@@ -363,7 +363,6 @@ Answer: Add the following to your NVIM init script:
 
 ```vimscript
   function OpenMarkdownPreview (url)
-    echo a:url
     execute "silent ! firefox --new-window " . a:url
   endfunction
   let g:mkdp_browserfunc = 'OpenMarkdownPreview'
