@@ -71,6 +71,26 @@ Plugin 'iamcco/markdown-preview.nvim'
 :call mkdp#util#install()
 ```
 
+Or with [Packer.nvim](https://github.com/wbthomason/packer.nvim):
+
+Add this in your `init.lua or plugins.lua`
+
+```vim
+use {'https://github.com/wbthomason/packer.nvim'}
+```
+
+add plugin in `~/.local/share/nvim/site/pack/packer/start/` directory:
+
+```vim
+cd ~/.local/share/nvim/site/pack/packer/start/
+git clone https://github.com/iamcco/markdown-preview.nvim.git
+cd markdown-preview.nvim
+yarn install
+yarn build
+```
+Please make sure that you have installed `node.js` and `yarn`.
+Open `nvim` and run `:PackerInstall` to make it workable
+
 Config:
 
 ```vim
