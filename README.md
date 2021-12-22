@@ -21,6 +21,7 @@ Main features:
 - [flowchart](https://github.com/adrai/flowchart.js)
 - [dot](https://github.com/mdaines/viz.js)
 - [Toc](https://github.com/nagaozen/markdown-it-toc-done-right)
+- [zTree_Toc](https://github.com/i5ting/markdown_toc)
 - Emoji
 - Task lists
 - Local images
