@@ -76,7 +76,7 @@ Or with [Packer.nvim](https://github.com/wbthomason/packer.nvim):
 Add this in your `init.lua or plugins.lua`
 
 ```vim
-use {'https://github.com/wbthomason/packer.nvim'}
+use {'iamcco/markdown-preview.nvim'}
 ```
 
 add plugin in `~/.local/share/nvim/site/pack/packer/start/` directory:
