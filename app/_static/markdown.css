@@ -209,6 +209,7 @@
 .markdown-body table td {
   padding: 6px 13px;
   border: 1px solid var(--color-markdown-table-border);
+  vertical-align: top;
 }
 .markdown-body kbd {
   display: inline-block;
