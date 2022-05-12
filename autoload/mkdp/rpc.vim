@@ -2,7 +2,6 @@ let s:mkdp_root_dir = expand('<sfile>:h:h:h')
 let s:mkdp_opts = {}
 let s:is_vim = !has('nvim')
 let s:mkdp_channel_id = s:is_vim ? v:null : -1
-let s:is_vim_node_rpc_ready = v:null
 
 function! s:on_stdout(chan_id, msgs, ...) abort
   call mkdp#util#echo_messages('Error', a:msgs)
@@ -25,14 +24,14 @@ endfunction
 
 function! s:start_vim_server(cmd) abort
   let options = {
+        \ 'in_mode': 'json',
+        \ 'out_mode': 'json',
         \ 'err_mode': 'nl',
-        \ 'out_mode': 'nl',
         \ 'out_cb': function('s:on_stdout'),
         \ 'err_cb': function('s:on_stderr'),
         \ 'exit_cb': function('s:on_exit'),
         \ 'env': {
         \   'VIM_NODE_RPC': 1,
-        \   'MKDP_NVIM_LISTEN_ADDRESS': $MKDP_NVIM_LISTEN_ADDRESS,
         \ }
         \}
   if has("patch-8.1.350")
@@ -45,11 +44,6 @@ function! s:start_vim_server(cmd) abort
     return
   endif
   let s:mkdp_channel_id = l:job
-  if s:is_vim_node_rpc_ready ==# v:null
-    let s:is_vim_node_rpc_ready = v:true
-    autocmd! User NvimMkdpRpcInit
-    unlet s:cb
-  endif
 endfunction
 
 function! mkdp#rpc#start_server() abort
@@ -65,24 +59,14 @@ function! mkdp#rpc#start_server() abort
   endif
   if exists('l:cmd')
     if s:is_vim
-      if s:is_vim_node_rpc_ready ==# v:null
-        let s:cb = function('s:start_vim_server', [l:cmd])
-        autocmd User NvimMkdpRpcInit call s:cb()
-      else
-        call s:start_vim_server(l:cmd)
-      endif
+      call s:start_vim_server(l:cmd)
     else
       let l:nvim_optons = {
+            \ 'rpc': 1,
             \ 'on_stdout': function('s:on_stdout'),
             \ 'on_stderr': function('s:on_stderr'),
             \ 'on_exit': function('s:on_exit')
             \ }
-      " https://github.com/iamcco/markdown-preview.nvim/issues/219#issuecomment-669789625
-      if $NVIM_LISTEN_ADDRESS =~# '\v\d+\.\d+\.\d+(:\d+)?'
-        let l:nvim_optons.env = {
-          \   'MKDP_NVIM_LISTEN_ADDRESS': serverstart()
-          \ }
-      endif
       let s:mkdp_channel_id = jobstart(l:cmd, l:nvim_optons)
     endif
   else

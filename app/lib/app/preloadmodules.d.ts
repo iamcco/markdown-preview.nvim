@@ -1,5 +1,5 @@
 declare const _default: {
-    neovim: any;
+    '@chemzqm/neovim': any;
     log4js: any;
     tslib: any;
     'socket.io': any;
