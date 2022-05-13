@@ -1,5 +1,4 @@
-import { attach, NeovimClient } from 'neovim'
-import { Attach } from 'neovim/lib/attach/attach'
+import { attach, Attach, NeovimClient } from '@chemzqm/neovim'
 
 const logger = require('../util/logger')('attach') // tslint:disable-line
 

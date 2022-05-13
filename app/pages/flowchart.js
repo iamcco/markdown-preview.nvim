@@ -18,7 +18,7 @@ const flowchart = (md, opts = {}) => {
 }
 
 export const renderFlowchart = () => {
-  let list = document.querySelectorAll('.flowchart')
+  let list = document.querySelectorAll('div.flowchart')
   if (!list) {
     return
   }
