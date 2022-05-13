@@ -83,7 +83,7 @@ use(async (req, res, next) => {
         }
       }
       logger.info('imgPath', imgPath)
-      if (fs.existsSync(imgPath)) {
+      if (fs.existsSync(imgPath) && !fs.statSync(imgPath).isDirectory()) {
         if (imgPath.endsWith('svg')) {
           res.setHeader('content-type', 'image/svg+xml')
         }
