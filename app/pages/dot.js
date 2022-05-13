@@ -6,7 +6,7 @@ const dot = (md, opts = {}) => {
     md.renderer.rules.fence = (tokens, idx, options, env, slf) => {
         const token = tokens[idx]
         try {
-            if (token.info && token.info.trim() === 'dot') {
+            if (token.info && (token.info.trim() === 'dot' || token.info.trim() === 'graphviz')) {
                 const code = token.content.trim()
                 return `<div class="dot">${code}</div>`
             }
