@@ -3,7 +3,6 @@ import Head from 'next/head'
 import io from 'socket.io-client'
 import MarkdownIt from 'markdown-it'
 import hljs from 'highlight.js'
-import mkuml from 'markdown-it-plantuml'
 import emoji from 'markdown-it-emoji'
 import taskLists from 'markdown-it-task-lists'
 import footnote from 'markdown-it-footnote'
@@ -19,7 +18,8 @@ import image from './image'
 import diagram, { renderDiagram } from './diagram'
 import flowchart, { renderFlowchart } from './flowchart'
 import dot, { renderDot } from './dot'
-import blockUml from './plantuml'
+import blockUml from './blockPlantuml'
+import codeUml from './plantuml'
 import scrollToLine from './scroll'
 import { meta } from './meta';
 import markdownImSize from './markdown-it-imsize'
@@ -175,7 +175,11 @@ export default class PreviewPage extends React.Component {
           ...DEFAULT_OPTIONS.katex,
           ...katex
         })
-        .use(mkuml, {
+        .use(blockUml, {
+          ...DEFAULT_OPTIONS.uml,
+          ...uml
+        })
+        .use(codeUml, {
           ...DEFAULT_OPTIONS.uml,
           ...uml
         })
@@ -188,10 +192,6 @@ export default class PreviewPage extends React.Component {
         .use(linenumbers)
         .use(mkitMermaid)
         .use(chart.chartPlugin)
-        .use(blockUml, {
-          ...DEFAULT_OPTIONS.uml,
-          ...uml
-        })
         .use(diagram, {
           ...sequenceDiagrams
         })

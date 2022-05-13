@@ -1,16 +1,10 @@
-const deflate = require('markdown-it-plantuml/lib/deflate')
+const plantumlEncoder = require("plantuml-encoder");
 
 function generateSourceDefault (umlCode, pluginOptions) {
-  var imageFormat = pluginOptions.imageFormat || 'svg'
+  var imageFormat = pluginOptions.imageFormat || 'img'
   var diagramName = pluginOptions.diagramName || 'uml'
   var server = pluginOptions.server || 'https://www.plantuml.com/plantuml'
-  var zippedCode = deflate.encode64(
-    deflate.zip_deflate(
-      unescape(encodeURIComponent(
-        '@start' + diagramName + '\n' + umlCode + '\n@end' + diagramName)),
-      9
-    )
-  )
+  var zippedCode = plantumlEncoder.encode(umlCode)
 
   return server + '/' + imageFormat + '/' + zippedCode
 }
