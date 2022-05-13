@@ -27,7 +27,7 @@
     "markdown-it-toc-done-right": "^4.0.1",
     "md-it-meta": "^0.0.2",
     "msgpack-lite": "^0.1.26",
-    "next": "^7.0.2",
+    "next": "^12.1.0",
     "next-routes": "^1.4.2",
     "plantuml-encoder": "^1.4.0",
     "react": "^16.5.2",
