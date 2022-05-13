@@ -80,7 +80,7 @@ export default class PreviewPage extends React.Component {
       cursor: '',
       content: '',
       pageTitle: '',
-      theme: 'light',
+      theme: '',
       themeModeIsVisible: false,
       contentEditable: false,
       disableFilename: 1
@@ -106,13 +106,6 @@ export default class PreviewPage extends React.Component {
 
 
   componentDidMount() {
-    if (
-      window.matchMedia &&
-      window.matchMedia('(prefers-color-scheme: dark)').matches
-    ) {
-      this.setState({ theme: 'dark' })
-    }
-
     const socket = io({
       query: {
         bufnr: window.location.pathname.split('/')[2]
@@ -152,6 +145,7 @@ export default class PreviewPage extends React.Component {
     winheight,
     cursor,
     pageTitle = '',
+    theme,
     name = '',
     content
   }) {
@@ -210,6 +204,21 @@ export default class PreviewPage extends React.Component {
           listType: 'ul'
         })
     }
+
+    // Theme already applied
+    if (this.state.theme) {
+      theme = this.state.theme
+    }
+    // Define the theme according to the preferences of the system
+    else if (!theme || !['light', 'dark'].includes(theme)) {
+      if (
+        window.matchMedia &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches
+      ) {
+        theme = 'dark'
+      }
+    }
+
     this.setState({
       cursor,
       name: ((name) => {
@@ -218,6 +227,7 @@ export default class PreviewPage extends React.Component {
       })(name),
       content: this.md.render(content.join('\n')),
       pageTitle,
+      theme,
       contentEditable: options.content_editable,
       disableFilename: options.disable_filename
     }, () => {
