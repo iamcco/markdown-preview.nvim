@@ -62,7 +62,7 @@ Or with [Vundle](https://github.com/vundlevim/vundle.vim):
 
 Place this in your `.vimrc` or `init.vim`,
 ```vim
-Plugin 'iamcco/markdown-preview.nvim' 
+Plugin 'iamcco/markdown-preview.nvim'
 ```
 ... then run the following in vim (to complete the `Plugin` installation):
 ```vim
@@ -126,6 +126,9 @@ let g:mkdp_open_to_the_world = 0
 let g:mkdp_open_ip = ''
 
 " specify browser to open preview page
+" for path with space
+" valid: `/path/with\ space/xxx`
+" invalid: `/path/with\\ space/xxx`
 " default: ''
 let g:mkdp_browser = ''
 
@@ -397,14 +400,12 @@ Replace "firefox" with "chrome" if you prefer. Both browsers recognize the `--ne
 
 ### About vim support
 
-Vim support is powered by [vim-node-rpc](https://github.com/neoclide/vim-node-rpc)
-
-> This plugin is integrated with vim-node-rpc, therefore you don't need to install vim-node-rpc
+Vim support is powered by [@chemzqm/neovim](https://github.com/neoclide/neovim)
 
 ### Reference
 
 - [coc.nvim](https://github.com/neoclide/coc.nvim)
-- [vim-node-rpc](https://github.com/neoclide/vim-node-rpc)
+- [@chemzqm/neovim](https://github.com/neoclide/neovim)
 - [chart.js](https://github.com/chartjs/Chart.js)
 - [highlight](https://github.com/highlightjs/highlight.js)
 - [neovim/node-client](https://github.com/neovim/node-client)
