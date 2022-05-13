@@ -1,5 +1,4 @@
-import { NeovimClient } from 'neovim';
-import { Attach } from 'neovim/lib/attach/attach';
+import { Attach, NeovimClient } from '@chemzqm/neovim';
 interface IApp {
     refreshPage: ((param: {
         bufnr: number | string;

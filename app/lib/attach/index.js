@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
-const neovim_1 = require("neovim");
+const neovim_1 = require("@chemzqm/neovim");
 const logger = require('../util/logger')('attach'); // tslint:disable-line
 let app;
 function default_1(options) {
-    const nvim = neovim_1.attach(options);
+    const nvim = (0, neovim_1.attach)(options);
     nvim.on('notification', (method, args) => tslib_1.__awaiter(this, void 0, void 0, function* () {
         const opts = args[0] || args;
         const bufnr = opts.bufnr;
@@ -18,6 +18,7 @@ function default_1(options) {
             const cursor = yield nvim.call('getpos', '.');
             const renderOpts = yield nvim.getVar('mkdp_preview_options');
             const pageTitle = yield nvim.getVar('mkdp_page_title');
+            const theme = yield nvim.getVar('mkdp_theme');
             const name = yield buffer.name;
             const content = yield buffer.getLines();
             const currentBuffer = yield nvim.buffer;
@@ -30,6 +31,7 @@ function default_1(options) {
                     winheight,
                     cursor,
                     pageTitle,
+                    theme,
                     name,
                     content
                 }

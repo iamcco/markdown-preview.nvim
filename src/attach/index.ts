@@ -1,5 +1,4 @@
-import { attach, NeovimClient } from 'neovim'
-import { Attach } from 'neovim/lib/attach/attach'
+import { attach, Attach, NeovimClient } from '@chemzqm/neovim'
 
 const logger = require('../util/logger')('attach') // tslint:disable-line
 
@@ -45,6 +44,7 @@ export default function(options: Attach): IPlugin {
       const cursor = await nvim.call('getpos', '.')
       const renderOpts = await nvim.getVar('mkdp_preview_options')
       const pageTitle = await nvim.getVar('mkdp_page_title')
+      const theme = await nvim.getVar('mkdp_theme')
       const name = await buffer.name
       const content = await buffer.getLines()
       const currentBuffer = await nvim.buffer
@@ -57,6 +57,7 @@ export default function(options: Attach): IPlugin {
           winheight,
           cursor,
           pageTitle,
+          theme,
           name,
           content
         }
