@@ -361,6 +361,20 @@ Question: How can I change the dark/light theme?
 Answer: The default theme is based on your system preferences.
 There is a button hidden in the header to change the theme. Place your mouse over the header to reveal it.
 
+Question: How can I pass CLI options to the browser, like opening in a new window?
+
+Answer: Add the following to your NVIM init script:
+
+```vimscript
+  function OpenMarkdownPreview (url)
+    execute "silent ! firefox --new-window " . a:url
+  endfunction
+  let g:mkdp_browserfunc = 'OpenMarkdownPreview'
+```
+
+Replace "firefox" with "chrome" if you prefer. Both browsers recognize the `--new-window` option.
+
+
 ### About vim support
 
 Vim support is powered by [vim-node-rpc](https://github.com/neoclide/vim-node-rpc)
