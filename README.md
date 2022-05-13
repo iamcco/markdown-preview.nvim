@@ -76,6 +76,12 @@ Or with [Packer.nvim](https://github.com/wbthomason/packer.nvim):
 Add this in your `init.lua or plugins.lua`
 
 ```vim
+use({ "iamcco/markdown-preview.nvim", run = "cd app && npm install", setup = function() vim.g.mkdp_filetypes = { "markdown" } end, ft = { "markdown" }, })
+```
+
+Or by hand
+
+```vim
 use {'iamcco/markdown-preview.nvim'}
 ```
 
@@ -91,7 +97,7 @@ yarn build
 Please make sure that you have installed `node.js` and `yarn`.
 Open `nvim` and run `:PackerInstall` to make it workable
 
-Config:
+### MarkdownPreview Config:
 
 ```vim
 " set to 1, nvim will open the preview window after entering the markdown buffer
