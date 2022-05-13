@@ -174,7 +174,7 @@ let g:mkdp_markdown_css = ''
 " like '/Users/username/highlight.css' or expand('~/highlight.css')
 let g:mkdp_highlight_css = ''
 
-" use a custom port to start server or random for empty
+" use a custom port to start server or empty for random
 let g:mkdp_port = ''
 
 " preview page title
