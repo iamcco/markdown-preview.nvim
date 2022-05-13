@@ -68,7 +68,10 @@ const DEFAULT_OPTIONS = {
     'throwOnError': false,
     'errorColor': ' #cc0000'
   },
-  uml: {}
+  uml: {},
+  toc: {
+    listType: 'ul'
+  }
 }
 
 export default class PreviewPage extends React.Component {
@@ -160,6 +163,7 @@ export default class PreviewPage extends React.Component {
         hide_yaml_meta: hideYamlMeta = 1,
         sequence_diagrams: sequenceDiagrams = {},
         flowchart_diagrams: flowchartDiagrams = {},
+        toc = {}
       } = options
       // markdown-it
       this.md = new MarkdownIt({
@@ -204,7 +208,8 @@ export default class PreviewPage extends React.Component {
           permalinkClass: 'anchor'
         })
         .use(markdownItToc, {
-          listType: 'ul'
+          ...DEFAULT_OPTIONS.toc,
+          ...toc
         })
     }
 
