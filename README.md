@@ -75,7 +75,13 @@ Or with [Packer.nvim](https://github.com/wbthomason/packer.nvim):
 
 Add this in your `init.lua or plugins.lua`
 
-```vim
+```lua
+-- install without yarn or npm
+use({
+    "iamcco/markdown-preview.nvim",
+    run = function() vim.fn["mkdp#util#install"]() end,
+})
+
 use({ "iamcco/markdown-preview.nvim", run = "cd app && npm install", setup = function() vim.g.mkdp_filetypes = { "markdown" } end, ft = { "markdown" }, })
 ```
 
