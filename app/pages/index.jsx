@@ -75,6 +75,9 @@ export default class PreviewPage extends React.Component {
   constructor(props) {
     super(props)
 
+    this.preContent = ''
+    this.timer = undefined
+
     this.state = {
       name: '',
       cursor: '',
@@ -219,30 +222,11 @@ export default class PreviewPage extends React.Component {
       }
     }
 
-    this.setState({
-      cursor,
-      name: ((name) => {
-        let tokens = name.split(/\\|\//).pop().split('.');
-        return tokens.length > 1 ? tokens.slice(0, -1).join('.') : tokens[0];
-      })(name),
-      content: this.md.render(content.join('\n')),
-      pageTitle,
-      theme,
-      contentEditable: options.content_editable,
-      disableFilename: options.disable_filename
-    }, () => {
-      try {
-        // eslint-disable-next-line
-        mermaid.initialize(options.maid || {})
-        // eslint-disable-next-line
-        mermaid.init(undefined, document.querySelectorAll('.mermaid'))
-      } catch (e) { }
+    const newContent = content.join('\n')
+    const refreshContent = this.preContent !== newContent
+    this.preContent = newContent
 
-      chart.render()
-      renderDiagram()
-      renderFlowchart()
-      renderDot()
-
+    const refreshScroll = () => {
       if (isActive && !options.disable_sync_scroll) {
         scrollToLine[options.sync_scroll_type || 'middle']({
           cursor: cursor[1],
@@ -251,7 +235,56 @@ export default class PreviewPage extends React.Component {
           len: content.length
         })
       }
-    })
+    }
+
+    const refreshRender = () => {
+      this.setState({
+        cursor,
+        name: ((name) => {
+          let tokens = name.split(/\\|\//).pop().split('.');
+          return tokens.length > 1 ? tokens.slice(0, -1).join('.') : tokens[0];
+        })(name),
+        ...(
+          refreshContent
+          ? { content: this.md.render(newContent) }
+          : {}
+        ),
+        pageTitle,
+        theme,
+        contentEditable: options.content_editable,
+        disableFilename: options.disable_filename
+      }, () => {
+        if (refreshContent) {
+          try {
+            // eslint-disable-next-line
+            mermaid.initialize(options.maid || {})
+            // eslint-disable-next-line
+            mermaid.init(undefined, document.querySelectorAll('.mermaid'))
+          } catch (e) { }
+
+          chart.render()
+          renderDiagram()
+          renderFlowchart()
+          renderDot()
+        }
+        refreshScroll()
+      })
+    }
+
+    if (!this.preContent) {
+      refreshRender()
+    } else {
+      if (!refreshContent) {
+        refreshScroll()
+      } else {
+        if (this.timer) {
+          clearTimeout(this.timer)
+        }
+        this.timer = setTimeout(() => {
+          refreshRender()
+        }, 16);
+      }
+    }
   }
 
   render() {
