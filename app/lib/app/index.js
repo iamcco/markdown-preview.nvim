@@ -7,7 +7,7 @@ const VERSION = '--version';
 const { argv = [] } = process;
 const param = argv[2];
 if (param === PATH) {
-    load_1.default(argv[3]).run();
+    (0, load_1.default)(argv[3]).run();
 }
 else if (param === VERSION) {
     // tslint:disable-next-line
