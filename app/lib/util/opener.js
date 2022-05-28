@@ -32,11 +32,11 @@ module.exports = function opener(args, tool) {
     }
     case "darwin": {
       const execSync = child_process_1.default.execSync;
-      const logName = execSync("logname", { encoding: "utf-8" });
-      const whoAmI = execSync("whoami", { encoding: "utf-8" });
+      const logName = execSync("logname", { encoding: "utf-8" }).trim();
+      const whoAmI = execSync("whoami", { encoding: "utf-8" }).trim();
       if (logName !== whoAmI) {
         command = "sudo";
-        args = ["-u", logname, "open"].concat(args);
+        args = ["-u", logName, "open"].concat(args);
       } else {
         command = "open";
       }
