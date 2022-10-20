@@ -65,7 +65,12 @@ use(async (req, res, next) => {
     const buffers = await plugin.nvim.buffers
     const buffer = buffers.find(b => b.id === Number(req.bufnr))
     if (buffer) {
-      const fileDir = await plugin.nvim.call('expand', `#${req.bufnr}:p:h`)
+			let fileDir = ''
+			if (req.custImgPath !== '' ){
+				fileDir = req.custImgPath
+			} else {
+				fileDir = await plugin.nvim.call('expand', `#${req.bufnr}:p:h`)
+			}
       logger.info('fileDir', fileDir)
       let imgPath = decodeURIComponent(decodeURIComponent(req.asPath.replace(reg, '')))
       imgPath = imgPath.replace(/\\ /g, ' ')

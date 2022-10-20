@@ -100,6 +100,11 @@ if !exists('g:mkdp_filetypes')
   let g:mkdp_filetypes = ['markdown']
 endif
 
+" markdown images custom path
+if !exists('g:mkdp_images_path')
+  let g:mkdp_images_path = ''
+endif
+
 function! s:init_command() abort
   command! -buffer MarkdownPreview call mkdp#util#open_preview_page()
   command! -buffer MarkdownPreviewStop call mkdp#util#stop_preview()
