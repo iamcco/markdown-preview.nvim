@@ -16,6 +16,22 @@ use((req, res, next) => {
   next()
 })
 
+// /page/(:number/)?relative-file-link
+use(async (req, res, next) => {
+  const match = req.asPath.match(/\/page\/(\d+\/)?(.+\.md)/);
+  if (match) {
+    logger.info('relative link: ', match[2]);
+    await req.plugin.nvim.call('execute', 'w');
+    await req.plugin.nvim.call('execute', `e ${match[2]}`);
+    const newBuffnr = await req.plugin.nvim.call('bufnr', '%');
+    res.writeHead(302, { Location: `/page/${newBuffnr}` });
+    res.end();
+    await req.plugin.nvim.call('execute', 'MarkdownPreview');
+    return;
+  }
+  next()
+})
+
 // /_next/path
 use((req, res, next) => {
   if (/\/_next/.test(req.asPath)) {
