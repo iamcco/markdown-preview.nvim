@@ -103,6 +103,14 @@ yarn build
 Please make sure that you have installed `node.js` and `yarn`.
 Open `nvim` and run `:PackerInstall` to make it workable
 
+Or with [lazy.nvim](https://github.com/folke/lazy.nvim)
+
+```lua
+require("lazy").setup({
+	  { "iamcco/markdown-preview.nvim", build = ":call mkdp@util#install()" },
+})
+```
+
 ### MarkdownPreview Config:
 
 ```vim
