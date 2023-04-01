@@ -383,33 +383,41 @@ Or
 
 ### FAQ
 
-Question: Why is the synchronised scrolling lagging?
+#### *Why is the synchronised scrolling lagging?*
 
-Answer: set `updatetime` to a small number, for instance: `set updatetime=100`
+Set `updatetime` to a small number, for instance: `set updatetime=100`
 
 *WSL 2 issue*: Can not open browser when using WSL 2 with terminal Vim.
 
 > if you are using Ubuntu you can install xdg-utils using `sudo apt-get install -y xdg-utils`
 > checkout [issue 199](https://github.com/iamcco/markdown-preview.nvim/issues/199) for more detail.
 
-Question: How can I change the dark/light theme?
+#### *How can I change the dark/light theme?*
 
-Answer: The default theme is based on your system preferences.
+The default theme is based on your system preferences.
 There is a button hidden in the header to change the theme. Place your mouse over the header to reveal it.
 
-Question: How can I pass CLI options to the browser, like opening in a new window?
+#### *How can I pass CLI options to the browser, like opening in a new window?*
 
-Answer: Add the following to your NVIM init script:
+Add the following to your NVIM init script:
 
+*Linux*
 ```vimscript
   function OpenMarkdownPreview (url)
     execute "silent ! firefox --new-window " . a:url
   endfunction
   let g:mkdp_browserfunc = 'OpenMarkdownPreview'
 ```
+Replace `firefox` with `chrome` if you prefer. Both browsers recognize the `--new-window` option.
 
-Replace "firefox" with "chrome" if you prefer. Both browsers recognize the `--new-window` option.
-
+*macOS*
+```vimscript
+  function OpenMarkdownPreview (url)
+    execute "silent ! open -a Firefox -n --args --new-window " . a:url
+  endfunction
+  let g:mkdp_browserfunc = 'OpenMarkdownPreview'
+```
+Replace `Firefox` with `Google\ Chrome` or `Brave\ Browser` if you prefer. They all recognize the `--new-window` option.
 
 ### About vim support
 
