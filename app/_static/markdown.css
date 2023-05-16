@@ -309,3 +309,13 @@
   box-sizing: border-box;
   padding: 0;
 }
+.octicon {
+  fill: var(--color-text-primary);
+}
+.mermaid {
+  display: flex;
+  justify-content: center;
+}
+.mermaid > svg {
+  max-width: none !important;
+}
