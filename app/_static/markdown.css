@@ -318,3 +318,8 @@
 .mermaid > svg {
   max-width: none !important;
 }
+.dot {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
