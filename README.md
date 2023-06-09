@@ -79,7 +79,7 @@ Add this in your `init.lua or plugins.lua`
 {
     "iamcco/markdown-preview.nvim",
     cmd = { "MarkdownPreviewToggle" },
-    ft = { "markdown" }
+    ft = { "markdown" },
     build = function() vim.fn["mkdp#util#install"]() end,
 }
 
