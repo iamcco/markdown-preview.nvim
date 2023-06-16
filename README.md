@@ -70,6 +70,17 @@ Plugin 'iamcco/markdown-preview.nvim'
 :PluginInstall
 :call mkdp#util#install()
 ```
+Or with [Lazy](https://github.com/folke/lazy.nvim):
+
+```lua
+{
+    "iamcco/markdown-preview.nvim",
+    ft = "markdown",
+    build = function()
+      vim.fn["mkdp#util#install"]()
+    end,
+  },
+```
 
 Or with [Packer.nvim](https://github.com/wbthomason/packer.nvim):
 
