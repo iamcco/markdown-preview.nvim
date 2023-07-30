@@ -5,9 +5,13 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 */
 :root {
     --color-text-primary: #333;
+    --color-diff-add: #dfd;
+    --color-diff-remove: #fdd;
 }
 [data-theme="dark"] {
     --color-text-primary: #c9d1d9;
+    --color-diff-add: #484;
+    --color-diff-remove: #844;
 }
 
 .hljs {
@@ -89,11 +93,11 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 }
 
 .hljs-deletion {
-  background: #fdd;
+  background: var(--color-diff-remove);
 }
 
 .hljs-addition {
-  background: #dfd;
+  background: var(--color-diff-add);
 }
 
 .hljs-emphasis {
