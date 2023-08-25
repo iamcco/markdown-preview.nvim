@@ -82,6 +82,18 @@ use(async (req, res, next) => {
           }
         }
       }
+
+      const  home_prefix=process.env.MINGW_HOME;
+      if (home_prefix){
+        if(! imgPath.includes(':')){
+          // home_prefix is win-like:    E:\msys64\mingw32
+          // imgPath is unix-like:      /home/usrname/....
+          // the win-like full path of imgPath should be: E:\msys64\home\usrname\...
+          const parts = home_prefix.split("\\");
+          imgPath = path.join(parts[0],parts[1],imgPath)
+        }  
+      }
+
       logger.info('imgPath', imgPath)
       if (fs.existsSync(imgPath) && !fs.statSync(imgPath).isDirectory()) {
         if (imgPath.endsWith('svg')) {
