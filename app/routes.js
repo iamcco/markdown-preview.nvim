@@ -65,8 +65,26 @@ use(async (req, res, next) => {
     const buffers = await plugin.nvim.buffers
     const buffer = buffers.find(b => b.id === Number(req.bufnr))
     if (buffer) {
-      const fileDir = await plugin.nvim.call('expand', `#${req.bufnr}:p:h`)
+      let fileDir = await plugin.nvim.call('expand', `#${req.bufnr}:p:h`)
       logger.info('fileDir', fileDir)
+
+      const  mingw_home=process.env.MINGW_HOME;
+      if (mingw_home){
+        if(! fileDir.includes(':')){
+          // fileDir is unix-like:      /Z/x/y/...., 'Z' means Z:
+          // the win-like fileDir should be: Z:\x\y...
+          const cygpath = 'cygpath.exe'
+          const cmd=cygpath+' -w'+' -a '+fileDir ;
+          logger.info('cmd',cmd)
+       
+          const { execSync } = require('node:child_process');
+          const result = execSync(cmd);
+          fileDir=result.toString('utf8').replace('\n','');
+
+          logger.info('New fileDir',fileDir);
+        }  
+      }
+
       let imgPath = decodeURIComponent(decodeURIComponent(req.asPath.replace(reg, '')))
       imgPath = imgPath.replace(/\\ /g, ' ')
       if (imgPath[0] !== '/' && imgPath[0] !== '\\') {
@@ -82,19 +100,8 @@ use(async (req, res, next) => {
           }
         }
       }
-
-      const  home_prefix=process.env.MINGW_HOME;
-      if (home_prefix){
-        if(! imgPath.includes(':')){
-          // home_prefix is win-like:    E:\msys64\mingw32
-          // imgPath is unix-like:      /home/usrname/....
-          // the win-like full path of imgPath should be: E:\msys64\home\usrname\...
-          const parts = home_prefix.split("\\");
-          imgPath = path.join(parts[0],parts[1],imgPath)
-        }  
-      }
-
-      logger.info('imgPath', imgPath)
+      logger.info('imgPath', imgPath);
+      
       if (fs.existsSync(imgPath) && !fs.statSync(imgPath).isDirectory()) {
         if (imgPath.endsWith('svg')) {
           res.setHeader('content-type', 'image/svg+xml')
