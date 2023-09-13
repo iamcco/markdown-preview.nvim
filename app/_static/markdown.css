@@ -302,6 +302,9 @@
   box-sizing: border-box;
   padding: 0;
 }
+.task-list-item input[type="checkbox"]:checked {
+  filter: invert() brightness(2.5) invert();
+}
 .task-list-item input[type="radio"] {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
