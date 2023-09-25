@@ -87,8 +87,6 @@ use({ "iamcco/markdown-preview.nvim", run = "cd app && npm install", setup = fun
 
 Or with [Lazy.nvim](https://github.com/folke/lazy.nvim):
 
-Add this in your `init.lua or plugins.lua`
-
 ```lua
 -- install without yarn or npm
 {
