@@ -91,6 +91,7 @@ Or with [Lazy.nvim](https://github.com/folke/lazy.nvim):
 -- install without yarn or npm
 {
    "iamcco/markdown-preview.nvim",
+   ft = {"markdown"},
    build = function() vim.fn["mkdp#util#install"]() end,
 }
 ```
