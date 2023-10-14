@@ -85,6 +85,17 @@ use({
 use({ "iamcco/markdown-preview.nvim", run = "cd app && npm install", setup = function() vim.g.mkdp_filetypes = { "markdown" } end, ft = { "markdown" }, })
 ```
 
+Or with [Lazy.nvim](https://github.com/folke/lazy.nvim):
+
+```lua
+-- install without yarn or npm
+{
+   "iamcco/markdown-preview.nvim",
+   ft = {"markdown"},
+   build = function() vim.fn["mkdp#util#install"]() end,
+}
+```
+
 Or by hand
 
 ```vim
