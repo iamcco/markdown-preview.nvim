@@ -231,6 +231,12 @@ let g:mkdp_filetypes = ['markdown']
 " set default theme (dark or light)
 " By default the theme is defined according to the preferences of the system
 let g:mkdp_theme = 'dark'
+
+" combine preview window
+" default: 0
+" if enable it will reuse previous opened preview window when you preview markdown file.
+" ensure to set let g:mkdp_auto_close = 0 if you have enable this option
+let g:mkdp_combine_preview = 0
 ```
 
 Mappings:

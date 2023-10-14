@@ -125,25 +125,36 @@ exports.run = function () {
         clients = {}
       }
       async function openBrowser ({ bufnr }) {
-        const openIp = await plugin.nvim.getVar('mkdp_open_ip')
-        const openHost = openIp !== '' ? openIp : (openToTheWord ? getIP() : 'localhost')
-        const url = `http://${openHost}:${port}/page/${bufnr}`
-        const browserfunc = await plugin.nvim.getVar('mkdp_browserfunc')
-        if (browserfunc !== '') {
-          logger.info(`open page [${browserfunc}]: `, url)
-          plugin.nvim.call(browserfunc, [url])
+        const combinePreview = await plugin.nvim.getVar('mkdp_combine_preview')
+        if (combinePreview && Object.values(clients).some(cs => cs.some(c => c.connected))) {
+          Object.values(clients).forEach(cs => {
+            cs.forEach(c => {
+              if (c.connected) {
+                c.emit('change_bufnr', bufnr)
+              }
+            })
+          })
         } else {
-          const browser = await plugin.nvim.getVar('mkdp_browser')
-          logger.info(`open page [${browser || 'default'}]: `, url)
-          if (browser !== '') {
-            openUrl(url, browser)
+          const openIp = await plugin.nvim.getVar('mkdp_open_ip')
+          const openHost = openIp !== '' ? openIp : (openToTheWord ? getIP() : 'localhost')
+          const url = `http://${openHost}:${port}/page/${bufnr}`
+          const browserfunc = await plugin.nvim.getVar('mkdp_browserfunc')
+          if (browserfunc !== '') {
+            logger.info(`open page [${browserfunc}]: `, url)
+            plugin.nvim.call(browserfunc, [url])
           } else {
-            openUrl(url)
+            const browser = await plugin.nvim.getVar('mkdp_browser')
+            logger.info(`open page [${browser || 'default'}]: `, url)
+            if (browser !== '') {
+              openUrl(url, browser)
+            } else {
+              openUrl(url)
+            }
           }
-        }
-        const isEchoUrl = await plugin.nvim.getVar('mkdp_echo_preview_url')
-        if (isEchoUrl) {
-          plugin.nvim.call('mkdp#util#echo_url', [url])
+          const isEchoUrl = await plugin.nvim.getVar('mkdp_echo_preview_url')
+          if (isEchoUrl) {
+            plugin.nvim.call('mkdp#util#echo_url', [url])
+          }
         }
       }
       plugin.init({

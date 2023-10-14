@@ -105,6 +105,11 @@ if !exists('g:mkdp_images_path')
   let g:mkdp_images_path = ''
 endif
 
+" combine preview window
+if !exists('g:mkdp_combine_preview')
+  let g:mkdp_combine_preview = 0
+endif
+
 function! s:init_command() abort
   command! -buffer MarkdownPreview call mkdp#util#open_preview_page()
   command! -buffer MarkdownPreviewStop call mkdp#util#stop_preview()
