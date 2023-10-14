@@ -70,7 +70,31 @@ Plugin 'iamcco/markdown-preview.nvim'
 :PluginInstall
 :call mkdp#util#install()
 ```
+Or with [lazy.nvim](https://github.com/folke/lazy.nvim):
 
+Add this in your `init.lua or plugins.lua`
+
+```lua
+-- install without yarn or npm
+{
+    "iamcco/markdown-preview.nvim",
+    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+    ft = { "markdown" },
+    build = function() vim.fn["mkdp#util#install"]() end,
+}
+
+-- install with yarn or npm
+{
+  "iamcco/markdown-preview.nvim",
+  cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+  build = "cd app && yarn install",
+  init = function()
+    vim.g.mkdp_filetypes = { "markdown" }
+  end,
+  ft = { "markdown" },
+},
+
+```
 Or with [Packer.nvim](https://github.com/wbthomason/packer.nvim):
 
 Add this in your `init.lua or plugins.lua`
