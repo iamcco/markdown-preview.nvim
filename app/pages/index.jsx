@@ -110,11 +110,16 @@ export default class PreviewPage extends React.Component {
     this.setState({ themeModeIsVisible: false })
   }
 
+  startSocket(bufnr) {
+    // Close the previous socket
+    if (window.socket) {
+      window.socket.close()
+      window.socket = undefined
+    }
 
-  componentDidMount() {
     const socket = io({
       query: {
-        bufnr: window.location.pathname.split('/')[2]
+        bufnr
       }
     })
 
@@ -129,6 +134,12 @@ export default class PreviewPage extends React.Component {
     socket.on('refresh_content', this.onRefreshContent.bind(this))
 
     socket.on('close_page', this.onClose.bind(this))
+
+    socket.on('change_bufnr', this.onChangeBufnr.bind(this))
+  }
+
+  componentDidMount() {
+    this.startSocket(window.location.pathname.split('/')[2])
   }
 
   onConnect() {
@@ -142,6 +153,10 @@ export default class PreviewPage extends React.Component {
   onClose() {
     console.log('close')
     window.close()
+  }
+
+  onChangeBufnr(bufnr) {
+    this.startSocket(bufnr)
   }
 
   onRefreshContent({
