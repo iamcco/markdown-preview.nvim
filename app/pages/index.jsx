@@ -9,6 +9,7 @@ import footnote from 'markdown-it-footnote'
 import markdownItAnchor from 'markdown-it-anchor'
 import markdownItToc from 'markdown-it-toc-done-right'
 import markdownDeflist from 'markdown-it-deflist'
+import GithubSlugger, {slug} from 'github-slugger'
 
 import mk from './katex'
 import chart from './chart'
@@ -205,11 +206,13 @@ export default class PreviewPage extends React.Component {
           permalink: true,
           permalinkBefore: true,
           permalinkSymbol: anchorSymbol,
-          permalinkClass: 'anchor'
+          permalinkClass: 'anchor',
+          slugify: slug,
         })
         .use(markdownItToc, {
           ...DEFAULT_OPTIONS.toc,
-          ...toc
+          ...toc,
+          slugify: x => slug(String(x).trim()),
         })
     }
 
