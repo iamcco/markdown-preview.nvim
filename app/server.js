@@ -35,6 +35,7 @@ exports.run = function () {
     req.asPath = req.url.replace(/[?#].*$/, '')
     req.mkcss = await plugin.nvim.getVar('mkdp_markdown_css')
     req.hicss = await plugin.nvim.getVar('mkdp_highlight_css')
+    req.custImgPath = await plugin.nvim.getVar('mkdp_images_path')
     // routes
     routes(req, res)
   })
