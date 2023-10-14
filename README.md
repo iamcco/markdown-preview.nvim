@@ -70,7 +70,31 @@ Plugin 'iamcco/markdown-preview.nvim'
 :PluginInstall
 :call mkdp#util#install()
 ```
+Or with [lazy.nvim](https://github.com/folke/lazy.nvim):
 
+Add this in your `init.lua or plugins.lua`
+
+```lua
+-- install without yarn or npm
+{
+    "iamcco/markdown-preview.nvim",
+    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+    ft = { "markdown" },
+    build = function() vim.fn["mkdp#util#install"]() end,
+}
+
+-- install with yarn or npm
+{
+  "iamcco/markdown-preview.nvim",
+  cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+  build = "cd app && yarn install",
+  init = function()
+    vim.g.mkdp_filetypes = { "markdown" }
+  end,
+  ft = { "markdown" },
+},
+
+```
 Or with [Packer.nvim](https://github.com/wbthomason/packer.nvim):
 
 Add this in your `init.lua or plugins.lua`
@@ -196,6 +220,9 @@ let g:mkdp_port = ''
 " preview page title
 " ${name} will be replace with the file name
 let g:mkdp_page_title = '「${name}」'
+
+" use a custom location for images
+let g:mkdp_images_path = /home/user/.markdown_images
 
 " recognized filetypes
 " these filetypes will have MarkdownPreview... commands
@@ -383,33 +410,41 @@ Or
 
 ### FAQ
 
-Question: Why is the synchronised scrolling lagging?
+#### *Why is the synchronised scrolling lagging?*
 
-Answer: set `updatetime` to a small number, for instance: `set updatetime=100`
+Set `updatetime` to a small number, for instance: `set updatetime=100`
 
 *WSL 2 issue*: Can not open browser when using WSL 2 with terminal Vim.
 
 > if you are using Ubuntu you can install xdg-utils using `sudo apt-get install -y xdg-utils`
 > checkout [issue 199](https://github.com/iamcco/markdown-preview.nvim/issues/199) for more detail.
 
-Question: How can I change the dark/light theme?
+#### *How can I change the dark/light theme?*
 
-Answer: The default theme is based on your system preferences.
+The default theme is based on your system preferences.
 There is a button hidden in the header to change the theme. Place your mouse over the header to reveal it.
 
-Question: How can I pass CLI options to the browser, like opening in a new window?
+#### *How can I pass CLI options to the browser, like opening in a new window?*
 
 Answer: Add the following to your Neovim init script:
 
+*Linux*
 ```vimscript
   function OpenMarkdownPreview (url)
     execute "silent ! firefox --new-window " . a:url
   endfunction
   let g:mkdp_browserfunc = 'OpenMarkdownPreview'
 ```
+Replace `firefox` with `chrome` if you prefer. Both browsers recognize the `--new-window` option.
 
-Replace "firefox" with "chrome" if you prefer. Both browsers recognize the `--new-window` option.
-
+*macOS*
+```vimscript
+  function OpenMarkdownPreview (url)
+    execute "silent ! open -a Firefox -n --args --new-window " . a:url
+  endfunction
+  let g:mkdp_browserfunc = 'OpenMarkdownPreview'
+```
+Replace `Firefox` with `Google\ Chrome` or `Brave\ Browser` if you prefer. They all recognize the `--new-window` option.
 
 ### About Vim Support
 
