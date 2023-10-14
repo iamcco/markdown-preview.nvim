@@ -262,7 +262,7 @@ export default class PreviewPage extends React.Component {
         if (refreshContent) {
           try {
             // eslint-disable-next-line
-            mermaid.initialize(options.maid || {})
+            mermaid.initialize({ theme: (this.state.theme || 'light'), ...(options.maid || {}) })
             // eslint-disable-next-line
             mermaid.init(undefined, document.querySelectorAll('.mermaid'))
           } catch (e) { }
