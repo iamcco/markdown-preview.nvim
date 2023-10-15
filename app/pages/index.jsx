@@ -117,6 +117,8 @@ export default class PreviewPage extends React.Component {
       window.socket = undefined
     }
 
+    window.history.replaceState(null, '', `/${bufnr}`)
+
     const socket = io({
       query: {
         bufnr

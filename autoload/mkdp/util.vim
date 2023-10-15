@@ -50,7 +50,7 @@ endfunction
 " auto refetch combine preview
 function! mkdp#util#combine_preview_refresh() abort
   if g:mkdp_clients_active && !g:mkdp_auto_start
-    call mkdp#rpc#open_browser()
+    call mkdp#util#open_browser()
   endif
 endfunction
 

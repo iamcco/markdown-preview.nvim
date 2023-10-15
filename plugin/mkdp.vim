@@ -143,7 +143,7 @@ function! s:init() abort
     if g:mkdp_auto_start
       execute 'autocmd BufEnter *.{md,mkd,mdown,mkdn,mdwn,' . join(g:mkdp_filetypes, ',') . '} call mkdp#util#open_preview_page()'
     endif
-    if g:mkdp_combine_preview_auto_refresh
+    if g:mkdp_combine_preview && g:mkdp_combine_preview_auto_refresh
       execute 'autocmd BufEnter *.{md,mkd,mdown,mkdn,mdwn,' . join(g:mkdp_filetypes, ',') . '} call mkdp#util#combine_preview_refresh()'
     endif
   augroup END
