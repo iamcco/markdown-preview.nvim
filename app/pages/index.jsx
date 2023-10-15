@@ -80,6 +80,7 @@ export default class PreviewPage extends React.Component {
 
     this.preContent = ''
     this.timer = undefined
+    this.bufnr = -1;
 
     this.state = {
       name: '',
@@ -111,11 +112,13 @@ export default class PreviewPage extends React.Component {
   }
 
   startSocket(bufnr) {
-    // Close the previous socket
-    if (window.socket) {
-      window.socket.close()
-      window.socket = undefined
+    if (this.bufnr === bufnr) {
+      return;
     }
+    this.bufnr = bufnr;
+
+    // Close the previous socket
+    const tmpSocket = window.socket
 
     window.history.replaceState(null, '', `/${bufnr}`)
 
@@ -138,10 +141,14 @@ export default class PreviewPage extends React.Component {
     socket.on('close_page', this.onClose.bind(this))
 
     socket.on('change_bufnr', this.onChangeBufnr.bind(this))
+
+    if (tmpSocket) {
+      tmpSocket.close()
+    }
   }
 
   componentDidMount() {
-    this.startSocket(window.location.pathname.split('/')[2])
+    this.startSocket(parseFloat(window.location.pathname.split('/')[2]))
   }
 
   onConnect() {

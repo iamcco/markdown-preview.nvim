@@ -139,6 +139,7 @@ exports.run = function () {
       async function openBrowser ({ bufnr }) {
         const combinePreview = await plugin.nvim.getVar('mkdp_combine_preview')
         if (combinePreview && Object.values(clients).some(cs => cs.some(c => c.connected))) {
+          logger.info(`combine preview page: `, bufnr)
           Object.values(clients).forEach(cs => {
             cs.forEach(c => {
               if (c.connected) {
