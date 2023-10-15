@@ -237,6 +237,10 @@ let g:mkdp_theme = 'dark'
 " if enable it will reuse previous opened preview window when you preview markdown file.
 " ensure to set let g:mkdp_auto_close = 0 if you have enable this option
 let g:mkdp_combine_preview = 0
+
+" auto refetch combine preview contents when change markdown buffer
+" only when g:mkdp_combine_preview is 1
+let g:mkdp_combine_preview_auto_refresh = 1
 ```
 
 Mappings:

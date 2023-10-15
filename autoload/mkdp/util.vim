@@ -47,6 +47,13 @@ function! mkdp#util#open_preview_page() abort
   endif
 endfunction
 
+" auto refetch combine preview
+function! mkdp#util#combine_preview_refresh() abort
+  if g:mkdp_clients_active && !g:mkdp_auto_start
+    call mkdp#rpc#open_browser()
+  endif
+endfunction
+
 " open browser
 function! mkdp#util#open_browser() abort
   call mkdp#rpc#open_browser()
@@ -54,6 +61,7 @@ function! mkdp#util#open_browser() abort
 endfunction
 
 function! mkdp#util#stop_preview() abort
+  let g:mkdp_clients_active = 0
   " TODO: delete autocmd
   call mkdp#rpc#stop_server()
 endfunction

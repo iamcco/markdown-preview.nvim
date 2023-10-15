@@ -24,6 +24,14 @@ exports.run = function () {
     })
   }
 
+  const update_clients_active_var = () => {
+    if (Object.values(clients).some(cs => cs.some(c => c.connected))) {
+      plugin.nvim.setVar('mkdp_clients_active', 1)
+    } else {
+      plugin.nvim.setVar('mkdp_clients_active', 0)
+    }
+  }
+
   // http server
   const server = http.createServer(async (req, res) => {
     // plugin
@@ -51,6 +59,8 @@ exports.run = function () {
 
     clients[bufnr] = clients[bufnr] || []
     clients[bufnr].push(client)
+    // update vim variable
+    update_clients_active_var();
 
     const buffers = await plugin.nvim.buffers
     buffers.forEach(async (buffer) => {
@@ -82,6 +92,8 @@ exports.run = function () {
     client.on('disconnect', function () {
       logger.info('disconnect: ', client.id)
       clients[bufnr] = (clients[bufnr] || []).map(c => c.id !== client.id)
+      // update vim variable
+      update_clients_active_var();
     })
   })
 
