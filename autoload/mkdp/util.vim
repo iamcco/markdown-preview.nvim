@@ -62,6 +62,9 @@ function! mkdp#util#get_platform() abort
   if has('win32') || has('win64')
     return 'win'
   elseif has('mac') || has('macvim')
+    if system('arch') =~? 'arm64'
+      return 'macos-arm64'
+    endif
     return 'macos'
   endif
   return 'linux'
