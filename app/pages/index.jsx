@@ -80,6 +80,7 @@ export default class PreviewPage extends React.Component {
 
     this.preContent = ''
     this.timer = undefined
+    this.bufnr = -1;
 
     this.state = {
       name: '',
@@ -110,11 +111,20 @@ export default class PreviewPage extends React.Component {
     this.setState({ themeModeIsVisible: false })
   }
 
+  startSocket(bufnr) {
+    if (this.bufnr === bufnr) {
+      return;
+    }
+    this.bufnr = bufnr;
 
-  componentDidMount() {
+    // Close the previous socket
+    const tmpSocket = window.socket
+
+    window.history.replaceState(null, '', `/${bufnr}`)
+
     const socket = io({
       query: {
-        bufnr: window.location.pathname.split('/')[2]
+        bufnr
       }
     })
 
@@ -129,6 +139,16 @@ export default class PreviewPage extends React.Component {
     socket.on('refresh_content', this.onRefreshContent.bind(this))
 
     socket.on('close_page', this.onClose.bind(this))
+
+    socket.on('change_bufnr', this.onChangeBufnr.bind(this))
+
+    if (tmpSocket) {
+      tmpSocket.close()
+    }
+  }
+
+  componentDidMount() {
+    this.startSocket(parseFloat(window.location.pathname.split('/')[2]))
   }
 
   onConnect() {
@@ -142,6 +162,10 @@ export default class PreviewPage extends React.Component {
   onClose() {
     console.log('close')
     window.close()
+  }
+
+  onChangeBufnr(bufnr) {
+    this.startSocket(bufnr)
   }
 
   onRefreshContent({
@@ -262,7 +286,7 @@ export default class PreviewPage extends React.Component {
         if (refreshContent) {
           try {
             // eslint-disable-next-line
-            mermaid.initialize(options.maid || {})
+            mermaid.initialize({ theme: (this.state.theme || 'light'), ...(options.maid || {}) })
             // eslint-disable-next-line
             mermaid.init(undefined, document.querySelectorAll('.mermaid'))
           } catch (e) { }

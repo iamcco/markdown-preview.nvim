@@ -47,6 +47,13 @@ function! mkdp#util#open_preview_page() abort
   endif
 endfunction
 
+" auto refetch combine preview
+function! mkdp#util#combine_preview_refresh() abort
+  if g:mkdp_clients_active && !g:mkdp_auto_start
+    call mkdp#util#open_browser()
+  endif
+endfunction
+
 " open browser
 function! mkdp#util#open_browser() abort
   call mkdp#rpc#open_browser()
@@ -54,6 +61,7 @@ function! mkdp#util#open_browser() abort
 endfunction
 
 function! mkdp#util#stop_preview() abort
+  let g:mkdp_clients_active = 0
   " TODO: delete autocmd
   call mkdp#rpc#stop_server()
 endfunction
@@ -62,6 +70,9 @@ function! mkdp#util#get_platform() abort
   if has('win32') || has('win64')
     return 'win'
   elseif has('mac') || has('macvim')
+    if system('arch') =~? 'arm64'
+      return 'macos-arm64'
+    endif
     return 'macos'
   endif
   return 'linux'

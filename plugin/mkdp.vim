@@ -100,6 +100,25 @@ if !exists('g:mkdp_filetypes')
   let g:mkdp_filetypes = ['markdown']
 endif
 
+" markdown images custom path
+if !exists('g:mkdp_images_path')
+  let g:mkdp_images_path = ''
+endif
+
+" combine preview window
+if !exists('g:mkdp_combine_preview')
+  let g:mkdp_combine_preview = 0
+endif
+
+" auto refetch combine preview contents when change markdown buffer
+" only when g:mkdp_combine_preview is 1
+if !exists('g:mkdp_combine_preview_auto_refresh')
+  let g:mkdp_combine_preview_auto_refresh = 1
+endif
+
+" if there are any active preview client
+let g:mkdp_clients_active = 0
+
 function! s:init_command() abort
   command! -buffer MarkdownPreview call mkdp#util#open_preview_page()
   command! -buffer MarkdownPreviewStop call mkdp#util#stop_preview()
@@ -123,6 +142,9 @@ function! s:init() abort
     endif
     if g:mkdp_auto_start
       execute 'autocmd BufEnter *.{md,mkd,mdown,mkdn,mdwn,' . join(g:mkdp_filetypes, ',') . '} call mkdp#util#open_preview_page()'
+    endif
+    if g:mkdp_combine_preview && g:mkdp_combine_preview_auto_refresh
+      execute 'autocmd BufEnter *.{md,mkd,mdown,mkdn,mdwn,' . join(g:mkdp_filetypes, ',') . '} call mkdp#util#combine_preview_refresh()'
     endif
   augroup END
 endfunction
