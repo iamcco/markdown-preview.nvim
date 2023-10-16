@@ -41,15 +41,15 @@ Install with [vim-plug](https://github.com/junegunn/vim-plug):
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 
 
-" If you have nodejs and yarn
-Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
+" If you have nodejs
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && npx --yes yarn install' }
 ```
 
 Or install with [dein](https://github.com/Shougo/dein.vim):
 
 ```vim
 call dein#add('iamcco/markdown-preview.nvim', {'on_ft': ['markdown', 'pandoc.markdown', 'rmd'],
-					\ 'build': 'sh -c "cd app && yarn install"' })
+					\ 'build': 'sh -c "cd app && npx --yes yarn install"' })
 ```
 
 Or with [minpac](https://github.com/k-takata/minpac):
@@ -121,11 +121,12 @@ add plugin to the `~/.local/share/nvim/site/pack/packer/start/` directory:
 cd ~/.local/share/nvim/site/pack/packer/start/
 git clone https://github.com/iamcco/markdown-preview.nvim.git
 cd markdown-preview.nvim
-yarn install
-yarn build
+npx --yes yarn install
+npx --yes yarn build
 ```
+
 Please make sure that you have installed `node.js` and `yarn`.
-Open `nvim` and run `:PackerInstall` to make it work.
+Open `nvim` and run `:PackerInstall` to make it workable
 
 ### MarkdownPreview Config:
 
