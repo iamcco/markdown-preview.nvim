@@ -1,6 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const logger = require('./lib/util/logger')('app/routes')
+const os = require('os')
 
 const routes = []
 
@@ -117,6 +118,31 @@ use(async (req, res, next) => {
       logger.error('image not exists: ', imgPath)
     }
   }
+  next()
+})
+
+// catchall for local files
+use(async (req, res, next) => {
+  logger.info('local file route: ', req.asPath)
+
+  let fileDir = await req.plugin.nvim.call('expand', `#${req.bufnr}:p:h`)
+  logger.info('fileDir', fileDir)
+
+  let filePath = decodeURIComponent(decodeURIComponent(req.asPath))
+  filePath = filePath.replace(/^\/~\//, os.homedir() + '/') // Expand ~/
+  filePath = filePath.replace(/\\ /g, ' ')
+
+  let filePathOptions = [
+    filePath, // absolute path
+    path.join(fileDir, filePath), // relative path
+  ]
+  for (let i in filePathOptions) {
+    logger.info('filePath', filePathOptions[i])
+    if (fs.existsSync(filePathOptions[i]) && !fs.statSync(filePathOptions[i]).isDirectory()) {
+        return fs.createReadStream(filePathOptions[i]).pipe(res)
+    }
+  }
+
   next()
 })
 
