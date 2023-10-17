@@ -10,7 +10,7 @@ const use = function (route) {
 
 // /page/:number
 use((req, res, next) => {
-  if (/\/page\/\d+/.test(req.asPath)) {
+  if (/\/page\/\d+/.test(req.asPath) || /^\/\d+$/.test(req.asPath)) {
     return fs.createReadStream('./out/index.html').pipe(res)
   }
   next()

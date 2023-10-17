@@ -148,7 +148,7 @@ export default class PreviewPage extends React.Component {
   }
 
   componentDidMount() {
-    this.startSocket(parseFloat(window.location.pathname.split('/')[2]))
+    this.startSocket(parseFloat(window.location.pathname.split('/').pop()))
   }
 
   onConnect() {
