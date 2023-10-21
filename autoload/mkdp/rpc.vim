@@ -109,18 +109,18 @@ function! mkdp#rpc#preview_refresh() abort
   endif
 endfunction
 
-function! mkdp#rpc#preview_close() abort
+function! mkdp#rpc#preview_close(bufnum) abort
   if s:is_vim
     if s:mkdp_channel_id !=# v:null
-      call mkdp#rpc#notify(s:mkdp_channel_id, 'close_page', { 'bufnr': bufnr('%') })
+      call mkdp#rpc#notify(s:mkdp_channel_id, 'close_page', { 'bufnr': a:bufnum })
     endif
   else
     if s:mkdp_channel_id !=# -1
-      call rpcnotify(s:mkdp_channel_id, 'close_page', { 'bufnr': bufnr('%') })
+      call rpcnotify(s:mkdp_channel_id, 'close_page', { 'bufnr': a:bufnum })
     endif
   endif
   let b:MarkdownPreviewToggleBool = 0
-  call mkdp#autocmd#clear_buf()
+  call mkdp#autocmd#clear_buf(a:bufnum)
 endfunction
 
 function! mkdp#rpc#open_browser() abort

@@ -253,7 +253,6 @@
   content: normal;
 }
 .markdown-body code {
-  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
   padding: 0;
   padding-top: 0.2em;
   padding-bottom: 0.2em;
@@ -303,9 +302,27 @@
   box-sizing: border-box;
   padding: 0;
 }
+.task-list-item input[type="checkbox"]:checked {
+  filter: invert() brightness(2.5) invert();
+}
 .task-list-item input[type="radio"] {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   padding: 0;
+}
+.octicon {
+  fill: var(--color-text-primary);
+}
+.mermaid {
+  display: flex;
+  justify-content: center;
+}
+.mermaid > svg {
+  max-width: none !important;
+}
+.dot {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
