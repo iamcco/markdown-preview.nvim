@@ -8,6 +8,7 @@ const child_process_1 = tslib_1.__importDefault(require("child_process"));
 const os_1 = tslib_1.__importDefault(require("os"));
 module.exports = function opener(args, tool) {
     let platform = process.platform;
+    let is_wsl = false;
     args = [].concat(args);
     // Attempt to detect Windows Subystem for Linux (WSL).
     // WSL  itself as Linux (which works in most cases), but in
@@ -16,12 +17,18 @@ module.exports = function opener(args, tool) {
     // whereas using xdg-open does not, since there is no X Windows in WSL.
     if (platform === 'linux' && os_1.default.release().toLowerCase().indexOf('microsoft') !== -1) {
         platform = 'win32';
+        is_wsl = true;
     }
     // http://stackoverflow.com/q/1480971/3191, but see below for Windows.
     let command;
     switch (platform) {
         case 'win32': {
-            command = 'cmd.exe';
+            if (is_wsl) {
+                command = '/mnt/c/Windows/System32/cmd.exe';
+            }
+            else {
+                command = 'cmd.exe';
+            }
             if (tool) {
                 args.unshift(tool);
             }

@@ -9,6 +9,7 @@ module.exports = function opener(
   tool: string | undefined
 ) {
   let platform = process.platform
+  let is_wsl = false
   args = [].concat(args)
 
   // Attempt to detect Windows Subystem for Linux (WSL).
@@ -18,13 +19,18 @@ module.exports = function opener(
   // whereas using xdg-open does not, since there is no X Windows in WSL.
   if (platform === 'linux' && os.release().toLowerCase().indexOf('microsoft') !== -1) {
     platform = 'win32'
+    is_wsl = true
   }
 
   // http://stackoverflow.com/q/1480971/3191, but see below for Windows.
   let command
   switch (platform) {
     case 'win32': {
-      command = 'cmd.exe'
+      if (is_wsl) {
+        command = '/mnt/c/Windows/System32/cmd.exe'
+      } else {
+        command = 'cmd.exe'
+      }
       if (tool) {
         args.unshift(tool)
       }
