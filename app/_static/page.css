@@ -74,3 +74,10 @@ main {
   font-size: 14px;
   font-weight: 600;
 }
+
+@media print {
+  #page-header {
+    display: none;
+  }
+}
+
