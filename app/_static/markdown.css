@@ -309,3 +309,9 @@
   box-sizing: border-box;
   padding: 0;
 }
+
+@media print {
+  .markdown-body {
+    border: 0;
+  }
+}
