@@ -128,6 +128,11 @@ npx --yes yarn build
 Please make sure that you have installed `node.js` and `yarn`.
 Open `nvim` and run `:PackerInstall` to make it workable
 
+#### Note About Normal Vim
+
+In order for this plugin to work on normal:  
+cd to this directory, then: `npm install` 
+
 ### MarkdownPreview Config:
 
 ```vim
