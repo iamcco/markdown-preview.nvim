@@ -128,6 +128,12 @@ npx --yes yarn build
 Please make sure that you have installed `node.js` and `yarn`.
 Open `nvim` and run `:PackerInstall` to make it workable
 
+#### Note About MacOS
+
+This plugin requires a further step in order for it to render markdown on MacOS; affects all Vim flavours. 
+
+cd to this directory, then: `npm install` 
+
 ### MarkdownPreview Config:
 
 ```vim
