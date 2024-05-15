@@ -225,6 +225,10 @@ let g:mkdp_page_title = '「${name}」'
 " use a custom location for images
 let g:mkdp_images_path = /home/user/.markdown_images
 
+" resolve absolute image paths against the custom location for images,
+" instead of the root of the system (default to 0)
+let g:mkdp_images_path_as_root = 1
+
 " recognized filetypes
 " these filetypes will have MarkdownPreview... commands
 let g:mkdp_filetypes = ['markdown']

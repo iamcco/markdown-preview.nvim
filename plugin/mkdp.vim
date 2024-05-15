@@ -105,6 +105,12 @@ if !exists('g:mkdp_images_path')
   let g:mkdp_images_path = ''
 endif
 
+" if 1, absolute image paths are resolved against the images custom
+" path instead of the system root
+if !exists('g:mkdp_images_path_as_root')
+  let g:mkdp_images_path_as_root = 0
+endif
+
 " combine preview window
 if !exists('g:mkdp_combine_preview')
   let g:mkdp_combine_preview = 0

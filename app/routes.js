@@ -93,7 +93,7 @@ use(async (req, res, next) => {
 
       let imgPath = decodeURIComponent(decodeURIComponent(req.asPath.replace(reg, '')))
       imgPath = imgPath.replace(/\\ /g, ' ')
-      if (imgPath[0] !== '/' && imgPath[0] !== '\\') {
+      if (req.custImgPathAsRoot || imgPath[0] !== '/' && imgPath[0] !== '\\') {
         imgPath = path.join(fileDir, imgPath)
       } else if (!fs.existsSync(imgPath)) {
         let tmpDirPath = fileDir
