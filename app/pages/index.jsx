@@ -187,7 +187,8 @@ export default class PreviewPage extends React.Component {
         hide_yaml_meta: hideYamlMeta = 1,
         sequence_diagrams: sequenceDiagrams = {},
         flowchart_diagrams: flowchartDiagrams = {},
-        toc = {}
+        toc = {},
+        katex_preamble = []
       } = options
       // markdown-it
       this.md = new MarkdownIt({
@@ -201,7 +202,8 @@ export default class PreviewPage extends React.Component {
       this.md
         .use(mk, {
           ...DEFAULT_OPTIONS.katex,
-          ...katex
+          ...katex,
+          _preamble: katex_preamble
         })
         .use(blockUml, {
           ...DEFAULT_OPTIONS.uml,

@@ -6,7 +6,6 @@ https://github.com/runarberg/markdown-it-math
 It differs in that it takes (a subset of) LaTeX as input and relies on KaTeX
 for rendering output.
 */
-
 /* jslint node: true */
 'use strict'
 
@@ -158,6 +157,13 @@ export default function math_plugin (md, options) {
 
   options = options || {}
   options.macros = options.macros || {}
+  const preamble = options._preamble
+
+  if (Array.isArray(preamble) && preamble.length) {
+      katex.renderToString(preamble.join("\n"), {macros: options.macros, globalGroup: true})
+  }
+
+  options._preamble = undefined
 
   // set KaTeX as the renderer for markdown-it-simplemath
   var katexInline = function (latex) {
