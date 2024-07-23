@@ -77,11 +77,15 @@ Add this in your `init.lua or plugins.lua`
 ```lua
 -- install without yarn or npm
 {
-    "iamcco/markdown-preview.nvim",
-    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
-    ft = { "markdown" },
-    build = function() vim.fn["mkdp#util#install"]() end,
-}
+  "iamcco/markdown-preview.nvim",
+  cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+  ft = { "markdown" },
+  build = function()
+    require("lazy").load { plugins = { "markdown-preview.nvim" } }
+    vim.fn["mkdp#util#install"]()
+  end,
+},
+
 
 -- install with yarn or npm
 {
