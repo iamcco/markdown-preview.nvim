@@ -35,7 +35,9 @@ export default function(options: Attach): IPlugin {
   nvim.on('notification', async (method: string, args: any[]) => {
     const opts = args[0] || args
     const bufnr = opts.bufnr
+    console.log('💡 bufnr from client =', bufnr);
     const buffers = await nvim.buffers
+    console.log('📚 Buffers from nvim =', buffers.map(b => b.id));
     const buffer = buffers.find(b => b.id === bufnr)
     if (method === 'refresh_content') {
       const winline = await nvim.call('winline')

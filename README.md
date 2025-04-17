@@ -1,5 +1,9 @@
 <h1 align="center"> ✨ Markdown Preview for (Neo)vim ✨ </h1>
 
+### THIS IS A FORKED PROJECT
+
+Please give all your love to the [original project](https://github.com/iamcco/markdown-preview.nvim), the only difference between the two is that I changed the default page width in `app/_static/page.css`.  If this could be a configurable setting, I'd be happy to retire this fork.
+
 > Powered by ❤️
 
 ### Introduction

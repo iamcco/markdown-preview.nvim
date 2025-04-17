@@ -1,4 +1,4 @@
-exports.run = function () {
+exports.run = function() {
   // attach nvim
   const { plugin } = require('./nvim')
   const http = require('http')
@@ -52,6 +52,7 @@ exports.run = function () {
   const io = websocket(server)
 
   io.on('connection', async (client) => {
+    console.log('💥 Client connected!', client.id);
     const { handshake = { query: {} } } = client
     const bufnr = handshake.query.bufnr
 
@@ -65,6 +66,7 @@ exports.run = function () {
     const buffers = await plugin.nvim.buffers
     buffers.forEach(async (buffer) => {
       if (buffer.id === Number(bufnr)) {
+        console.log('✅ Found matching buffer:', buffer.id);
         const winline = await plugin.nvim.call('winline')
         const currentWindow = await plugin.nvim.window
         const winheight = await plugin.nvim.call('winheight', currentWindow.id)
@@ -74,7 +76,10 @@ exports.run = function () {
         const theme = await plugin.nvim.getVar('mkdp_theme')
         const name = await buffer.name
         const content = await buffer.getLines()
+        const pageCtnMaxWidth = await plugin.nvim.getVar('mkdp_page_ctn_max_width')
+        console.log('📡 Sending pageCtnMaxWidth =', pageCtnMaxWidth); // <- add this!
         const currentBuffer = await plugin.nvim.buffer
+        console.log('🚀 Emitting refresh_content');
         client.emit('refresh_content', {
           options,
           isActive: currentBuffer.id === buffer.id,
@@ -84,12 +89,13 @@ exports.run = function () {
           pageTitle,
           theme,
           name,
-          content
+          content,
+          pageCtnMaxWidth
         })
       }
     })
 
-    client.on('disconnect', function () {
+    client.on('disconnect', function() {
       logger.info('disconnect: ', client.id)
       clients[bufnr] = (clients[bufnr] || []).map(c => c.id !== client.id)
       // update vim variable
@@ -97,7 +103,7 @@ exports.run = function () {
     })
   })
 
-  async function startServer () {
+  async function startServer() {
     const openToTheWord = await plugin.nvim.getVar('mkdp_open_to_the_world')
     const host = openToTheWord ? '0.0.0.0' : '127.0.0.1'
     let port = await plugin.nvim.getVar('mkdp_port')
@@ -105,17 +111,17 @@ exports.run = function () {
     server.listen({
       host,
       port
-    }, function () {
+    }, function() {
       logger.info('server run: ', port)
-      function refreshPage ({ bufnr, data }) {
+      function refreshPage({ bufnr, data }) {
         logger.info('refresh page: ', bufnr)
-        ;(clients[bufnr] || []).forEach(c => {
-          if (c.connected) {
-            c.emit('refresh_content', data)
-          }
-        })
+          ; (clients[bufnr] || []).forEach(c => {
+            if (c.connected) {
+              c.emit('refresh_content', data)
+            }
+          })
       }
-      function closePage ({ bufnr }) {
+      function closePage({ bufnr }) {
         logger.info('close page: ', bufnr)
         clients[bufnr] = (clients[bufnr] || []).filter(c => {
           if (c.connected) {
@@ -125,10 +131,10 @@ exports.run = function () {
           return true
         })
       }
-      function closeAllPages () {
+      function closeAllPages() {
         logger.info('close all pages')
         Object.keys(clients).forEach(bufnr => {
-          ;(clients[bufnr] || []).forEach(c => {
+          ; (clients[bufnr] || []).forEach(c => {
             if (c.connected) {
               c.emit('close_page')
             }
@@ -136,7 +142,7 @@ exports.run = function () {
         })
         clients = {}
       }
-      async function openBrowser ({ bufnr }) {
+      async function openBrowser({ bufnr }) {
         const combinePreview = await plugin.nvim.getVar('mkdp_combine_preview')
         if (combinePreview && Object.values(clients).some(cs => cs.some(c => c.connected))) {
           logger.info(`combine preview page: `, bufnr)

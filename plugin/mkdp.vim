@@ -116,6 +116,10 @@ if !exists('g:mkdp_combine_preview_auto_refresh')
   let g:mkdp_combine_preview_auto_refresh = 1
 endif
 
+if !exists('g:mkdp_page_ctn_max_width')
+    let g:mkdp_page_ctn_max_width = ''
+endif
+
 " if there are any active preview client
 let g:mkdp_clients_active = 0
 
