@@ -24,6 +24,14 @@ exports.run = function () {
     })
   }
 
+  const update_clients_active_var = () => {
+    if (Object.values(clients).some(cs => cs.some(c => c.connected))) {
+      plugin.nvim.setVar('mkdp_clients_active', 1)
+    } else {
+      plugin.nvim.setVar('mkdp_clients_active', 0)
+    }
+  }
+
   // http server
   const server = http.createServer(async (req, res) => {
     // plugin
@@ -35,6 +43,7 @@ exports.run = function () {
     req.asPath = req.url.replace(/[?#].*$/, '')
     req.mkcss = await plugin.nvim.getVar('mkdp_markdown_css')
     req.hicss = await plugin.nvim.getVar('mkdp_highlight_css')
+    req.custImgPath = await plugin.nvim.getVar('mkdp_images_path')
     // routes
     routes(req, res)
   })
@@ -50,6 +59,8 @@ exports.run = function () {
 
     clients[bufnr] = clients[bufnr] || []
     clients[bufnr].push(client)
+    // update vim variable
+    update_clients_active_var();
 
     const buffers = await plugin.nvim.buffers
     buffers.forEach(async (buffer) => {
@@ -81,6 +92,8 @@ exports.run = function () {
     client.on('disconnect', function () {
       logger.info('disconnect: ', client.id)
       clients[bufnr] = (clients[bufnr] || []).map(c => c.id !== client.id)
+      // update vim variable
+      update_clients_active_var();
     })
   })
 
@@ -124,25 +137,37 @@ exports.run = function () {
         clients = {}
       }
       async function openBrowser ({ bufnr }) {
-        const openIp = await plugin.nvim.getVar('mkdp_open_ip')
-        const openHost = openIp !== '' ? openIp : (openToTheWord ? getIP() : 'localhost')
-        const url = `http://${openHost}:${port}/page/${bufnr}`
-        const browserfunc = await plugin.nvim.getVar('mkdp_browserfunc')
-        if (browserfunc !== '') {
-          logger.info(`open page [${browserfunc}]: `, url)
-          plugin.nvim.call(browserfunc, [url])
+        const combinePreview = await plugin.nvim.getVar('mkdp_combine_preview')
+        if (combinePreview && Object.values(clients).some(cs => cs.some(c => c.connected))) {
+          logger.info(`combine preview page: `, bufnr)
+          Object.values(clients).forEach(cs => {
+            cs.forEach(c => {
+              if (c.connected) {
+                c.emit('change_bufnr', bufnr)
+              }
+            })
+          })
         } else {
-          const browser = await plugin.nvim.getVar('mkdp_browser')
-          logger.info(`open page [${browser || 'default'}]: `, url)
-          if (browser !== '') {
-            openUrl(url, browser)
+          const openIp = await plugin.nvim.getVar('mkdp_open_ip')
+          const openHost = openIp !== '' ? openIp : (openToTheWord ? getIP() : 'localhost')
+          const url = `http://${openHost}:${port}/page/${bufnr}`
+          const browserfunc = await plugin.nvim.getVar('mkdp_browserfunc')
+          if (browserfunc !== '') {
+            logger.info(`open page [${browserfunc}]: `, url)
+            plugin.nvim.call(browserfunc, [url])
           } else {
-            openUrl(url)
+            const browser = await plugin.nvim.getVar('mkdp_browser')
+            logger.info(`open page [${browser || 'default'}]: `, url)
+            if (browser !== '') {
+              openUrl(url, browser)
+            } else {
+              openUrl(url)
+            }
           }
-        }
-        const isEchoUrl = await plugin.nvim.getVar('mkdp_echo_preview_url')
-        if (isEchoUrl) {
-          plugin.nvim.call('mkdp#util#echo_url', [url])
+          const isEchoUrl = await plugin.nvim.getVar('mkdp_echo_preview_url')
+          if (isEchoUrl) {
+            plugin.nvim.call('mkdp#util#echo_url', [url])
+          }
         }
       }
       plugin.init({

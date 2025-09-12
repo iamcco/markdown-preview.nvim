@@ -1,7 +1,10 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 set -o nounset    # error when referencing undefined variable
 set -o errexit    # exit when command fails
+
+# goes to the script directory
+cd "$(dirname "$0")"
 
 BOLD="$(tput bold 2>/dev/null || echo '')"
 GREY="$(tput setaf 0 2>/dev/null || echo '')"
@@ -68,7 +71,7 @@ download() {
   url="https://github.com/iamcco/markdown-preview.nvim/releases/download/$tag/${1}"
   info "Downloading binary from ${url}"
   if fetch "${url}" | tar xzfv -; then
-    chmod a+x ${1%.tar.gz}
+    chmod a+x "${1%.tar.gz}"
     return
   else
     warn "Binary not available for now, please wait for a few minutes."
@@ -80,6 +83,6 @@ case "${arch}" in
   "Linux x86_64") download markdown-preview-linux.tar.gz ;;
   "Linux i686") download markdown-preview-linux.tar.gz ;;
   "Darwin x86_64") download markdown-preview-macos.tar.gz ;;
-  "Darwin arm64") download markdown-preview-macos.tar.gz ;;
+  "Darwin arm64") download markdown-preview-macos-arm64.tar.gz ;;
   *) info "No pre-built binary available for ${arch}.";;
 esac

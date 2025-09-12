@@ -1,19 +1,18 @@
 let s:mkdp_root_dir = expand('<sfile>:h:h:h')
 
 function! health#mkdp#check() abort
-  call health#report_info('Platform: ' . mkdp#util#get_platform())
-  let l:info = system('nvim --version')
-  call health#report_info('Nvim Version: '. split(l:info, '\n')[0])
-  let l:mkdp_server_script = s:mkdp_root_dir . '/app/bin/markdown-preview-' . mkdp#util#get_platform()
+  lua vim.health.info("Platform: " .. vim.fn['mkdp#util#get_platform']())
+  lua vim.health.info('Nvim Version: ' .. string.gsub(vim.fn.system('nvim --version'), '^%s*(.-)%s*$', '%1'))
+  let l:mkdp_server_script = s:mkdp_root_dir .. '/app/bin/markdown-preview-' .. mkdp#util#get_platform()
   if executable(l:mkdp_server_script)
-    call health#report_info('Pre build: ' . l:mkdp_server_script)
-    call health#report_info('Pre build version: ' . mkdp#util#pre_build_version())
-    call health#report_ok('Using pre build')
+    lua vim.health.info('Pre build: ' .. vim.api.nvim_eval('l:mkdp_server_script'))
+    lua vim.health.info('Pre build version: ' .. vim.fn['mkdp#util#pre_build_version']())
+    lua vim.health.ok('Using pre build')
   elseif executable('node')
-    call health#report_info('Node version: ' . system('node --version'))
-    let l:mkdp_server_script = s:mkdp_root_dir . '/app/server.js'
-    call health#report_info('Script: ' . l:mkdp_server_script)
-    call health#report_info('Script exists: ' . filereadable(l:mkdp_server_script))
-    call health#report_ok('Using node')
+    lua vim.health.info('Node version: ' .. string.gsub(vim.fn.system('node --version'), '^%s*(.-)%s*$', '%1'))
+    let l:mkdp_server_script = s:mkdp_root_dir .. '/app/server.js'
+    lua vim.health.info('Script: ' .. vim.api.nvim_eval('l:mkdp_server_script'))
+    lua vim.health.info('Script exists: ' .. vim.fn.filereadable(vim.api.nvim_eval('l:mkdp_server_script')))
+    lua vim.health.ok('Using node')
   endif
 endfunction
