@@ -213,10 +213,10 @@ export default class PreviewPage extends React.Component {
           ...DEFAULT_OPTIONS.uml,
           ...uml
         })
-	.use(d2, {
-	  ...DEFAULT_OPTIONS.d2,
-	  ...uml
-	})
+        .use(d2, {
+          ...DEFAULT_OPTIONS.d2,
+          ...uml
+        })
         .use(emoji)
         .use(taskLists)
         .use(markdownDeflist)
