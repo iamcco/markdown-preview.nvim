@@ -87,7 +87,7 @@ Add this in your `init.lua or plugins.lua`
 {
   "iamcco/markdown-preview.nvim",
   cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
-  build = "cd app && yarn install",
+  build = "(cd app && yarn install); git restore app/yarn.lock",
   init = function()
     vim.g.mkdp_filetypes = { "markdown" }
   end,
