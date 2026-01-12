@@ -17,7 +17,7 @@ $dir = "bin"
 
 new-item -Name $dir -ItemType directory -Force
 
-Write-Host Dowloading latest release
+Write-Host Downloading latest release
 Invoke-WebRequest $download -Out $zip
 
 Remove-Item $dir\* -Recurse -Force -ErrorAction SilentlyContinue
