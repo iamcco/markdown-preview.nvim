@@ -12,7 +12,7 @@ import markdownDeflist from 'markdown-it-deflist'
 
 import mk from './katex'
 import chart from './chart'
-import mkitMermaid from './mermaid'
+import mkitMermaid, { renderMermaidWithErrorHandling } from './mermaid'
 import linenumbers from './linenumbers'
 import image from './image'
 import diagram, { renderDiagram } from './diagram'
@@ -120,7 +120,7 @@ export default class PreviewPage extends React.Component {
     // Close the previous socket
     const tmpSocket = window.socket
 
-    window.history.replaceState(null, '', `/${bufnr}`)
+    // Keep the original URL path unchanged
 
     const socket = io({
       query: {
@@ -287,8 +287,9 @@ export default class PreviewPage extends React.Component {
           try {
             // eslint-disable-next-line
             mermaid.initialize({ theme: (this.state.theme || 'light'), ...(options.maid || {}) })
-            // eslint-disable-next-line
-            mermaid.init(undefined, document.querySelectorAll('.mermaid'))
+            // eslint-disable-next-line - render with error handling for user-friendly error display
+            renderMermaidWithErrorHandling(mermaid, { theme: this.state.theme || 'light' })
+              .catch(e => console.error('Mermaid render error:', e))
           } catch (e) { }
 
           chart.render()
