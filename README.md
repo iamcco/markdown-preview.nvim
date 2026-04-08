@@ -21,6 +21,7 @@ Main features:
 - [Flowchart](https://github.com/adrai/flowchart.js)
 - [dot](https://github.com/mdaines/viz.js)
 - [Table of contents](https://github.com/nagaozen/markdown-it-toc-done-right)
+- [GitHub Flavored Markdown Alerts](https://github.com/antfu/markdown-it-github-alerts)
 - Emojis
 - Task lists
 - Local images
@@ -474,6 +475,7 @@ Vim support is powered by [@chemzqm/neovim](https://github.com/neoclide/neovim)
 - [markdown-it-katex](https://github.com/waylonflinn/markdown-it-katex)
 - [markdown-it-plantuml](https://github.com/gmunguia/markdown-it-plantuml)
 - [markdown-it-chart](https://github.com/tylingsoft/markdown-it-chart)
+- [markdown-it-github-alerts](https://github.com/antfu/markdown-it-github-alerts)
 - [mermaid](https://github.com/knsv/mermaid)
 - [opener](https://github.com/domenic/opener)
 - [sequence-diagrams](https://github.com/bramp/js-sequence-diagrams)
