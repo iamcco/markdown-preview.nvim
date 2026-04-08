@@ -18,6 +18,11 @@
     --color-markdown-table-border: #dfe2e5;
     --color-markdown-table-tr-border: #c6cbd1;
     --color-markdown-code-bg: #1b1f230d;
+    --color-note: #0969da;
+    --color-tip: #1a7f37;
+    --color-warning: #9a6700;
+    --color-caution: #d1242f;
+    --color-important: #8250df;
 }
 [data-theme="dark"] {
     --color-text-primary: #c9d1d9;
@@ -34,6 +39,11 @@
     --color-markdown-table-border: #3b434b;
     --color-markdown-table-tr-border: #272c32;
     --color-markdown-code-bg: #f0f6fc26;
+    --color-note: #2f81f7;
+    --color-tip: #3fb950;
+    --color-warning: #d29922;
+    --color-caution: #f85149;
+    --color-important: #a371f7;
 }
 
 .markdown-body ol ol,
@@ -188,6 +198,61 @@
   padding: 0 15px;
   color: var(--color-text-tertiary);
   border-left: 4px solid var(--color-markdown-blockquote-border);
+}
+.markdown-body .markdown-alert {
+  padding: 0.5rem 1rem;
+  margin-bottom: 16px;
+  color: inherit;
+  border-left: 0.25em solid #888;
+}
+.markdown-body .markdown-alert > :first-child {
+  margin-top: 0;
+}
+.markdown-body .markdown-alert > :last-child {
+  margin-bottom: 0;
+}
+.markdown-body .markdown-alert .markdown-alert-title {
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  line-height: 1;
+}
+.markdown-body .markdown-alert .markdown-alert-title .octicon {
+  margin-right: 0.5rem;
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}
+.markdown-body .markdown-alert.markdown-alert-note {
+  border-left-color: var(--color-note);
+}
+.markdown-body .markdown-alert.markdown-alert-note .markdown-alert-title {
+  color: var(--color-note);
+}
+.markdown-body .markdown-alert.markdown-alert-important {
+  border-left-color: var(--color-important);
+}
+.markdown-body .markdown-alert.markdown-alert-important .markdown-alert-title {
+  color: var(--color-important);
+}
+.markdown-body .markdown-alert.markdown-alert-warning {
+  border-left-color: var(--color-warning);
+}
+.markdown-body .markdown-alert.markdown-alert-warning .markdown-alert-title {
+  color: var(--color-warning);
+}
+.markdown-body .markdown-alert.markdown-alert-tip {
+  border-left-color: var(--color-tip);
+}
+.markdown-body .markdown-alert.markdown-alert-tip .markdown-alert-title {
+  color: var(--color-tip);
+}
+.markdown-body .markdown-alert.markdown-alert-caution {
+  border-left-color: var(--color-caution);
+}
+.markdown-body .markdown-alert.markdown-alert-caution .markdown-alert-title {
+  color: var(--color-caution);
 }
 .markdown-body table {
   display: block;
