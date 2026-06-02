@@ -6,9 +6,9 @@ import path from 'path'
 const MAX_LOG_SIZE = 1024 * 1024
 const MAX_LOG_BACKUPS = 10
 const LOG_FILE_PATH =
-  process.env.NVIM_MKDP_LOG_FILE || path.join(os.tmpdir(), 'mkdp-nvim.log')
+  process.env.NVIM_MDRV_LOG_FILE || path.join(os.tmpdir(), 'mdrv-nvim.log')
 
-const level = process.env.NVIM_MKDP_LOG_LEVEL || 'info'
+const level = process.env.NVIM_MDRV_LOG_LEVEL || 'info'
 
 if (level === 'debug') {
   fs.writeFileSync(LOG_FILE_PATH, '', 'utf8')
@@ -38,6 +38,6 @@ if (!isRoot) {
   })
 }
 
-module.exports = (name = 'mkdp'): log4js.Logger => {
+module.exports = (name = 'mdrv'): log4js.Logger => {
   return log4js.getLogger(name)
 }

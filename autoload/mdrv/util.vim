@@ -1,9 +1,9 @@
-let s:mkdp_root_dir = expand('<sfile>:h:h:h')
-let s:pre_build = s:mkdp_root_dir . '/app/bin/markdown-preview-'
-let s:package_file = s:mkdp_root_dir . '/package.json'
+let s:mdrv_root_dir = expand('<sfile>:h:h:h')
+let s:pre_build = s:mdrv_root_dir . '/app/bin/markdown-preview-'
+let s:package_file = s:mdrv_root_dir . '/package.json'
 
 " echo message
-function! mkdp#util#echo_messages(hl, msgs)
+function! mdrv#util#echo_messages(hl, msgs)
   if empty(a:msgs) | return | endif
   execute 'echohl '.a:hl
   if type(a:msgs) ==# 1
@@ -17,56 +17,56 @@ function! mkdp#util#echo_messages(hl, msgs)
 endfunction
 
 " echo url
-function! mkdp#util#echo_url(url)
+function! mdrv#util#echo_url(url)
   let l:url = 'Preview page: ' . a:url
-  call mkdp#util#echo_messages('Type', l:url)
+  call mdrv#util#echo_messages('Type', l:url)
 endfunction
 
 " try open preview page
 function! s:try_open_preview_page(timer_id) abort
-  let l:server_status = mkdp#rpc#get_server_status()
+  let l:server_status = mdrv#rpc#get_server_status()
   if l:server_status !=# 1
     let s:try_id = ''
-    call mkdp#rpc#stop_server()
-    call mkdp#rpc#start_server()
+    call mdrv#rpc#stop_server()
+    call mdrv#rpc#start_server()
   endif
 endfunction
 
 " open preview page
-function! mkdp#util#open_preview_page() abort
+function! mdrv#util#open_preview_page() abort
   if get(s:, 'try_id', '') !=# ''
     return
   endif
-  let l:server_status = mkdp#rpc#get_server_status()
+  let l:server_status = mdrv#rpc#get_server_status()
   if l:server_status ==# -1
-    call mkdp#rpc#start_server()
+    call mdrv#rpc#start_server()
   elseif l:server_status ==# 0
     let s:try_id = timer_start(1000, function('s:try_open_preview_page'))
   else
-    call mkdp#util#open_browser()
+    call mdrv#util#open_browser()
   endif
 endfunction
 
 " auto refetch combine preview
-function! mkdp#util#combine_preview_refresh() abort
-  if g:mkdp_clients_active && !g:mkdp_auto_start
-    call mkdp#util#open_browser()
+function! mdrv#util#combine_preview_refresh() abort
+  if g:mdrv_clients_active && !g:mdrv_auto_start
+    call mdrv#util#open_browser()
   endif
 endfunction
 
 " open browser
-function! mkdp#util#open_browser() abort
-  call mkdp#rpc#open_browser()
-  call mkdp#autocmd#init()
+function! mdrv#util#open_browser() abort
+  call mdrv#rpc#open_browser()
+  call mdrv#autocmd#init()
 endfunction
 
-function! mkdp#util#stop_preview() abort
-  let g:mkdp_clients_active = 0
+function! mdrv#util#stop_preview() abort
+  let g:mdrv_clients_active = 0
   " TODO: delete autocmd
-  call mkdp#rpc#stop_server()
+  call mdrv#rpc#stop_server()
 endfunction
 
-function! mkdp#util#get_platform() abort
+function! mdrv#util#get_platform() abort
   if has('win32') || has('win64')
     return 'win'
   elseif has('mac') || has('macvim')
@@ -88,7 +88,7 @@ function! s:on_exit(autoclose, bufnr, Callback, job_id, status, ...)
   endif
 endfunction
 
-function! mkdp#util#open_terminal(opts) abort
+function! mdrv#util#open_terminal(opts) abort
   if get(a:opts, 'position', 'bottom') ==# 'bottom'
     let p = '5new'
   else
@@ -126,56 +126,56 @@ function! mkdp#util#open_terminal(opts) abort
   return bufnr
 endfunction
 
-function! s:markdown_preview_installed(status, ...) abort
+function! s:markdown_review_installed(status, ...) abort
   if a:status != 0
-    call mkdp#util#echo_messages('Error', '[markdown-preview]: install fail')
+    call mdrv#util#echo_messages('Error', '[markdown-review]: install fail')
     return
   endif
-  echo '[markdown-preview.nvim]: install completed'
+  echo '[markdown-review.nvim]: install completed'
 endfunction
 
 function! s:trim(str) abort
   return substitute(a:str, '\v^(\s|\\n)*|(\s|\\n)*$', '', 'g')
 endfunction
 
-function! mkdp#util#install(...)
-  let l:version = mkdp#util#pre_build_version()
-  let l:info = json_decode(join(readfile(s:mkdp_root_dir . '/package.json'), ''))
+function! mdrv#util#install(...)
+  let l:version = mdrv#util#pre_build_version()
+  let l:info = json_decode(join(readfile(s:mdrv_root_dir . '/package.json'), ''))
   if s:trim(l:version) ==# s:trim(l:info.version)
     return
   endif
   let obj = json_decode(join(readfile(s:package_file)))
-  let cmd = (mkdp#util#get_platform() ==# 'win' ? 'install.cmd' : './install.sh') . ' v'.obj['version']
+  let cmd = (mdrv#util#get_platform() ==# 'win' ? 'install.cmd' : './install.sh') . ' v'.obj['version']
   if get(a:, '1', v:false) ==# v:true
-    execute 'lcd ' . s:mkdp_root_dir . '/app'
+    execute 'lcd ' . s:mdrv_root_dir . '/app'
     execute '!' . cmd
   else
-    call mkdp#util#open_terminal({
+    call mdrv#util#open_terminal({
           \ 'cmd': cmd,
-          \ 'cwd': s:mkdp_root_dir . '/app',
-          \ 'Callback': function('s:markdown_preview_installed')
+          \ 'cwd': s:mdrv_root_dir . '/app',
+          \ 'Callback': function('s:markdown_review_installed')
           \})
     wincmd p
   endif
 endfunction
 
-function! mkdp#util#install_sync(...)
+function! mdrv#util#install_sync(...)
   if get(a:, '1', v:false) ==# v:true
-    silent call mkdp#util#install(v:true)
+    silent call mdrv#util#install(v:true)
   else
-    call mkdp#util#install(v:true)
+    call mdrv#util#install(v:true)
   endif
 endfunction
 
-function! mkdp#util#pre_build_version() abort
-  let l:pre_build = s:pre_build . mkdp#util#get_platform()
+function! mdrv#util#pre_build_version() abort
+  let l:pre_build = s:pre_build . mdrv#util#get_platform()
   if has('win32') || has('win64')
     let l:pre_build .= '.exe'
   endif
   if filereadable(l:pre_build)
     let l:info = system(l:pre_build . ' --version')
     if l:info ==# ''
-      call mkdp#util#echo_messages('Type', "[markdown-preview.nvim]: Can not execute pre build binary bundle to get version, will download latest pre build binary bundle")
+      call mdrv#util#echo_messages('Type', "[markdown-review.nvim]: Can not execute pre build binary bundle to get version, will download latest pre build binary bundle")
       return ''
     endif
     let l:info = split(l:info, '\n')
@@ -184,13 +184,13 @@ function! mkdp#util#pre_build_version() abort
   return ''
 endfunction
 
-function! mkdp#util#toggle_preview() abort
-    if !get(b:, 'MarkdownPreviewToggleBool')
-        call mkdp#util#open_preview_page()
-        let b:MarkdownPreviewToggleBool=1
+function! mdrv#util#toggle_preview() abort
+    if !get(b:, 'MarkdownReviewToggleBool')
+        call mdrv#util#open_preview_page()
+        let b:MarkdownReviewToggleBool=1
     else
-        call mkdp#util#stop_preview()
-        let b:MarkdownPreviewToggleBool=0
+        call mdrv#util#stop_preview()
+        let b:MarkdownReviewToggleBool=0
     endif
 endfunction
 

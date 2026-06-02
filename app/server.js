@@ -17,18 +17,18 @@ exports.run = function () {
       const message = err.message || ''
       const match = message.match(/\s*spawn\s+(.+)\s+ENOENT\s*/)
       if (match) {
-        plugin.nvim.call('mkdp#util#echo_messages', ['Error', [`[markdown-preview.nvim]: Can not open browser by using ${match[1]} command`]])
+        plugin.nvim.call('mdrv#util#echo_messages', ['Error', [`[markdown-review.nvim]: Can not open browser by using ${match[1]} command`]])
       } else {
-        plugin.nvim.call('mkdp#util#echo_messages', ['Error', [err.name, err.message]])
+        plugin.nvim.call('mdrv#util#echo_messages', ['Error', [err.name, err.message]])
       }
     })
   }
 
   const update_clients_active_var = () => {
     if (Object.values(clients).some(cs => cs.some(c => c.connected))) {
-      plugin.nvim.setVar('mkdp_clients_active', 1)
+      plugin.nvim.setVar('mdrv_clients_active', 1)
     } else {
-      plugin.nvim.setVar('mkdp_clients_active', 0)
+      plugin.nvim.setVar('mdrv_clients_active', 0)
     }
   }
 
@@ -41,9 +41,9 @@ exports.run = function () {
       .replace(/[?#].*$/, '').split('/').pop()
     // request path
     req.asPath = req.url.replace(/[?#].*$/, '')
-    req.mkcss = await plugin.nvim.getVar('mkdp_markdown_css')
-    req.hicss = await plugin.nvim.getVar('mkdp_highlight_css')
-    req.custImgPath = await plugin.nvim.getVar('mkdp_images_path')
+    req.mkcss = await plugin.nvim.getVar('mdrv_markdown_css')
+    req.hicss = await plugin.nvim.getVar('mdrv_highlight_css')
+    req.custImgPath = await plugin.nvim.getVar('mdrv_images_path')
     // routes
     routes(req, res)
   })
@@ -69,9 +69,9 @@ exports.run = function () {
         const currentWindow = await plugin.nvim.window
         const winheight = await plugin.nvim.call('winheight', currentWindow.id)
         const cursor = await plugin.nvim.call('getpos', '.')
-        const options = await plugin.nvim.getVar('mkdp_preview_options')
-        const pageTitle = await plugin.nvim.getVar('mkdp_page_title')
-        const theme = await plugin.nvim.getVar('mkdp_theme')
+        const options = await plugin.nvim.getVar('mdrv_preview_options')
+        const pageTitle = await plugin.nvim.getVar('mdrv_page_title')
+        const theme = await plugin.nvim.getVar('mdrv_theme')
         const name = await buffer.name
         const content = await buffer.getLines()
         const currentBuffer = await plugin.nvim.buffer
@@ -89,6 +89,30 @@ exports.run = function () {
       }
     })
 
+    // add a review comment from the preview page to the quickfix list
+    client.on('add_comment', async (payload = {}) => {
+      try {
+        const targetBufnr = Number(payload.bufnr != null ? payload.bufnr : bufnr)
+        const lnum = Number(payload.lnum) || 1
+        const text = String(payload.text == null ? '' : payload.text)
+        if (!text.trim()) {
+          client.emit('comment_ack', { ok: false, reason: 'empty' })
+          return
+        }
+        const added = await plugin.nvim.call('mdrv#review#add', [targetBufnr, lnum, text])
+        logger.info('add_comment: ', targetBufnr, lnum, added)
+        client.emit('comment_ack', {
+          ok: !!added,
+          reason: added ? '' : 'disabled',
+          bufnr: targetBufnr,
+          lnum
+        })
+      } catch (e) {
+        logger.error('add_comment failed: ', e)
+        client.emit('comment_ack', { ok: false, reason: 'error' })
+      }
+    })
+
     client.on('disconnect', function () {
       logger.info('disconnect: ', client.id)
       clients[bufnr] = (clients[bufnr] || []).map(c => c.id !== client.id)
@@ -98,9 +122,9 @@ exports.run = function () {
   })
 
   async function startServer () {
-    const openToTheWord = await plugin.nvim.getVar('mkdp_open_to_the_world')
+    const openToTheWord = await plugin.nvim.getVar('mdrv_open_to_the_world')
     const host = openToTheWord ? '0.0.0.0' : '127.0.0.1'
-    let port = await plugin.nvim.getVar('mkdp_port')
+    let port = await plugin.nvim.getVar('mdrv_port')
     port = port || (8080 + Number(`${Date.now()}`.slice(-3)))
     server.listen({
       host,
@@ -137,7 +161,7 @@ exports.run = function () {
         clients = {}
       }
       async function openBrowser ({ bufnr }) {
-        const combinePreview = await plugin.nvim.getVar('mkdp_combine_preview')
+        const combinePreview = await plugin.nvim.getVar('mdrv_combine_preview')
         if (combinePreview && Object.values(clients).some(cs => cs.some(c => c.connected))) {
           logger.info(`combine preview page: `, bufnr)
           Object.values(clients).forEach(cs => {
@@ -148,15 +172,15 @@ exports.run = function () {
             })
           })
         } else {
-          const openIp = await plugin.nvim.getVar('mkdp_open_ip')
+          const openIp = await plugin.nvim.getVar('mdrv_open_ip')
           const openHost = openIp !== '' ? openIp : (openToTheWord ? getIP() : 'localhost')
           const url = `http://${openHost}:${port}/page/${bufnr}`
-          const browserfunc = await plugin.nvim.getVar('mkdp_browserfunc')
+          const browserfunc = await plugin.nvim.getVar('mdrv_browserfunc')
           if (browserfunc !== '') {
             logger.info(`open page [${browserfunc}]: `, url)
             plugin.nvim.call(browserfunc, [url])
           } else {
-            const browser = await plugin.nvim.getVar('mkdp_browser')
+            const browser = await plugin.nvim.getVar('mdrv_browser')
             logger.info(`open page [${browser || 'default'}]: `, url)
             if (browser !== '') {
               openUrl(url, browser)
@@ -164,9 +188,9 @@ exports.run = function () {
               openUrl(url)
             }
           }
-          const isEchoUrl = await plugin.nvim.getVar('mkdp_echo_preview_url')
+          const isEchoUrl = await plugin.nvim.getVar('mdrv_echo_preview_url')
           if (isEchoUrl) {
-            plugin.nvim.call('mkdp#util#echo_url', [url])
+            plugin.nvim.call('mdrv#util#echo_url', [url])
           }
         }
       }
@@ -177,7 +201,7 @@ exports.run = function () {
         openBrowser
       })
 
-      plugin.nvim.call('mkdp#util#open_browser')
+      plugin.nvim.call('mdrv#util#open_browser')
     })
   }
 

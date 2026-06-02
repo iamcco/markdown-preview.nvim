@@ -16,9 +16,9 @@ function default_1(options) {
             const currentWindow = yield nvim.window;
             const winheight = yield nvim.call('winheight', currentWindow.id);
             const cursor = yield nvim.call('getpos', '.');
-            const renderOpts = yield nvim.getVar('mkdp_preview_options');
-            const pageTitle = yield nvim.getVar('mkdp_page_title');
-            const theme = yield nvim.getVar('mkdp_theme');
+            const renderOpts = yield nvim.getVar('mdrv_preview_options');
+            const pageTitle = yield nvim.getVar('mdrv_page_title');
+            const theme = yield nvim.getVar('mdrv_theme');
             const name = yield buffer.name;
             const content = yield buffer.getLines();
             const currentBuffer = yield nvim.buffer;
@@ -56,7 +56,7 @@ function default_1(options) {
     });
     nvim.channelId
         .then((channelId) => tslib_1.__awaiter(this, void 0, void 0, function* () {
-        yield nvim.setVar('mkdp_node_channel_id', channelId);
+        yield nvim.setVar('mdrv_node_channel_id', channelId);
     }))
         .catch(e => {
         logger.error('channelId: ', e);
