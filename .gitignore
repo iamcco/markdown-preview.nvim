@@ -73,3 +73,6 @@ typings/
 
 app/.next/
 app/bin/
+
+# Compiled Next.js static export
+app/out/
