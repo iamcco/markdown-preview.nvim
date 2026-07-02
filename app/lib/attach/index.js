@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = default_1;
 const tslib_1 = require("tslib");
 const neovim_1 = require("@chemzqm/neovim");
 const logger = require('../util/logger')('attach'); // tslint:disable-line
@@ -11,6 +12,8 @@ function default_1(options) {
         const bufnr = opts.bufnr;
         const buffers = yield nvim.buffers;
         const buffer = buffers.find(b => b.id === bufnr);
+        if (!buffer)
+            return;
         if (method === 'refresh_content') {
             const winline = yield nvim.call('winline');
             const currentWindow = yield nvim.window;
@@ -68,4 +71,3 @@ function default_1(options) {
         }
     };
 }
-exports.default = default_1;

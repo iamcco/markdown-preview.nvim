@@ -1,4 +1,5 @@
-import Chart from 'chart.js'
+import { Chart, registerables } from 'chart.js'
+Chart.register(...registerables)
 
 function render () {
   document.querySelectorAll('.chartjs').forEach(element => {

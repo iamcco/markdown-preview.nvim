@@ -1,4 +1,4 @@
-import { Attach, NeovimClient } from '@chemzqm/neovim';
+import { Attach, Neovim } from '@chemzqm/neovim';
 interface IApp {
     refreshPage: ((param: {
         bufnr: number | string;
@@ -14,7 +14,7 @@ interface IApp {
 }
 interface IPlugin {
     init: ((app: IApp) => void);
-    nvim: NeovimClient;
+    nvim: Neovim;
 }
 export default function (options: Attach): IPlugin;
 export {};

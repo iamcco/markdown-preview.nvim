@@ -9,7 +9,7 @@ module.exports = function opener(
   tool: string | undefined
 ) {
   let platform = process.platform
-  args = [].concat(args)
+  args = ([] as string[]).concat(args)
 
   // Attempt to detect Windows Subystem for Linux (WSL).
   // WSL  itself as Linux (which works in most cases), but in

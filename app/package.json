@@ -8,9 +8,10 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "log4js": "6.4.0",
-    "@chemzqm/neovim": "^5.7.9",
-    "socket.io": "2.4.0",
-    "tslib": "1.9.3"
+    "log4js": "6.9.1",
+    "@chemzqm/neovim": "^6.3.6",
+    "socket.io": "4.8.3",
+    "tslib": "2.8.1",
+    "msgpack-lite": "^0.1.26"
   }
 }

@@ -72,4 +72,3 @@ typings/
 .env
 
 app/.next/
-app/bin/

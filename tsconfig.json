@@ -1,6 +1,7 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
+    "ignoreDeprecations": "6.0",
     "resolveJsonModule": true,
     "composite": true,
     "target": "es2015",
@@ -15,7 +16,8 @@
     "outDir": "./app/lib",
     "rootDir": "./src",
     "importHelpers": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "types": ["node"]
   },
   "include": [
     "./src"

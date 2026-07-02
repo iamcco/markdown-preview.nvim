@@ -5,7 +5,7 @@ import vm from 'vm'
 
 import modules from './preloadmodules'
 
-export default function load(scriptPath) {
+export default function load(scriptPath: string) {
   const userModule = new Module(scriptPath)
   userModule.filename = scriptPath
   userModule.paths = (Module as any)._nodeModulePaths(path.dirname(scriptPath))
@@ -18,9 +18,9 @@ export default function load(scriptPath) {
     ...global,
     exports: userModule.exports,
     module: userModule,
-    require: name => {
-      if (modules[name]) {
-        return modules[name]
+    require: (name: string) => {
+      if ((modules as any)[name]) {
+        return (modules as any)[name]
       }
       try {
         return userModule.require(name)

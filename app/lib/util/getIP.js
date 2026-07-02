@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getIP = void 0;
+exports.getIP = getIP;
 function getIP() {
     const interfaces = require('os').networkInterfaces();
     let IP = '';
@@ -18,4 +18,3 @@ function getIP() {
     });
     return IP;
 }
-exports.getIP = getIP;
