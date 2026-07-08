@@ -16,6 +16,7 @@
   "dependencies": {
     "@chemzqm/neovim": "^5.7.9",
     "chart.js": "^2.7.3",
+    "github-slugger": "^2.0.0",
     "highlight.js": "^10.4.1",
     "log4js": "^6.4.0",
     "markdown-it": "^12.3.2",
