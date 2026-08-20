@@ -119,10 +119,15 @@ endif
 " if there are any active preview client
 let g:mkdp_clients_active = 0
 
+if !exists('g:mkdp_open_annotator_on_start')
+  let g:mkdp_open_annotator_on_start = 0
+endif
+
 function! s:init_command() abort
   command! -buffer MarkdownPreview call mkdp#util#open_preview_page()
   command! -buffer MarkdownPreviewStop call mkdp#util#stop_preview()
   command! -buffer MarkdownPreviewToggle call mkdp#util#toggle_preview()
+  command! -buffer MarkdownAnnotate call mkdp#util#open_annotator_page()
   " mapping for user
   noremap <buffer> <silent> <Plug>MarkdownPreview :MarkdownPreview<CR>
   inoremap <buffer> <silent> <Plug>MarkdownPreview <Esc>:MarkdownPreview<CR>a
@@ -130,6 +135,8 @@ function! s:init_command() abort
   inoremap <buffer> <silent> <Plug>MarkdownPreviewStop <Esc>:MarkdownPreviewStop<CR>a
   nnoremap <buffer> <silent> <Plug>MarkdownPreviewToggle :MarkdownPreviewToggle<CR>
   inoremap <buffer> <silent> <Plug>MarkdownPreviewToggle <Esc>:MarkdownPreviewToggle<CR>
+  noremap <buffer> <silent> <Plug>MarkdownAnnotate :MarkdownAnnotate<CR>
+  inoremap <buffer> <silent> <Plug>MarkdownAnnotate <Esc>:MarkdownAnnotate<CR>a
 endfunction
 
 function! s:init() abort

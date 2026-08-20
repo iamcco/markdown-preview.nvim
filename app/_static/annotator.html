@@ -1,0 +1,2970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Markdown Annotator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,600&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F9F7F3;
+  --bg-warm: #F0EDE6;
+  --bg-hover: #EAE6DD;
+  --bg-surface: #FEFDFB;
+  --bg-surface-warm: #FCFBF9;
+  --border: #DDD7CC;
+  --border-light: #E8E3D9;
+  --text: #2D2A26;
+  --text-secondary: #6B6560;
+  --text-tertiary: #7A746B; /* darkened from #9B958C for WCAG AA on --bg */
+  --accent: #C4704B;
+  --accent-hover: #B5613D;
+  --accent-light: rgba(196, 112, 75, 0.08);
+  --accent-wash: rgba(196, 112, 75, 0.12);
+  --danger: #B85450;
+  --danger-hover: #A34845;
+  --danger-light: rgba(184, 84, 80, 0.08);
+  --danger-wash: rgba(184, 84, 80, 0.12);
+  --success: #5B8A5E;
+  --global: #7C6BBA;
+  --global-hover: #6B5AA8;
+  --global-light: rgba(124, 107, 186, 0.08);
+  --global-wash: rgba(124, 107, 186, 0.12);
+  --radius: 10px;
+  --radius-md: 10px;
+  --radius-sm: 6px;
+  --shadow-sm: 0 1px 3px rgba(45, 42, 38, 0.06);
+  --shadow-md: 0 4px 12px rgba(45, 42, 38, 0.08), 0 1px 3px rgba(45, 42, 38, 0.06);
+  --shadow-lg: 0 8px 30px rgba(45, 42, 38, 0.12), 0 2px 8px rgba(45, 42, 38, 0.06);
+  /* CJK fallbacks are explicit: Source Serif 4 / DM Sans carry no Chinese glyphs */
+  --font-display: 'Source Serif 4', 'Noto Serif SC', 'Songti SC', 'STSong', Georgia, 'Times New Roman', serif;
+  --font-ui: 'DM Sans', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --font-mono: 'SF Mono', 'Cascadia Code', 'Fira Code', monospace;
+  --transition: 180ms cubic-bezier(0.25, 0, 0, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+body {
+  font-family: var(--font-ui);
+  background: var(--bg);
+  color: var(--text);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Top bar ── */
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: var(--bg-warm);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-right: 6px;
+  flex-shrink: 0;
+}
+
+.topbar-brand svg { color: var(--accent); flex-shrink: 0; }
+
+.topbar-brand span {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+.topbar input[type="text"] {
+  flex: 1;
+  padding: 7px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 12.5px;
+  font-family: var(--font-mono);
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.topbar input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+.topbar-actions { display: flex; gap: 4px; flex-shrink: 0; }
+
+.btn-ghost {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 12.5px;
+  font-weight: 500;
+  font-family: var(--font-ui);
+  background: var(--bg);
+  color: var(--text-secondary);
+  transition: all var(--transition);
+}
+
+.btn-ghost:hover {
+  background: var(--bg-hover);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.btn-ghost.active {
+  background: var(--accent-light);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* ── Main layout ── */
+.main { display: flex; flex: 1; overflow: hidden; }
+
+.preview-area {
+  flex: 1;
+  position: relative;
+  background: var(--bg-surface);
+  display: flex;
+  min-width: 0;
+}
+
+.source-pane {
+  flex: 1;
+  min-width: 0;
+  background: var(--bg-surface);
+  display: none;
+  flex-direction: column;
+}
+
+.source-pane.visible {
+  display: flex;
+}
+
+/* When editing, the source pane takes the whole area — preview is hidden. */
+.preview-area:has(.source-pane.visible) .preview-pane {
+  display: none;
+}
+
+.source-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border-light);
+  background: var(--bg-surface-warm);
+}
+
+.source-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.source-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.source-btn {
+  padding: 4px 9px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 12px;
+  font-family: var(--font-ui);
+  transition: all var(--transition);
+}
+
+.source-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text);
+}
+
+.source-btn.save {
+  border-color: var(--accent);
+  color: var(--accent);
+  min-width: 72px;
+}
+
+.source-btn.save:hover {
+  background: var(--accent-light);
+}
+
+/* Save button states: dirty = solid accent, saving = held, saved = quiet check */
+.source-btn.save.dirty {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.source-btn.save.dirty:hover { background: var(--accent-hover); }
+.source-btn.save.saving {
+  opacity: 0.65;
+  pointer-events: none;
+}
+.source-btn.save.saved {
+  border-color: var(--border);
+  color: var(--success);
+}
+
+.source-editor {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  border: 0;
+  outline: none;
+  background: var(--bg-surface);
+  position: relative;
+  overflow: hidden;
+}
+.source-editor-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: var(--text-tertiary);
+  pointer-events: none;
+}
+.source-editor-loading.hidden { display: none; }
+
+/* Editor scroll viewport — match the thin scrollbar used by .ann-list */
+.source-editor { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+.source-editor::-webkit-scrollbar { width: 8px; }
+.source-editor::-webkit-scrollbar-track { background: transparent; }
+.source-editor::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+.source-editor::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
+
+/* Full Width applies to the editor too (id selector outweighs the bundle CSS) */
+#sourceEditor.full-width .milkdown .ProseMirror { max-width: none; }
+
+/* Editor typography follows the shared font tokens (adds CJK fallbacks the
+   bundled theme lacks) */
+#sourceEditor .milkdown {
+  --crepe-font-title: var(--font-display);
+  --crepe-font-default: var(--font-display);
+  --crepe-font-code: var(--font-mono);
+}
+
+.source-status {
+  padding: 8px 12px;
+  border-top: 1px solid var(--border-light);
+  font-size: 11px;
+  color: var(--text-tertiary);
+  background: var(--bg-surface-warm);
+}
+
+.preview-pane {
+  flex: 1;
+  min-width: 0;
+}
+
+.preview-pane iframe { width: 100%; height: 100%; border: none; }
+
+/* ── Side panel ── */
+.side-panel {
+  width: var(--notes-w, 320px);
+  min-width: var(--notes-w, 320px);
+  background: var(--bg-warm);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+.side-panel.collapsed { display: none; }
+
+/* Drag handle on the notes panel's left edge (mirrors the file tree resizer) */
+.notes-resizer {
+  width: 5px;
+  margin-right: -3px;
+  flex-shrink: 0;
+  cursor: col-resize;
+  z-index: 5;
+  background: transparent;
+  transition: background 140ms;
+}
+.notes-resizer:hover,
+.notes-resizer.dragging {
+  background: color-mix(in srgb, var(--accent) 35%, transparent);
+}
+.main:has(.side-panel.collapsed) .notes-resizer { display: none; }
+
+/* Floating tab to re-expand the collapsed notes panel */
+.side-panel-expand {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: none;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 6px 10px 9px;
+  background: var(--bg-warm);
+  border: 1px solid var(--border);
+  border-right: none;
+  border-radius: 10px 0 0 10px;
+  box-shadow: -2px 2px 10px rgba(45,42,38,0.10);
+  cursor: pointer;
+  z-index: 30;
+  color: var(--text-secondary);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 600;
+}
+.side-panel-expand.visible { display: inline-flex; }
+.side-panel-expand:hover { background: var(--bg-hover); color: var(--text); }
+.side-panel-expand .expand-count {
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 9px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 18px;
+  text-align: center;
+  display: none;
+  box-sizing: border-box;
+}
+.side-panel-expand .expand-count.visible { display: inline-block; }
+
+.panel-header {
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.panel-title {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.panel-title h3 {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+
+.ann-count {
+  font-size: 12px;
+  font-weight: 500;
+  min-width: 18px;
+  text-align: center;
+  padding: 1px 6px;
+  background: var(--accent-light);
+  color: var(--accent);
+  border-radius: 99px;
+  display: none;
+}
+
+.ann-count.visible { display: inline-block; }
+
+.panel-actions { display: flex; gap: 4px; }
+
+.btn-panel {
+  padding: 5px 10px;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: var(--font-ui);
+  transition: all var(--transition);
+  background: transparent;
+}
+
+.btn-panel.copy {
+  color: var(--text-secondary);
+}
+.btn-panel.copy:hover {
+  background: var(--accent-light);
+  color: var(--accent);
+}
+
+.btn-panel.clear {
+  color: var(--text-tertiary);
+}
+.btn-panel.clear:hover {
+  background: var(--danger-light);
+  color: var(--danger);
+}
+
+/* ── Annotation list ── */
+.ann-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  scroll-behavior: smooth;
+}
+
+.ann-list::-webkit-scrollbar { width: 5px; }
+.ann-list::-webkit-scrollbar-track { background: transparent; }
+.ann-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+.ann-list::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
+
+/* ── Empty state ── */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 28px 40px;
+  text-align: center;
+}
+
+.empty-state svg {
+  color: var(--border);
+  margin-bottom: 20px;
+}
+
+.empty-state p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  max-width: 220px;
+}
+
+.empty-state kbd {
+  display: inline-block;
+  padding: 2px 6px;
+  font-size: 11px;
+  font-family: var(--font-ui);
+  font-weight: 500;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-secondary);
+  box-shadow: 0 1px 0 var(--border);
+}
+
+/* ── Annotation items ── */
+.ann-item {
+  background: var(--bg);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  position: relative;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all var(--transition);
+  animation: slideIn 250ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.ann-item:hover {
+  border-color: var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+.ann-item .snippet {
+  font-family: var(--font-display);
+  font-size: 13.5px;
+  color: var(--text);
+  line-height: 1.55;
+  word-break: break-word;
+  font-style: italic;
+}
+
+.ann-item .snippet::before { content: '\201C'; color: var(--accent); font-weight: 600; }
+.ann-item .snippet::after { content: '\201D'; color: var(--accent); font-weight: 600; }
+
+.ann-item .note {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  margin-top: 8px;
+  line-height: 1.5;
+  word-break: break-word;
+  padding-left: 10px;
+  border-left: 2px solid var(--accent-wash);
+}
+
+.ann-item .remove-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 4px;
+  opacity: 0;
+  transition: all var(--transition);
+}
+
+.ann-item .copy-btn {
+  position: absolute;
+  top: 10px;
+  right: 34px;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  border-radius: 4px;
+  opacity: 0;
+  transition: all var(--transition);
+}
+
+.ann-item:hover .remove-btn,
+.ann-item:hover .copy-btn,
+.ann-item:focus-within .remove-btn,
+.ann-item:focus-within .copy-btn { opacity: 1; }
+.ann-item .remove-btn:hover {
+  background: var(--danger-light);
+  color: var(--danger);
+}
+.ann-item .copy-btn:hover {
+  background: var(--accent-light);
+  color: var(--accent);
+}
+
+/* ── Floating toolbar ── */
+.ann-toolbar {
+  position: fixed;
+  display: none;
+  z-index: 10000;
+  background: var(--text);
+  border-radius: 8px;
+  padding: 3px;
+  box-shadow: var(--shadow-lg);
+  gap: 2px;
+  animation: toolbarIn 150ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes toolbarIn {
+  from { opacity: 0; transform: translateY(4px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.ann-toolbar.visible { display: flex; }
+
+.ann-toolbar button {
+  padding: 7px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font-ui);
+  color: var(--bg);
+  background: transparent;
+  transition: background var(--transition);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ann-toolbar button:hover { background: rgba(249, 247, 243, 0.12); }
+
+.ann-toolbar button svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+/* ── Floating note popover ── */
+.note-popover-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 11000;
+}
+
+.note-popover-overlay.visible { display: block; }
+
+.note-popover {
+  position: fixed;
+  display: none;
+  z-index: 12000;
+  width: 420px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  padding: 16px;
+  animation: popoverIn 200ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes popoverIn {
+  from { opacity: 0; transform: translateY(6px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.note-popover.visible { display: block; }
+
+.note-popover-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-tertiary);
+  margin-bottom: 8px;
+}
+
+.note-popover-selected {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-style: italic;
+  color: var(--text-secondary);
+  padding: 8px 10px;
+  background: var(--accent-light);
+  border-radius: var(--radius-sm);
+  margin-bottom: 10px;
+  max-height: 72px;
+  overflow: hidden;
+  line-height: 1.5;
+}
+
+.note-popover textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-warm);
+  color: var(--text);
+  font-size: 13px;
+  font-family: var(--font-ui);
+  resize: none;
+  outline: none;
+  line-height: 1.5;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.note-popover textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+.note-popover-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.btn-save {
+  padding: 6px 16px;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font-ui);
+  background: var(--accent);
+  color: var(--bg);
+  transition: background var(--transition);
+}
+
+.btn-save:hover { background: var(--accent-hover); }
+
+.btn-cancel {
+  padding: 6px 12px;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font-ui);
+  background: transparent;
+  color: var(--text-secondary);
+  transition: all var(--transition);
+}
+
+.btn-cancel:hover {
+  background: var(--bg-hover);
+  color: var(--text);
+}
+
+/* ── Editable note on annotation items ── */
+.ann-item .note-text { cursor: pointer; }
+.ann-item .note-text:hover { color: var(--text); }
+.ann-item .add-note-hint {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin-top: 6px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+.ann-item:hover .add-note-hint { opacity: 1; }
+.ann-item .add-note-hint:hover { color: var(--accent); }
+
+/* ── Annotation type styles ── */
+.ann-item[data-type="add"] .note { border-left-color: rgba(91,138,94,0.2); }
+
+/* Delete type */
+.ann-item[data-type="delete"] .snippet { text-decoration: line-through; color: var(--danger); }
+.ann-item[data-type="delete"] .snippet::before,
+.ann-item[data-type="delete"] .snippet::after { color: var(--danger); }
+.ann-item[data-type="delete"] .note { border-left-color: var(--danger-wash); }
+
+.ann-item .type-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-bottom: 6px;
+}
+.type-badge.modify { background: var(--accent-light); color: var(--accent); }
+.type-badge.add { background: rgba(91,138,94,0.1); color: var(--success); }
+.type-badge.delete { background: var(--danger-light); color: var(--danger); }
+.type-badge.global { background: var(--global-light); color: var(--global); }
+
+/* ── Global instruction trigger ── */
+.global-instruction-trigger {
+  padding: 8px 12px;
+  flex-shrink: 0;
+}
+
+.global-instruction-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  color: var(--global);
+  cursor: pointer;
+  transition: color var(--transition);
+}
+
+.global-instruction-btn:hover { color: var(--global-hover); }
+.global-instruction-btn:focus-visible { outline: 2px solid var(--global); outline-offset: 2px; border-radius: 2px; }
+
+/* ── Global instruction modal ── */
+.global-modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  z-index: 9998;
+}
+.global-modal-overlay.visible { display: block; }
+
+.global-modal {
+  display: none;
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(420px, calc(100vw - 40px));
+  background: var(--bg-surface);
+  border-radius: var(--radius-md);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.18);
+  z-index: 9999;
+  padding: 20px;
+  font-family: var(--font-ui);
+}
+.global-modal.visible { display: block; }
+
+.global-modal-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+
+.global-modal textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 10px 12px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  color: var(--text);
+  resize: vertical;
+  transition: border-color var(--transition), box-shadow var(--transition);
+  box-sizing: border-box;
+}
+.global-modal textarea:focus {
+  border-color: var(--global);
+  box-shadow: 0 0 0 2px var(--global-wash);
+  outline: none;
+}
+.global-modal textarea::placeholder { color: var(--text-tertiary); }
+
+.global-modal-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 10px 0 0;
+}
+
+.global-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.preset-chip {
+  padding: 6px 12px;
+  border: 1px solid var(--border-light);
+  border-radius: 99px;
+  background: var(--bg-surface);
+  font-family: var(--font-ui);
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.preset-chip:hover,
+.preset-chip:focus-visible {
+  border-color: var(--global);
+  color: var(--global);
+  background: var(--global-light);
+}
+
+.preset-chip:focus-visible {
+  outline: 2px solid var(--global);
+  outline-offset: 1px;
+}
+
+/* ── Global annotation item style ── */
+.ann-item[data-type="global"] {
+  border-left: 3px solid var(--global-wash);
+}
+
+.ann-item[data-type="global"] .snippet {
+  font-style: normal;
+  font-family: var(--font-ui);
+  color: var(--text);
+}
+
+.ann-item[data-type="global"] .snippet::before,
+.ann-item[data-type="global"] .snippet::after { content: none; }
+
+.ann-item[data-type="global"] .note {
+  border-left-color: var(--global-wash);
+}
+
+.global-divider {
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-tertiary);
+  padding: 8px 4px 4px;
+}
+
+/* ── Toolbar keyboard hints ── */
+.ann-toolbar .kbd-hint {
+  font-size: 10px;
+  opacity: 0.5;
+  padding: 1px 4px;
+  border: 1px solid rgba(249,247,243,0.25);
+  border-radius: 3px;
+  margin-left: 2px;
+}
+
+.ann-toolbar .divider {
+  width: 1px;
+  background: rgba(249,247,243,0.15);
+  margin: 4px 2px;
+  flex-shrink: 0;
+}
+
+/* ── Edit counter in topbar ── */
+.edit-counter {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--success);
+  padding: 3px 8px;
+  background: rgba(91,138,94,0.1);
+  border-radius: 99px;
+  display: none;
+  flex-shrink: 0;
+}
+.edit-counter.visible { display: inline-block; }
+
+/* Confirmation toast */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--text);
+  color: var(--bg);
+  padding: 10px 20px;
+  border-radius: 99px;
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 20000;
+}
+
+.toast.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ── Custom confirm dialog ── */
+.confirm-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(45, 42, 38, 0.3);
+  z-index: 30000;
+  animation: confirmFadeIn 150ms ease-out both;
+}
+.confirm-overlay.visible { display: flex; align-items: center; justify-content: center; }
+
+@keyframes confirmFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.confirm-dialog {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg);
+  padding: 24px;
+  width: 340px;
+  animation: confirmSlideIn 200ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes confirmSlideIn {
+  from { opacity: 0; transform: scale(0.95) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.confirm-dialog h4 {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.confirm-dialog p {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.confirm-actions .btn-cancel {
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.confirm-actions .btn-danger {
+  padding: 8px 16px;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font-ui);
+  background: var(--danger);
+  color: var(--bg);
+  transition: background var(--transition);
+}
+
+.confirm-actions .btn-danger:hover { background: var(--danger-hover); }
+
+/* ── Focus-visible (C4) ── */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.topbar input:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+.source-editor:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--accent-light);
+}
+
+.note-popover textarea:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+.ann-toolbar button:focus-visible {
+  outline: 2px solid var(--bg);
+  outline-offset: -2px;
+}
+
+/* ── Reduced motion (a11y) ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Responsive (adapt) ── */
+@media (max-width: 768px) {
+  .main {
+    flex-direction: column;
+  }
+
+  .side-panel {
+    width: 100%;
+    min-width: 0;
+    max-height: 40vh;
+    border-left: none;
+    border-top: 1px solid var(--border);
+  }
+
+  .source-pane {
+    min-width: 0;
+  }
+
+  .note-popover {
+    width: calc(100vw - 32px);
+    max-width: 420px;
+  }
+
+  .confirm-dialog {
+    width: calc(100vw - 32px);
+    max-width: 340px;
+  }
+
+  .topbar-brand span { display: none; }
+}
+
+@media (max-width: 480px) {
+  .topbar { padding: 8px 10px; gap: 6px; }
+  .topbar-brand { margin-right: 0; }
+}
+
+/* ── Touch targets (adapt) ── */
+@media (pointer: coarse) {
+  .btn-ghost { min-height: 44px; padding: 10px 14px; }
+  .source-btn { min-height: 44px; padding: 10px 12px; }
+  .btn-panel { min-height: 44px; padding: 10px 12px; }
+  .ann-item .remove-btn { width: 44px; height: 44px; top: 2px; right: 2px; opacity: 1; }
+  .ann-item .copy-btn { width: 44px; height: 44px; top: 2px; right: 46px; opacity: 1; }
+  .ann-toolbar button { min-height: 44px; padding: 10px 16px; }
+}
+
+/* ── File Tree Panel ── */
+.file-tree-panel {
+  display: none;
+  width: var(--tree-w, 260px);
+  min-width: var(--tree-w, 260px);
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  overflow-x: hidden;
+  font-family: var(--font-ui);
+  font-size: 13px;
+}
+.file-tree-panel.visible { display: flex; flex-direction: column; }
+
+/* Drag handle on the file tree's right edge */
+.file-tree-resizer {
+  display: none;
+  width: 5px;
+  margin-left: -3px;
+  flex-shrink: 0;
+  cursor: col-resize;
+  z-index: 5;
+  background: transparent;
+  transition: background 140ms;
+}
+.file-tree-panel.visible + .file-tree-resizer { display: block; }
+.file-tree-resizer:hover,
+.file-tree-resizer.dragging {
+  background: color-mix(in srgb, var(--accent) 35%, transparent);
+}
+.file-tree-header {
+  padding: 12px 14px 8px;
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-tertiary);
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.file-tree-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px 0;
+}
+.tree-item {
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  cursor: pointer;
+  color: var(--text);
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: background var(--transition);
+  border-radius: 4px;
+  margin: 1px 6px;
+}
+.tree-item:hover { background: var(--bg-hover); }
+.tree-item.current { background: var(--accent-light); color: var(--accent); font-weight: 500; }
+.tree-item.dir { font-weight: 500; color: var(--text-secondary); }
+.tree-item-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 6px;
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+.tree-item.current .tree-item-icon { opacity: 1; }
+.tree-children { display: block; }
+.tree-children.collapsed { display: none; }
+.tree-indent { display: inline-block; width: 16px; flex-shrink: 0; }
+.file-tree-loading {
+  padding: 20px;
+  text-align: center;
+  color: var(--text-tertiary);
+  font-size: 12px;
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-brand">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+    <span>Annotator</span>
+  </div>
+  <label for="urlInput" class="sr-only">Preview URL</label>
+  <input type="text" id="urlInput" spellcheck="false" placeholder="Preview URL" aria-label="Preview URL">
+  <span class="edit-counter" id="editCounter" aria-live="polite"></span>
+  <div class="topbar-actions">
+    <button class="btn-ghost" id="toggleTreeBtn" title="Toggle file browser (F)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px" aria-hidden="true"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+      Files
+    </button>
+    <button class="btn-ghost" id="reloadBtn">Reload</button>
+    <button class="btn-ghost" id="toggleSourceBtn" title="Toggle source editor">Edit Source</button>
+    <button class="btn-ghost" id="toggleWidthBtn" title="Toggle preview content width">Full Width</button>
+  </div>
+</div>
+
+<div class="main">
+  <div class="file-tree-panel" id="fileTreePanel">
+    <div class="file-tree-header" id="fileTreeHeader">Files</div>
+    <div class="file-tree-list" id="fileTreeList">
+      <div class="file-tree-loading">Loading...</div>
+    </div>
+  </div>
+  <div class="file-tree-resizer" id="fileTreeResizer" title="Drag to resize"></div>
+  <div class="preview-area">
+    <div class="source-pane">
+      <div class="source-header">
+        <span class="source-title">Markdown Source</span>
+        <div class="source-actions">
+          <button class="source-btn" id="reloadSourceBtn">Reload</button>
+          <button class="source-btn save" id="saveSourceBtn">Save</button>
+        </div>
+      </div>
+      <div id="sourceEditor" class="source-editor" aria-label="Markdown source editor">
+        <div class="source-editor-loading" id="sourceEditorLoading">Loading editor...</div>
+      </div>
+      <div class="source-status" id="sourceStatus">Source not loaded</div>
+    </div>
+    <div class="preview-pane">
+      <iframe id="previewFrame" title="Markdown preview"></iframe>
+    </div>
+  </div>
+
+  <div class="notes-resizer" id="notesResizer" title="Drag to resize"></div>
+  <div class="side-panel">
+    <div class="panel-header">
+      <div class="panel-title">
+        <h3>Notes</h3>
+        <span class="ann-count" id="annCount">0</span>
+      </div>
+      <div class="panel-actions">
+        <button class="btn-panel copy" id="copyAllBtn">Copy All</button>
+        <button class="btn-panel clear" id="clearAllBtn">Clear</button>
+        <button class="btn-panel" id="collapseNotesBtn" title="Collapse notes panel (N)" aria-label="Collapse notes panel">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px" aria-hidden="true"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="global-instruction-trigger">
+      <button class="global-instruction-btn" id="globalInstructionBtn">+ Document Instruction</button>
+    </div>
+    <div class="ann-list" id="annList">
+      <div class="empty-state" id="emptyState">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.828 2.828 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+        <p>Select text to annotate (<kbd>M</kbd> <kbd>A</kbd> <kbd>D</kbd>) or press <kbd>G</kbd> for a document instruction</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button class="side-panel-expand" id="expandNotesBtn" title="Expand notes panel (N)" aria-label="Expand notes panel">
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
+  Notes
+  <span class="expand-count" id="expandNotesCount">0</span>
+</button>
+
+<div class="note-popover-overlay" id="noteOverlay"></div>
+<div class="note-popover" id="notePopover" role="dialog" aria-modal="true" aria-labelledby="notePopoverLabel">
+  <div class="note-popover-label" id="notePopoverLabel">New annotation</div>
+  <div class="note-popover-selected" id="notePopoverSelected"></div>
+  <textarea id="notePopoverInput" rows="3" placeholder="Add a note (optional)" aria-label="Annotation note"></textarea>
+  <div class="note-popover-actions">
+    <button class="btn-cancel" id="notePopoverCancel">Cancel</button>
+    <button class="btn-save" id="notePopoverSave">Save</button>
+  </div>
+</div>
+
+<div class="global-modal-overlay" id="globalModalOverlay"></div>
+<div class="global-modal" id="globalModal" role="dialog" aria-modal="true" aria-labelledby="globalModalTitle">
+  <div class="global-modal-title" id="globalModalTitle">Document Instruction</div>
+  <textarea id="globalModalInput" rows="3" placeholder="Enter an instruction to apply to the entire document..."></textarea>
+  <div class="global-modal-presets">
+    <button class="preset-chip" data-preset="Translate this document to Chinese">Translate to Chinese</button>
+    <button class="preset-chip" data-preset="Fix all grammar and spelling errors">Fix grammar</button>
+    <button class="preset-chip" data-preset="Make the tone more concise and professional">Concise &amp; professional</button>
+    <button class="preset-chip" data-preset="Simplify for a general audience">Simplify</button>
+    <button class="preset-chip" data-preset="Add section headings where appropriate">Add headings</button>
+  </div>
+  <div class="global-modal-actions">
+    <button class="btn-cancel" id="globalModalCancel">Cancel</button>
+    <button class="btn-save" id="globalModalSave">Add</button>
+  </div>
+</div>
+
+<div class="ann-toolbar" id="annToolbar">
+  <button data-action="modify">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+    Modify <span class="kbd-hint">M</span>
+  </button>
+  <div class="divider" role="separator"></div>
+  <button data-action="add">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    Add <span class="kbd-hint">A</span>
+  </button>
+  <div class="divider" role="separator"></div>
+  <button data-action="delete">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    Delete <span class="kbd-hint">D</span>
+  </button>
+</div>
+
+<div class="confirm-overlay" id="confirmOverlay" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+  <div class="confirm-dialog">
+    <h4 id="confirmTitle">Clear all annotations?</h4>
+    <p id="confirmMessage">This will remove all annotations and highlights from this document. This cannot be undone.</p>
+    <div class="confirm-actions">
+      <button class="btn-cancel" id="confirmCancel">Cancel</button>
+      <button class="btn-danger" id="confirmOk">Clear All</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="save-scheduler.js"></script>
+<script src="frontmatter.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  var TYPE_MODIFY = 'modify';
+  var TYPE_ADD = 'add';
+  var TYPE_DELETE = 'delete';
+  var TYPE_GLOBAL = 'global';
+  var COPY_SVG = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>';
+
+  var HIGHLIGHT_CSS = [
+    '.ann-highlight { background: rgba(196,112,75,0.14) !important; border-bottom: 2px solid rgba(196,112,75,0.5) !important; cursor: pointer !important; transition: background 0.15s ease !important; }',
+    '.ann-highlight:hover { background: rgba(196,112,75,0.25) !important; }',
+    '.ann-highlight-add { background: rgba(91,138,94,0.12) !important; border-bottom: 2px solid rgba(91,138,94,0.5) !important; cursor: pointer !important; transition: background 0.15s ease !important; }',
+    '.ann-highlight-add:hover { background: rgba(91,138,94,0.22) !important; }',
+    '.ann-highlight-delete { background: rgba(184,84,80,0.1) !important; border-bottom: 2px solid rgba(184,84,80,0.5) !important; text-decoration: line-through !important; cursor: pointer !important; transition: background 0.15s ease !important; }',
+    '.ann-highlight-delete:hover { background: rgba(184,84,80,0.2) !important; }'
+  ].join('\n');
+
+  const frame = document.getElementById('previewFrame');
+  const toolbar = document.getElementById('annToolbar');
+  const annList = document.getElementById('annList');
+  const emptyState = document.getElementById('emptyState');
+  const urlInput = document.getElementById('urlInput');
+  const reloadBtn = document.getElementById('reloadBtn');
+  const copyAllBtn = document.getElementById('copyAllBtn');
+  const clearAllBtn = document.getElementById('clearAllBtn');
+  const annCount = document.getElementById('annCount');
+  const editCounterEl = document.getElementById('editCounter');
+  const sourceEditor = document.getElementById('sourceEditor');
+  const sourceStatusEl = document.getElementById('sourceStatus');
+  const saveSourceBtn = document.getElementById('saveSourceBtn');
+  const reloadSourceBtn = document.getElementById('reloadSourceBtn');
+  const toggleSourceBtn = document.getElementById('toggleSourceBtn');
+  const toggleWidthBtn = document.getElementById('toggleWidthBtn');
+  const toggleTreeBtn = document.getElementById('toggleTreeBtn');
+  const fileTreePanel = document.getElementById('fileTreePanel');
+  const fileTreeList = document.getElementById('fileTreeList');
+  const fileTreeHeader = document.getElementById('fileTreeHeader');
+  const sourcePane = document.querySelector('.source-pane');
+  const globalInstructionBtn = document.getElementById('globalInstructionBtn');
+  const globalModal = document.getElementById('globalModal');
+  const globalModalOverlay = document.getElementById('globalModalOverlay');
+  const globalModalInput = document.getElementById('globalModalInput');
+  const globalModalCancel = document.getElementById('globalModalCancel');
+  const globalModalSave = document.getElementById('globalModalSave');
+  const globalModalPresets = globalModal.querySelector('.global-modal-presets');
+
+  var emptyStateHintDefault = null;
+  function updateEmptyStateHint(editing) {
+    var p = emptyState.querySelector('p');
+    if (!p) return;
+    if (emptyStateHintDefault === null) emptyStateHintDefault = p.innerHTML;
+    p.innerHTML = editing
+      ? 'Annotations pause while editing the source. Close the editor to select text again.'
+      : emptyStateHintDefault;
+  }
+
+  function setSourcePaneVisible(visible) {
+    sourcePane.classList.toggle('visible', visible);
+    toggleSourceBtn.classList.toggle('active', visible);
+    toggleSourceBtn.textContent = visible ? 'Close Editor' : 'Edit Source';
+    updateEmptyStateHint(visible);
+    if (visible) {
+      ensureEditor().then(function() {
+        if (!sourceContentSnapshot) loadSourceFromServer();
+      });
+    }
+  }
+
+  toggleSourceBtn.addEventListener('click', function() {
+    setSourcePaneVisible(!sourcePane.classList.contains('visible'));
+  });
+
+  // --- Lazy-load the Milkdown editor bundle ---
+  let editor = null;
+  let editorPromise = null;
+  const sourceEditorLoading = document.getElementById('sourceEditorLoading');
+
+  function loadScript(src) {
+    return new Promise(function(resolve, reject) {
+      var s = document.createElement('script');
+      s.src = src;
+      s.async = true;
+      s.onload = function() { resolve(); };
+      s.onerror = function() { reject(new Error('Failed to load ' + src)); };
+      document.head.appendChild(s);
+    });
+  }
+
+  function loadStyle(href) {
+    return new Promise(function(resolve, reject) {
+      var link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = href;
+      link.onload = function() { resolve(); };
+      link.onerror = function() { reject(new Error('Failed to load ' + href)); };
+      document.head.appendChild(link);
+    });
+  }
+
+  function ensureEditor() {
+    if (editor) return Promise.resolve(editor);
+    if (editorPromise) return editorPromise;
+    sourceEditorLoading.classList.remove('hidden');
+    editorPromise = Promise.all([
+      loadStyle('milkdown.bundle.css'),
+      loadScript('milkdown.bundle.js')
+    ]).then(function() {
+      if (!window.MdpAnnotatorEditor || typeof window.MdpAnnotatorEditor.create !== 'function') {
+        throw new Error('Editor bundle loaded but global is missing');
+      }
+      return window.MdpAnnotatorEditor.create({
+        root: sourceEditor,
+        initialValue: '',
+        onChange: onEditorChange
+      });
+    }).then(function(handle) {
+      editor = handle;
+      sourceEditorLoading.classList.add('hidden');
+      return editor;
+    }).catch(function(err) {
+      sourceEditorLoading.textContent = 'Editor failed to load';
+      editorPromise = null;
+      throw err;
+    });
+    return editorPromise;
+  }
+
+  function onEditorChange(markdown) {
+    if (!editor) return;
+    if (markdown === sourceContentSnapshot) {
+      setSourceStatus('No unsaved changes');
+      setSaveButtonState('saved');
+      return;
+    }
+    setSourceStatus('Unsaved changes...');
+    setSaveButtonState('dirty');
+    saveScheduler.notifyChange();
+  }
+  const noteOverlay = document.getElementById('noteOverlay');
+  const notePopover = document.getElementById('notePopover');
+  const notePopoverLabel = document.getElementById('notePopoverLabel');
+  const notePopoverSelected = document.getElementById('notePopoverSelected');
+  const notePopoverInput = document.getElementById('notePopoverInput');
+  const notePopoverCancel = document.getElementById('notePopoverCancel');
+  const notePopoverSave = document.getElementById('notePopoverSave');
+  const toastEl = document.getElementById('toast');
+
+  let annotations = [];
+  let currentSelection = null;
+  let highlightCounter = 0;
+  let toastTimer = null;
+  let sourceContentSnapshot = ''; // editor body only, frontmatter excluded
+  let sourceFrontmatter = ''; // raw YAML header held out of the editor, spliced back on save
+  let sourceVersion = ''; // server-side content hash; echoed back on save for conflict detection
+  let sourceLoadedBufnr = ''; // which buffer the editor content belongs to
+  let manualSaveRequested = false;
+  const saveScheduler = MdpSaveScheduler.createSaveScheduler({
+    save: function() {
+      const silent = !manualSaveRequested;
+      manualSaveRequested = false;
+      return saveSourceToServer(silent);
+    }
+  });
+  function requestManualSave() {
+    manualSaveRequested = true;
+    saveScheduler.requestSave();
+  }
+  let isPreviewFullWidth = false;
+
+  function updateWidthButtonState() {
+    toggleWidthBtn.classList.toggle('active', isPreviewFullWidth);
+    toggleWidthBtn.textContent = isPreviewFullWidth ? 'Default Width' : 'Full Width';
+  }
+
+  function applyPreviewWidthMode() {
+    try {
+      const doc = frame.contentDocument;
+      if (!doc) return;
+      const pageContainer = doc.getElementById('page-ctn');
+      if (!pageContainer) return;
+
+      if (isPreviewFullWidth) {
+        pageContainer.style.maxWidth = 'none';
+        pageContainer.style.width = 'calc(100% - 56px)';
+        pageContainer.style.margin = '0 auto';
+      } else {
+        pageContainer.style.maxWidth = '';
+        pageContainer.style.width = '';
+        pageContainer.style.margin = '';
+      }
+    } catch (_) {}
+  }
+
+  toggleWidthBtn.addEventListener('click', function() {
+    isPreviewFullWidth = !isPreviewFullWidth;
+    updateWidthButtonState();
+    applyPreviewWidthMode();
+    // Width mode applies to the source editor as well as the preview
+    sourceEditor.classList.toggle('full-width', isPreviewFullWidth);
+  });
+
+  updateWidthButtonState();
+
+  // --- File Tree ---
+  var fileTreeLoaded = false;
+  var fileTreeRetryTimer = null;
+  var currentFilePath = '';
+
+  function toggleFileTree() {
+    var isNowVisible = fileTreePanel.classList.toggle('visible');
+    toggleTreeBtn.classList.toggle('active');
+    if (isNowVisible) {
+      if (!fileTreeLoaded) loadFileTree();
+    } else if (fileTreeRetryTimer) {
+      clearTimeout(fileTreeRetryTimer);
+      fileTreeRetryTimer = null;
+    }
+  }
+
+  toggleTreeBtn.addEventListener('click', toggleFileTree);
+
+  function loadFileTree() {
+    var sock = getPreviewSocket();
+    if (!sock) {
+      fileTreeList.innerHTML = '<div class="file-tree-loading">Waiting for preview...</div>';
+      fileTreeRetryTimer = setTimeout(loadFileTree, 1000);
+      return;
+    }
+    fileTreeList.innerHTML = '<div class="file-tree-loading">Loading...</div>';
+    sock.emit('list_md_tree', { bufnr: bufnr }, function(result) {
+      if (!result || !result.ok) {
+        fileTreeList.innerHTML = '<div class="file-tree-loading">Failed to load files</div>';
+        return;
+      }
+      fileTreeLoaded = true;
+      fileTreeRetryTimer = null;
+      fileTreeHeader.textContent = result.tree.name;
+      // Set currentFilePath from the tree's isCurrent marker
+      (function findCurrent(n) {
+        if (n.isCurrent) { currentFilePath = n.path; return; }
+        (n.children || []).forEach(findCurrent);
+      })(result.tree);
+      renderTree(result.tree, fileTreeList);
+    });
+  }
+
+  var folderSvg = '<svg class="tree-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>';
+  var fileSvg = '<svg class="tree-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
+
+  function subtreeHasCurrent(n) {
+    if (n.isCurrent) return true;
+    return (n.children || []).some(subtreeHasCurrent);
+  }
+
+  function sortedChildren(node) {
+    var ch = node.children || [];
+    var dirs = ch.filter(function(c) { return c.type === 'dir'; });
+    var files = ch.filter(function(c) { return c.type === 'file'; });
+    return dirs.concat(files);
+  }
+
+  function appendIndents(el, depth) {
+    for (var i = 0; i < depth; i++) {
+      var s = document.createElement('span');
+      s.className = 'tree-indent';
+      el.appendChild(s);
+    }
+  }
+
+  function renderTree(node, container) {
+    container.innerHTML = '';
+    if (node.type === 'dir' && node.children) {
+      sortedChildren(node).forEach(function(child) {
+        renderNode(child, container, 0);
+      });
+    }
+  }
+
+  function renderNode(node, container, depth) {
+    if (node.type === 'dir') {
+      var dirEl = document.createElement('div');
+      dirEl.className = 'tree-item dir';
+      appendIndents(dirEl, depth);
+      dirEl.insertAdjacentHTML('beforeend', folderSvg);
+      var nameSpan = document.createElement('span');
+      nameSpan.textContent = node.name;
+      dirEl.appendChild(nameSpan);
+      container.appendChild(dirEl);
+
+      var childrenEl = document.createElement('div');
+      childrenEl.className = subtreeHasCurrent(node) ? 'tree-children' : 'tree-children collapsed';
+      container.appendChild(childrenEl);
+
+      dirEl.addEventListener('click', function() {
+        childrenEl.classList.toggle('collapsed');
+      });
+
+      sortedChildren(node).forEach(function(child) {
+        renderNode(child, childrenEl, depth + 1);
+      });
+    } else {
+      var isCurrent = node.path === currentFilePath;
+      var fileEl = document.createElement('div');
+      fileEl.className = 'tree-item' + (isCurrent ? ' current' : '');
+      appendIndents(fileEl, depth);
+      fileEl.insertAdjacentHTML('beforeend', fileSvg);
+      var nameSpan2 = document.createElement('span');
+      nameSpan2.textContent = node.name;
+      fileEl.appendChild(nameSpan2);
+      container.appendChild(fileEl);
+
+      fileEl.addEventListener('click', function() {
+        if (node.path === currentFilePath) return;
+        switchToFile(node.path, fileEl);
+      });
+    }
+  }
+
+  function switchToFile(filePath, clickedEl) {
+    var sock = getPreviewSocket();
+    if (!sock) {
+      showToast('Preview not connected');
+      return;
+    }
+    sock.emit('preview_file', { filePath: filePath }, function(result) {
+      if (!result || !result.ok) {
+        showToast('Failed to open file');
+        return;
+      }
+      saveAnnotations();
+      currentFilePath = filePath;
+      // Drop any scheduled/buffered save — it belongs to the previous file.
+      // (An in-flight save is safe: it is bound to its own saveBufnr.)
+      saveScheduler.cancel();
+      sourceLoadedBufnr = '';
+      setSaveButtonState('idle');
+      setSourceStatus('Source not loaded');
+      // Point source read/write and inline edits at the switched buffer
+      if (result.bufnr) {
+        bufnr = String(result.bufnr);
+        urlInput.value = window.location.origin + '/page/' + bufnr;
+      } else {
+        urlInput.value = filePath;
+      }
+
+      fileTreeList.querySelectorAll('.tree-item.current').forEach(function(el) {
+        el.classList.remove('current');
+      });
+      clickedEl.classList.add('current');
+
+      sourceContentSnapshot = '';
+      sourceFrontmatter = '';
+      sourceVersion = '';
+      if (sourcePane.classList.contains('visible')) {
+        sourceLoadRetries = 0;
+        setTimeout(loadSourceFromServer, 500);
+      }
+    });
+  }
+
+  // --- Init from query params ---
+  const params = new URLSearchParams(window.location.search);
+  let bufnr = params.get('page');
+  if (bufnr) {
+    const previewPath = '/page/' + bufnr;
+    frame.src = previewPath;
+    urlInput.value = window.location.origin + previewPath;
+  } else {
+    frame.src = '/';
+    urlInput.value = window.location.origin;
+  }
+
+  // --- Toast ---
+  function showToast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('visible');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toastEl.classList.remove('visible'), 2000);
+  }
+
+  // --- Storage ---
+  let activeStorageKey = '';
+
+  function getPreviewTitle() {
+    try {
+      const title = frame.contentDocument && frame.contentDocument.title;
+      if (title && title.trim()) return title.trim();
+    } catch(e) {}
+    return '';
+  }
+
+  function storageKeys() {
+    const keys = [];
+    const title = getPreviewTitle();
+    if (title) {
+      keys.push('md-annotator:' + title);
+    }
+    const urlKey = 'md-annotator:' + urlInput.value.trim();
+    keys.push(urlKey);
+    return Array.from(new Set(keys.filter(Boolean)));
+  }
+
+  function serializeAnnotations(items) {
+    return items.map(a => ({
+      id: a.id,
+      type: a.type,
+      text: a.text,
+      note: a.note,
+      context: a.context
+    }));
+  }
+
+  function hydrateAnnotationIds(items) {
+    items.forEach(a => {
+      if (!a.id) a.id = 'ann-' + (++highlightCounter);
+    });
+  }
+
+  function saveAnnotations() {
+    try {
+      const keys = storageKeys();
+      const primaryKey = keys[0];
+      if (!primaryKey) return;
+      const data = serializeAnnotations(annotations);
+      localStorage.setItem(primaryKey, JSON.stringify(data));
+      activeStorageKey = primaryKey;
+    } catch(e) {}
+  }
+
+  function loadAnnotations() {
+    try {
+      const keys = storageKeys();
+      if (!keys.length) return false;
+
+      const primaryKey = keys[0];
+      let matchedKey = '';
+      let loaded = [];
+
+      for (const key of keys) {
+        const raw = localStorage.getItem(key);
+        if (!raw) continue;
+        try {
+          const parsed = JSON.parse(raw);
+          if (!Array.isArray(parsed)) continue;
+          loaded = parsed;
+          matchedKey = key;
+          break;
+        } catch(_) {}
+      }
+
+      annotations = loaded;
+      hydrateAnnotationIds(annotations);
+
+      if (matchedKey && matchedKey !== primaryKey) {
+        localStorage.setItem(primaryKey, JSON.stringify(serializeAnnotations(annotations)));
+      }
+
+      activeStorageKey = primaryKey;
+      return true;
+    } catch(e) {
+      annotations = [];
+      return false;
+    }
+  }
+
+  function refreshAnnotationsFromStorage() {
+    const before = JSON.stringify(annotations);
+    const hadHighlights = (() => {
+      try {
+        const doc = frame.contentDocument;
+        return !!(doc && doc.querySelector('[data-ann-id]'));
+      } catch(_) {
+        return false;
+      }
+    })();
+
+    loadAnnotations();
+    const after = JSON.stringify(annotations);
+    if (before !== after) {
+      renderList();
+      if (!hadHighlights && annotations.length > 0) {
+        reapplyHighlights();
+      }
+    }
+  }
+
+  var lastCount = -1;
+  function updateCount() {
+    if (annotations.length === lastCount) return;
+    lastCount = annotations.length;
+    annCount.textContent = lastCount;
+    annCount.classList.toggle('visible', lastCount > 0);
+    var expandBadge = document.getElementById('expandNotesCount');
+    if (expandBadge) {
+      expandBadge.textContent = lastCount;
+      expandBadge.classList.toggle('visible', lastCount > 0);
+    }
+    copyAllBtn.textContent = lastCount > 0
+      ? 'Copy All (' + lastCount + ')'
+      : 'Copy All';
+  }
+
+  // --- URL handling ---
+  function reloadIframe() {
+    var src = bufnr ? '/page/' + bufnr : urlInput.value.trim();
+    frame.src = '';
+    setTimeout(() => { frame.src = src; }, 0);
+  }
+  reloadBtn.addEventListener('click', reloadIframe);
+  urlInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') reloadIframe(); });
+
+  function setSourceStatus(msg) {
+    sourceStatusEl.textContent = msg;
+  }
+
+  // Save button state machine: idle | dirty | saving | saved.
+  // saveState is the source of truth; the button classes only render it.
+  var saveState = 'idle';
+  function setSaveButtonState(state) {
+    saveState = state;
+    saveSourceBtn.classList.remove('dirty', 'saving', 'saved');
+    if (state === 'dirty') {
+      saveSourceBtn.classList.add('dirty');
+      saveSourceBtn.textContent = 'Save';
+    } else if (state === 'saving') {
+      saveSourceBtn.classList.add('saving');
+      saveSourceBtn.textContent = 'Saving…';
+    } else if (state === 'saved') {
+      saveSourceBtn.classList.add('saved');
+      saveSourceBtn.textContent = 'Saved ✓';
+    } else {
+      saveSourceBtn.textContent = 'Save';
+    }
+  }
+
+  function getPreviewSocket() {
+    return frame.contentWindow && frame.contentWindow.socket;
+  }
+
+  function socketRequest(event, payload) {
+    return new Promise((resolve, reject) => {
+      var sock = getPreviewSocket();
+      if (!sock) {
+        reject(new Error('preview socket not ready'));
+        return;
+      }
+
+      var settled = false;
+      function settle(fn, value) {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timeout);
+        fn(value);
+      }
+
+      var timeout = setTimeout(() => {
+        settle(reject, new Error(event + ' timeout'));
+      }, 20000);
+
+      sock.emit(event, payload, function(result) {
+        if (!result || !result.ok) {
+          var err = new Error(result && result.error ? result.error : event + ' failed');
+          err.result = result;
+          settle(reject, err);
+          return;
+        }
+        settle(resolve, result);
+      });
+    });
+  }
+
+  var sourceLoadRetries = 0;
+  async function loadSourceFromServer() {
+    if (!bufnr) return;
+    if (!getPreviewSocket()) {
+      if (sourceLoadRetries < 5) {
+        sourceLoadRetries++;
+        setSourceStatus('Waiting for preview connection...');
+        setTimeout(loadSourceFromServer, 1000);
+      } else {
+        setSourceStatus('Could not connect to preview');
+      }
+      return;
+    }
+    sourceLoadRetries = 0;
+    // Bind this load to the buffer it was issued for: if the user switches
+    // files while read_source is in flight, drop the stale response instead
+    // of stamping old content with the new bufnr.
+    const loadBufnr = bufnr;
+    try {
+      setSourceStatus('Loading source...');
+      const result = await socketRequest('read_source', { bufnr: loadBufnr });
+      if (bufnr !== loadBufnr) return;
+      const content = typeof result.content === 'string' ? result.content : '';
+      const parts = MdpFrontmatter.splitFrontmatter(content);
+      const handle = await ensureEditor();
+      if (bufnr !== loadBufnr) return;
+      handle.replaceContent(parts.body);
+      sourceFrontmatter = parts.frontmatter;
+      sourceContentSnapshot = parts.body;
+      sourceVersion = result.version || '';
+      sourceLoadedBufnr = loadBufnr;
+      setSaveButtonState('saved');
+      setSourceStatus('Loaded from ' + (result.filePath || 'buffer'));
+    } catch (e) {
+      setSourceStatus('Load failed');
+      showToast('Source load failed');
+    }
+  }
+
+  // Concurrency and lost-change handling live in saveScheduler — always call
+  // this through the scheduler, never directly.
+  async function saveSourceToServer(silent) {
+    if (!bufnr || !editor) return;
+    // Never write content that belongs to a different buffer (file-tree switch
+    // in progress: bufnr changed but the editor still shows the old file).
+    if (sourceLoadedBufnr !== bufnr) return;
+    const saveBufnr = bufnr;
+    const current = editor.getMarkdown();
+    if (current === sourceContentSnapshot) return;
+    const fullContent = MdpFrontmatter.joinFrontmatter(sourceFrontmatter, current);
+    // The user may keep typing (or switch files) while the request is in
+    // flight — only mark "saved" if the editor still shows what was written.
+    const stillCurrent = () => bufnr === saveBufnr && editor.getMarkdown() === current;
+    try {
+      setSourceStatus('Saving...');
+      setSaveButtonState('saving');
+      const result = await socketRequest('write_source', {
+        bufnr: saveBufnr,
+        content: fullContent,
+        baseline: sourceVersion
+      });
+      if (bufnr !== saveBufnr) return; // switched files mid-save: state belongs to the new file now
+      sourceContentSnapshot = current;
+      sourceVersion = result.version || '';
+      setSaveButtonState(stillCurrent() ? 'saved' : 'dirty');
+      const now = new Date();
+      setSourceStatus('Saved at ' + now.toLocaleTimeString() + ' · ' + (result.filePath || 'buffer'));
+      if (!silent) {
+        showToast('Source saved');
+      }
+    } catch (e) {
+      if (bufnr !== saveBufnr) return; // switched files mid-save: don't touch the new file's state
+      if (e && e.result && e.result.conflict) {
+        setSaveButtonState('dirty');
+        setSourceStatus('File changed on disk — Reload to load the new version');
+        showToast('Save blocked: file changed outside the editor');
+        return;
+      }
+      const message = String((e && e.message) || e || '');
+      if (message.includes('timeout')) {
+        try {
+          const verify = await socketRequest('read_source', { bufnr: saveBufnr });
+          const verifyContent = typeof verify.content === 'string' ? verify.content : '';
+          if (bufnr === saveBufnr && verifyContent === fullContent) {
+            sourceContentSnapshot = current;
+            sourceVersion = verify.version || '';
+            setSaveButtonState(stillCurrent() ? 'saved' : 'dirty');
+            const now = new Date();
+            setSourceStatus('Saved at ' + now.toLocaleTimeString() + ' · delayed ack');
+            if (!silent) {
+              showToast('Source saved');
+            }
+            return;
+          }
+        } catch (_) {}
+      }
+      if (bufnr !== saveBufnr) return;
+
+      setSaveButtonState('dirty');
+      setSourceStatus('Save failed');
+      showToast('Source save failed');
+    }
+  }
+
+  reloadSourceBtn.addEventListener('click', function() {
+    // Guard: reloading with unsaved edits silently discards them
+    if (saveState === 'dirty' || saveState === 'saving') {
+      showConfirm(function() { loadSourceFromServer(); }, {
+        title: 'Discard unsaved changes?',
+        message: 'Reloading will replace the editor content with the file on disk.',
+        okLabel: 'Discard & Reload'
+      });
+      return;
+    }
+    loadSourceFromServer();
+  });
+
+  saveSourceBtn.addEventListener('click', function() {
+    requestManualSave();
+  });
+
+  sourceEditor.addEventListener('keydown', function(e) {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 's') {
+      e.preventDefault();
+      requestManualSave();
+    }
+  });
+
+  // --- Inject highlight CSS into iframe ---
+  function injectStyles() {
+    try {
+      const doc = frame.contentDocument;
+      if (!doc || doc.getElementById('ann-styles')) return;
+      const style = doc.createElement('style');
+      style.id = 'ann-styles';
+      style.textContent = HIGHLIGHT_CSS + '\n@keyframes saveFlash { 0% { box-shadow: 0 0 0 0 rgba(91,138,94,0.4); } 50% { box-shadow: 0 0 0 3px rgba(91,138,94,0.2); } 100% { box-shadow: 0 0 0 0 rgba(91,138,94,0); } }';
+      doc.head.appendChild(style);
+    } catch(e) {}
+  }
+
+  function markClassName(type) {
+    return type === TYPE_DELETE ? 'ann-highlight-delete' : type === TYPE_ADD ? 'ann-highlight-add' : 'ann-highlight';
+  }
+
+  function wrapRangeInMark(range, id, type) {
+    var doc = frame.contentDocument;
+    var cls = markClassName(type);
+
+    // Collect text nodes within the range
+    var textNodes = [];
+    var walker = doc.createTreeWalker(range.commonAncestorContainer, NodeFilter.SHOW_TEXT, null, false);
+    var node;
+    while (node = walker.nextNode()) {
+      if (range.intersectsNode(node)) textNodes.push(node);
+    }
+    // If commonAncestor is itself a text node
+    if (range.commonAncestorContainer.nodeType === 3) {
+      textNodes = [range.commonAncestorContainer];
+    }
+
+    if (textNodes.length === 0) return null;
+
+    var firstMark = null;
+    textNodes.forEach(function(tn) {
+      var start = (tn === range.startContainer) ? range.startOffset : 0;
+      var end = (tn === range.endContainer) ? range.endOffset : tn.textContent.length;
+      if (start >= end) return;
+
+      var r = doc.createRange();
+      r.setStart(tn, start);
+      r.setEnd(tn, end);
+      var mark = doc.createElement('mark');
+      mark.className = cls;
+      mark.dataset.annId = id;
+      r.surroundContents(mark);
+      if (!firstMark) firstMark = mark;
+    });
+    return firstMark;
+  }
+
+  function unwrapMark(el) {
+    var parent = el.parentNode;
+    while (el.firstChild) parent.insertBefore(el.firstChild, el);
+    parent.removeChild(el);
+    parent.normalize();
+  }
+
+  function unwrapAllMarks(id) {
+    try {
+      var doc = frame.contentDocument;
+      doc.querySelectorAll('[data-ann-id="' + id + '"]').forEach(function(el) { unwrapMark(el); });
+    } catch(e) {}
+  }
+
+  function highlightRange(range, id, type) {
+    try {
+      if (!frame.contentDocument) return null;
+      return wrapRangeInMark(range, id, type);
+    } catch(e) { return null; }
+  }
+
+  function reapplyHighlights() {
+    try {
+      const doc = frame.contentDocument;
+      if (!doc || !doc.body) return;
+      injectStyles();
+      annotations.forEach(ann => {
+        if (!ann.text) return;
+        findAndHighlight(doc.body, ann.text, ann.id, ann.type);
+      });
+    } catch(e) {}
+  }
+
+  function findAndHighlight(root, text, id, type) {
+    const doc = frame.contentDocument;
+    const walker = doc.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
+    const searchText = text.substring(0, 100);
+    let node;
+    while (node = walker.nextNode()) {
+      const idx = node.textContent.indexOf(searchText);
+      if (idx !== -1) {
+        const range = doc.createRange();
+        range.setStart(node, idx);
+        range.setEnd(node, Math.min(idx + text.length, node.textContent.length));
+        try { wrapRangeInMark(range, id, type); } catch(e) {}
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // --- Inline editing ---
+  var textSnapshot = new WeakMap();
+  var isEditing = false;
+  var editTimer = null;
+  var editCount = 0;
+
+  function snapshotText(doc) {
+    doc.querySelectorAll('[data-source-line]').forEach(function(el) {
+      textSnapshot.set(el, el.textContent);
+    });
+  }
+
+  // Find the minimal changed substring between two strings
+  function minimalDiff(oldStr, newStr) {
+    var i = 0;
+    while (i < oldStr.length && i < newStr.length && oldStr[i] === newStr[i]) i++;
+    var j = 0;
+    while (j < oldStr.length - i && j < newStr.length - i && oldStr[oldStr.length - 1 - j] === newStr[newStr.length - 1 - j]) j++;
+    return {
+      oldText: oldStr.slice(i, oldStr.length - j),
+      newText: newStr.slice(i, newStr.length - j)
+    };
+  }
+
+  function collectChanges(doc) {
+    var changes = [];
+    doc.querySelectorAll('[data-source-line]').forEach(function(el) {
+      var line = parseInt(el.getAttribute('data-source-line'));
+      var currentText = el.textContent;
+      var originalText = textSnapshot.get(el);
+      if (originalText != null && currentText !== originalText) {
+        var diff = minimalDiff(originalText, currentText);
+        if (diff.oldText !== diff.newText) {
+          changes.push({
+            line: line,
+            oldText: diff.oldText,
+            newText: diff.newText,
+            oldLineText: originalText,
+            newLineText: currentText,
+            el: el
+          });
+        }
+      }
+    });
+    return changes;
+  }
+
+  function saveInlineEdits() {
+    try {
+      var doc = frame.contentDocument;
+      if (!doc) return;
+      var changes = collectChanges(doc);
+      if (changes.length === 0) { isEditing = false; return; }
+
+      var sock = frame.contentWindow && frame.contentWindow.socket;
+      if (!sock) { isEditing = false; return; }
+
+      var payload = changes.map(function(c) {
+        return {
+          line: c.line,
+          oldText: c.oldText,
+          newText: c.newText,
+          oldLineText: c.oldLineText,
+          newLineText: c.newLineText
+        };
+      });
+
+      sock.emit('update_lines', { bufnr: bufnr, changes: payload }, function(result) {
+        if (!result || !result.ok) {
+          showToast('Save failed');
+          isEditing = false;
+          return;
+        }
+
+        if (!result.applied) {
+          showToast('No changes saved');
+          isEditing = false;
+          return;
+        }
+
+        changes.forEach(function(c) {
+          textSnapshot.set(c.el, c.el.textContent);
+          c.el.style.animation = 'none';
+        });
+        // Single forced reflow in iframe context, then apply animations
+        if (changes.length > 0) void changes[0].el.offsetHeight;
+        changes.forEach(function(c) {
+          c.el.style.animation = 'saveFlash 0.6s ease-out';
+        });
+
+        editCount += result.applied;
+        editCounterEl.textContent = editCount + (editCount === 1 ? ' edit' : ' edits');
+        editCounterEl.classList.add('visible');
+        showToast('Saved');
+        isEditing = false;
+      });
+    } catch(e) {
+      isEditing = false;
+    }
+  }
+
+  function setupInlineEditing(doc) {
+    var markdownBody = doc.querySelector('.markdown-body');
+    if (!markdownBody || markdownBody._inlineEditAttached) return;
+    markdownBody._inlineEditAttached = true;
+
+    markdownBody.setAttribute('contenteditable', 'true');
+    markdownBody.style.outline = 'none';
+
+    snapshotText(doc);
+
+    markdownBody.addEventListener('input', function() {
+      isEditing = true;
+      clearTimeout(editTimer);
+      editTimer = setTimeout(saveInlineEdits, 500);
+    });
+
+    markdownBody.addEventListener('blur', function() {
+      if (isEditing) {
+        clearTimeout(editTimer);
+        saveInlineEdits();
+      }
+    }, true);
+  }
+
+  // --- Selection handling in iframe ---
+  function setupIframeListeners() {
+    try {
+      const doc = frame.contentDocument;
+      if (!doc || doc._annListenersAttached) return;
+      doc._annListenersAttached = true;
+
+      injectStyles();
+
+      doc.addEventListener('mouseup', (e) => {
+        setTimeout(() => {
+          const sel = doc.getSelection();
+          if (sel && sel.toString().trim().length > 0) {
+            currentSelection = {
+              text: sel.toString().trim(),
+              range: sel.getRangeAt(0).cloneRange()
+            };
+            showToolbar(e);
+          } else {
+            hideToolbar();
+            currentSelection = null;
+          }
+        }, 10);
+      });
+
+      doc.addEventListener('mousedown', (e) => {
+        if (!toolbar.contains(e.target)) {
+          hideToolbar();
+        }
+      });
+
+      doc.addEventListener('keydown', handleToolbarKeydown);
+
+      reapplyHighlights();
+    } catch(e) {
+      console.warn('Cannot access iframe. Highlights won\'t show in preview.');
+    }
+  }
+
+  frame.addEventListener('load', () => {
+    setupIframeListeners();
+    applyPreviewWidthMode();
+    refreshAnnotationsFromStorage();
+    setTimeout(refreshAnnotationsFromStorage, 300);
+    setTimeout(refreshAnnotationsFromStorage, 1200);
+    setTimeout(setupIframeListeners, 500);
+    setTimeout(observeIframeChanges, 1000);
+  });
+
+  // --- Toolbar ---
+  // Stores the position of the last selection for popover placement
+  var lastSelectionPos = { x: 0, y: 0 };
+
+  function showToolbar(e) {
+    const iframeRect = frame.getBoundingClientRect();
+    let x = iframeRect.left + e.clientX;
+    let y = iframeRect.top + e.clientY - 50;
+
+    // Save selection position for popover use by keyboard shortcuts
+    lastSelectionPos = { x: iframeRect.left + e.clientX, y: iframeRect.top + e.clientY + 10 };
+
+    const tw = 360;
+    if (x + tw > window.innerWidth) x = window.innerWidth - tw - 10;
+    if (x < 10) x = 10;
+    if (y < 10) y = iframeRect.top + e.clientY + 20;
+
+    toolbar.style.left = x + 'px';
+    toolbar.style.top = y + 'px';
+    toolbar.classList.add('visible');
+  }
+
+  function hideToolbar() {
+    toolbar.classList.remove('visible');
+  }
+
+  toolbar.addEventListener('mousedown', (e) => { e.preventDefault(); e.stopPropagation(); });
+
+  // --- Popover positioning ---
+  let popoverPosition = { x: 0, y: 0 };
+  let editingAnnotationIdx = -1;
+
+  function positionPopover(x, y) {
+    const pw = 420, ph = 300;
+    if (x + pw > window.innerWidth) x = window.innerWidth - pw - 16;
+    if (x < 16) x = 16;
+    if (y + ph > window.innerHeight) y = y - ph - 10;
+    if (y < 16) y = 16;
+    notePopover.style.left = x + 'px';
+    notePopover.style.top = y + 'px';
+  }
+
+  function openPopoverForNew(x, y) {
+    if (!currentSelection) return;
+    editingAnnotationIdx = -1;
+    const truncated = currentSelection.text.length > 120
+      ? currentSelection.text.substring(0, 120) + '...'
+      : currentSelection.text;
+    notePopoverSelected.textContent = truncated;
+    notePopoverSelected.style.display = '';
+    notePopoverInput.value = '';
+    positionPopover(x, y);
+    noteOverlay.classList.add('visible');
+    notePopover.classList.add('visible');
+    releasePopoverTrap = trapFocus(notePopover);
+  }
+
+  function openPopoverForEdit(idx, anchorEl) {
+    const ann = annotations[idx];
+    if (!ann) return;
+    editingAnnotationIdx = idx;
+    var t = ann.type || TYPE_MODIFY;
+    notePopoverLabel.textContent = t === TYPE_GLOBAL ? 'Edit instruction' : 'Edit note';
+    notePopoverInput.placeholder = t === TYPE_GLOBAL ? 'Document instruction...' : t === TYPE_ADD ? 'What to add here?' : t === TYPE_DELETE ? 'Why or how should this be removed?' : 'How should this be improved?';
+    if (t === TYPE_GLOBAL) {
+      notePopoverSelected.style.display = 'none';
+    } else {
+      const truncated = ann.text.length > 120 ? ann.text.substring(0, 120) + '...' : ann.text;
+      notePopoverSelected.textContent = truncated;
+      notePopoverSelected.style.display = '';
+    }
+    notePopoverInput.value = ann.note || '';
+    const rect = anchorEl.getBoundingClientRect();
+    positionPopover(rect.left, rect.bottom + 6);
+    noteOverlay.classList.add('visible');
+    notePopover.classList.add('visible');
+    releasePopoverTrap = trapFocus(notePopover);
+    setTimeout(() => { notePopoverInput.select(); }, 50);
+  }
+
+  var releasePopoverTrap = null;
+  var isComposingIME = false;
+  var imeComposeResetTimer = null;
+
+  function closePopover() {
+    noteOverlay.classList.remove('visible');
+    notePopover.classList.remove('visible');
+    if (releasePopoverTrap) { releasePopoverTrap(); releasePopoverTrap = null; }
+    isComposingIME = false;
+    if (imeComposeResetTimer) { clearTimeout(imeComposeResetTimer); imeComposeResetTimer = null; }
+    editingAnnotationIdx = -1;
+    currentSelection = null;
+  }
+
+  function commitFromPopover() {
+    if (editingAnnotationIdx >= 0) {
+      annotations[editingAnnotationIdx].note = notePopoverInput.value.trim();
+      saveAnnotations();
+      renderList();
+      closePopover();
+      return;
+    }
+
+    if (!currentSelection) { closePopover(); return; }
+
+    const note = notePopoverInput.value.trim();
+    const id = 'ann-' + (++highlightCounter);
+    const ann = {
+      id: id,
+      type: pendingType,
+      text: currentSelection.text.substring(0, 500),
+      note: note,
+      context: currentSelection.text.substring(0, 60)
+    };
+
+    highlightRange(currentSelection.range, id, pendingType);
+    try { frame.contentDocument.getSelection().removeAllRanges(); } catch(e) {}
+
+    annotations.push(ann);
+    saveAnnotations();
+    renderList();
+    closePopover();
+  }
+
+  var pendingType = TYPE_MODIFY;
+
+  function doModifyAction() {
+    pendingType = TYPE_MODIFY;
+    hideToolbar();
+    popoverPosition = lastSelectionPos;
+    notePopoverLabel.textContent = 'Modify';
+    notePopoverInput.placeholder = 'How should this be improved?';
+    openPopoverForNew(lastSelectionPos.x, lastSelectionPos.y);
+  }
+
+  function doAddAction() {
+    pendingType = TYPE_ADD;
+    hideToolbar();
+    popoverPosition = lastSelectionPos;
+    notePopoverLabel.textContent = 'Add content';
+    notePopoverInput.placeholder = 'What to add here?';
+    openPopoverForNew(lastSelectionPos.x, lastSelectionPos.y);
+  }
+
+  function doDeleteAction() {
+    pendingType = TYPE_DELETE;
+    hideToolbar();
+    popoverPosition = lastSelectionPos;
+    notePopoverLabel.textContent = 'Delete';
+    notePopoverInput.placeholder = 'Why or how should this be removed?';
+    openPopoverForNew(lastSelectionPos.x, lastSelectionPos.y);
+  }
+
+  function handleToolbarKeydown(e) {
+    if (!toolbar.classList.contains('visible')) return;
+    if (e.isComposing || e.keyCode === 229) return;
+    if (e.key === 'm' || e.key === 'M') { e.preventDefault(); doModifyAction(); }
+    if (e.key === 'a' || e.key === 'A') { e.preventDefault(); doAddAction(); }
+    if (e.key === 'd' || e.key === 'D') { e.preventDefault(); doDeleteAction(); }
+    if (e.key === 'Escape') hideToolbar();
+  }
+
+  toolbar.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (btn.dataset.action === 'delete') doDeleteAction();
+      else if (btn.dataset.action === 'add') doAddAction();
+      else doModifyAction();
+    });
+  });
+
+  document.addEventListener('keydown', handleToolbarKeydown);
+
+  noteOverlay.addEventListener('click', closePopover);
+  notePopoverCancel.addEventListener('click', closePopover);
+  notePopoverSave.addEventListener('click', commitFromPopover);
+
+  notePopoverInput.addEventListener('compositionstart', () => {
+    isComposingIME = true;
+    if (imeComposeResetTimer) { clearTimeout(imeComposeResetTimer); imeComposeResetTimer = null; }
+  });
+  notePopoverInput.addEventListener('compositionend', () => {
+    if (imeComposeResetTimer) clearTimeout(imeComposeResetTimer);
+    imeComposeResetTimer = setTimeout(() => {
+      isComposingIME = false;
+      imeComposeResetTimer = null;
+    }, 0);
+  });
+  notePopoverInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey && !e.isComposing && !isComposingIME) { e.preventDefault(); commitFromPopover(); }
+    if (e.key === 'Escape' && !e.isComposing && !isComposingIME) closePopover();
+  });
+
+  // --- Render ---
+  var renderedAnnIds = new Set();
+
+  function renderList() {
+    updateCount();
+
+    if (annotations.length === 0) {
+      renderedAnnIds = new Set();
+      annList.innerHTML = '';
+      annList.appendChild(emptyState);
+      emptyState.style.display = '';
+      return;
+    }
+
+    emptyState.style.display = 'none';
+    annList.innerHTML = '';
+    var newItemCount = 0;
+
+    annotations.forEach((ann, idx) => {
+      if (idx > 0 && ann.type !== TYPE_GLOBAL && annotations[idx - 1].type === TYPE_GLOBAL) {
+        var divider = document.createElement('div');
+        divider.className = 'global-divider';
+        divider.textContent = 'Selection annotations';
+        annList.appendChild(divider);
+      }
+
+      const item = document.createElement('div');
+      item.className = 'ann-item';
+      item.dataset.id = ann.id;
+      // Only newly added items animate in; re-renders keep existing items still
+      if (renderedAnnIds.has(ann.id)) {
+        item.style.animation = 'none';
+      } else {
+        item.style.animationDelay = (newItemCount++ * 30) + 'ms';
+      }
+
+      const annType = ann.type || TYPE_MODIFY;
+      item.dataset.type = annType;
+      const badgeLabel = annType.charAt(0).toUpperCase() + annType.slice(1);
+
+      var bodyHtml;
+      if (annType === TYPE_GLOBAL) {
+        bodyHtml = `<div class="snippet"><span class="note-text">${escapeHtml(ann.note)}</span></div>`;
+      } else {
+        const truncText = ann.text.length > 100 ? ann.text.substring(0, 100) + '...' : ann.text;
+        bodyHtml = `<div class="snippet">${escapeHtml(truncText)}</div>`;
+        bodyHtml += ann.note
+          ? `<div class="note"><span class="note-text">${escapeHtml(ann.note)}</span></div>`
+          : `<div class="add-note-hint">Click to add a note</div>`;
+      }
+
+      item.innerHTML = `
+        <button class="copy-btn" title="Copy" aria-label="Copy annotation">${COPY_SVG}</button>
+        <button class="remove-btn" data-idx="${idx}" title="Remove" aria-label="Remove annotation">&times;</button>
+        <span class="type-badge ${annType}">${badgeLabel}</span>
+        ${bodyHtml}
+      `;
+
+      item.addEventListener('click', (e) => {
+        if (e.target.closest('.remove-btn')) return;
+        if (e.target.closest('.copy-btn')) return;
+        if (e.target.classList.contains('note-text') || e.target.classList.contains('add-note-hint')) {
+          e.stopPropagation();
+          openPopoverForEdit(idx, item);
+          return;
+        }
+        if (annType !== TYPE_GLOBAL) scrollToAnnotation(ann.id);
+      });
+
+      item.querySelector('.remove-btn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        removeAnnotation(idx);
+      });
+
+      item.querySelector('.copy-btn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        copyToClipboard(formatAnnotation(ann));
+        showToast('Copied');
+      });
+
+      annList.appendChild(item);
+    });
+
+    renderedAnnIds = new Set(annotations.map(a => a.id));
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function scrollToAnnotation(id) {
+    try {
+      const doc = frame.contentDocument;
+      const el = doc.querySelector(`[data-ann-id="${id}"]`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.style.transition = 'background 0.2s ease';
+        el.style.background = 'rgba(196, 112, 75, 0.35)';
+        setTimeout(() => { el.style.background = ''; }, 1500);
+      }
+    } catch(e) {}
+  }
+
+  function removeAnnotation(idx) {
+    const ann = annotations[idx];
+    unwrapAllMarks(ann.id);
+
+    annotations.splice(idx, 1);
+    saveAnnotations();
+    renderList();
+  }
+
+  // --- Copy helpers ---
+  function formatAnnotation(ann) {
+    const annType = (ann.type || TYPE_MODIFY).toUpperCase();
+    if (ann.type === TYPE_GLOBAL) {
+      return `[GLOBAL]\n**Instruction:** ${ann.note}\n`;
+    }
+    const text = ann.text.replace(/\n/g, ' ');
+    let md = `[${annType}]\n`;
+    if (ann.type === TYPE_DELETE) {
+      md += `> ~~${text}~~\n`;
+      if (ann.note) md += `\n**Deletion direction:** ${ann.note}\n`;
+    } else if (ann.type === TYPE_ADD) {
+      md += `> ${text}\n`;
+      if (ann.note) md += `\n**Add:** ${ann.note}\n`;
+    } else {
+      md += `> ${text}\n`;
+      if (ann.note) md += `\n**Rewrite direction:** ${ann.note}\n`;
+    }
+    return md;
+  }
+
+  function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).catch(() => {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    });
+  }
+
+  // --- Copy All ---
+  copyAllBtn.addEventListener('click', () => {
+    if (annotations.length === 0) return;
+
+    let title;
+    try { title = frame.contentDocument.title || urlInput.value.trim(); }
+    catch(e) { title = urlInput.value.trim(); }
+
+    var globalAnns = annotations.filter(a => a.type === TYPE_GLOBAL);
+    var selectionAnns = annotations.filter(a => a.type !== TYPE_GLOBAL);
+
+    let md = `# Document Review: ${title}\n\n`;
+
+    if (globalAnns.length > 0) {
+      md += `## Document Instructions\n\n`;
+      globalAnns.forEach((ann, i) => {
+        md += `${i + 1}. ${ann.note}\n`;
+      });
+      md += `\n`;
+    }
+
+    if (selectionAnns.length > 0) {
+      md += `## Annotations\n\n`;
+      selectionAnns.forEach((ann, i) => {
+        md += `### ${i + 1}. ${formatAnnotation(ann)}\n`;
+      });
+    }
+
+    md += `---\n\n`;
+    md += `Apply all instructions and annotations above to the original document:\n`;
+    if (globalAnns.length > 0) {
+      md += `- Document Instructions: apply each instruction to the entire document\n`;
+    }
+    md += `- [MODIFY]: rewrite and improve the quoted text based on the direction or suggestion provided — the note is guidance, not a literal replacement\n`;
+    md += `- [ADD]: insert new content after the quoted text based on the direction provided — the note is guidance, not a literal insertion\n`;
+    md += `- [DELETE]: remove or rework the quoted text based on the direction provided — the note explains why or how it should be removed\n`;
+    md += `\nOutput the complete revised document in full. Do not summarize or skip sections.\n`;
+
+    copyToClipboard(md);
+    showToast('Copied to clipboard');
+  });
+
+  // --- Clear All ---
+  // --- Custom confirm dialog ---
+  const confirmOverlay = document.getElementById('confirmOverlay');
+  const confirmCancel = document.getElementById('confirmCancel');
+  const confirmOk = document.getElementById('confirmOk');
+
+  function trapFocus(container) {
+    var focusable = container.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    var first = focusable[0];
+    var last = focusable[focusable.length - 1];
+    function handler(e) {
+      if (e.key !== 'Tab') return;
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    }
+    container.addEventListener('keydown', handler);
+    first && first.focus();
+    return function() { container.removeEventListener('keydown', handler); };
+  }
+
+  var releaseFocusTrap = null;
+
+  function showConfirm(onConfirm, opts) {
+    opts = opts || {};
+    document.getElementById('confirmTitle').textContent = opts.title || 'Are you sure?';
+    document.getElementById('confirmMessage').textContent = opts.message || 'This action cannot be undone.';
+    confirmOk.textContent = opts.okLabel || 'Confirm';
+    confirmOverlay.classList.add('visible');
+    releaseFocusTrap = trapFocus(confirmOverlay.querySelector('.confirm-dialog'));
+    function onKey(e) { if (e.key === 'Escape') cleanup(); }
+    function onClickOutside(e) { if (e.target === confirmOverlay) cleanup(); }
+    var cleanup = () => {
+      confirmOverlay.classList.remove('visible');
+      confirmOverlay.removeEventListener('keydown', onKey);
+      confirmOverlay.removeEventListener('click', onClickOutside);
+      if (releaseFocusTrap) { releaseFocusTrap(); releaseFocusTrap = null; }
+    };
+    confirmOk.onclick = () => { cleanup(); onConfirm(); };
+    confirmCancel.onclick = cleanup;
+    confirmOverlay.addEventListener('keydown', onKey);
+    confirmOverlay.addEventListener('click', onClickOutside);
+  }
+
+  clearAllBtn.addEventListener('click', () => {
+    if (annotations.length === 0) return;
+    showConfirm(() => {
+      try {
+        const doc = frame.contentDocument;
+        doc.querySelectorAll('[data-ann-id]').forEach(el => unwrapMark(el));
+      } catch(e) {}
+      annotations = [];
+      storageKeys().forEach(key => localStorage.removeItem(key));
+      if (activeStorageKey) {
+        localStorage.removeItem(activeStorageKey);
+      }
+      renderList();
+      showToast('All annotations cleared');
+    }, {
+      title: 'Clear all annotations?',
+      message: 'This will remove all annotations and highlights from this document. This cannot be undone.',
+      okLabel: 'Clear All'
+    });
+  });
+
+  document.addEventListener('mousedown', () => { hideToolbar(); });
+
+  // --- Global document instructions (modal) ---
+  var releaseGlobalTrap = null;
+
+  function openGlobalModal() {
+    globalModalInput.value = '';
+    globalModal.classList.add('visible');
+    globalModalOverlay.classList.add('visible');
+    releaseGlobalTrap = trapFocus(globalModal);
+    setTimeout(() => globalModalInput.focus(), 50);
+  }
+
+  function closeGlobalModal() {
+    globalModal.classList.remove('visible');
+    globalModalOverlay.classList.remove('visible');
+    if (releaseGlobalTrap) { releaseGlobalTrap(); releaseGlobalTrap = null; }
+  }
+
+  function addGlobalNote(note) {
+    var trimmed = (note || '').trim();
+    if (!trimmed) return;
+    const id = 'ann-' + (++highlightCounter);
+    const ann = { id: id, type: TYPE_GLOBAL, text: '', note: trimmed, context: trimmed.substring(0, 60) };
+    var insertIdx = 0;
+    for (var i = 0; i < annotations.length; i++) {
+      if (annotations[i].type === TYPE_GLOBAL) insertIdx = i + 1;
+      else break;
+    }
+    annotations.splice(insertIdx, 0, ann);
+    saveAnnotations();
+    renderList();
+    closeGlobalModal();
+    showToast('Instruction added');
+  }
+
+  globalInstructionBtn.addEventListener('click', openGlobalModal);
+  globalModalOverlay.addEventListener('click', closeGlobalModal);
+  globalModalCancel.addEventListener('click', closeGlobalModal);
+  globalModalSave.addEventListener('click', () => addGlobalNote(globalModalInput.value));
+
+  globalModalInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); addGlobalNote(globalModalInput.value); }
+    if (e.key === 'Escape') { closeGlobalModal(); }
+  });
+
+  globalModalPresets.querySelectorAll('.preset-chip').forEach(chip => {
+    chip.addEventListener('click', (e) => {
+      e.preventDefault();
+      addGlobalNote(chip.dataset.preset);
+    });
+  });
+
+  function isShortcutBlocked() {
+    var ae = document.activeElement;
+    if (ae && (ae.tagName === 'INPUT' || ae.tagName === 'TEXTAREA')) return true;
+    if (ae && ae.isContentEditable) return true;
+    if (notePopover.classList.contains('visible') || confirmOverlay.classList.contains('visible')) return true;
+    if (globalModal.classList.contains('visible')) return true;
+    return false;
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.isComposing || e.keyCode === 229) return;
+    if ((e.key === 'f' || e.key === 'F') && !isShortcutBlocked()) {
+      e.preventDefault();
+      toggleFileTree();
+      return;
+    }
+    if ((e.key === 'g' || e.key === 'G') && !isShortcutBlocked() && !toolbar.classList.contains('visible')) {
+      e.preventDefault();
+      openGlobalModal();
+    }
+    if (e.key === 'Escape' && sourcePane.classList.contains('visible') && !isShortcutBlocked()) {
+      setSourcePaneVisible(false);
+    }
+  });
+
+  function observeIframeChanges() {
+    try {
+      const doc = frame.contentDocument;
+      if (!doc || !doc.body) return;
+
+      const observer = new MutationObserver(() => {
+        if (isEditing) return;
+        clearTimeout(observer._timer);
+        observer._timer = setTimeout(() => {
+          injectStyles();
+          if (!doc.querySelector('[data-ann-id]') && annotations.length > 0) {
+            reapplyHighlights();
+          }
+          // Re-snapshot after DOM refresh
+          snapshotText(doc);
+        }, 300);
+      });
+
+      observer.observe(doc.body, { childList: true, subtree: true });
+    } catch(e) {}
+  }
+
+  // --- Notes panel collapse ---
+  var sidePanel = document.querySelector('.side-panel');
+  var collapseNotesBtn = document.getElementById('collapseNotesBtn');
+  var expandNotesBtn = document.getElementById('expandNotesBtn');
+  var expandNotesCount = document.getElementById('expandNotesCount');
+  var NOTES_COLLAPSED_KEY = 'mdp-notes-collapsed';
+
+  function setNotesCollapsed(collapsed, persist) {
+    sidePanel.classList.toggle('collapsed', collapsed);
+    expandNotesBtn.classList.toggle('visible', collapsed);
+    if (persist !== false) {
+      try { localStorage.setItem(NOTES_COLLAPSED_KEY, collapsed ? '1' : '0'); } catch (e) {}
+    }
+  }
+  collapseNotesBtn.addEventListener('click', function() { setNotesCollapsed(true); });
+  expandNotesBtn.addEventListener('click', function() { setNotesCollapsed(false); });
+  try {
+    if (localStorage.getItem(NOTES_COLLAPSED_KEY) === '1') setNotesCollapsed(true, false);
+  } catch (e) {}
+
+  document.addEventListener('keydown', (e) => {
+    if (e.isComposing || e.keyCode === 229) return;
+    if ((e.key === 'n' || e.key === 'N') && !isShortcutBlocked() && !toolbar.classList.contains('visible')) {
+      e.preventDefault();
+      setNotesCollapsed(!sidePanel.classList.contains('collapsed'));
+    }
+  });
+
+  // --- Panel column resizers ---
+  // Shared drag-to-resize behaviour: clamp, persist, and disable iframe mouse
+  // capture during the drag. `sign` is +1 when dragging right widens the
+  // panel (left-side panel) and -1 when dragging left widens it (right-side).
+  function initColumnResizer(opts) {
+    try {
+      var saved = parseInt(localStorage.getItem(opts.storageKey), 10);
+      if (saved >= opts.min && saved <= opts.max) opts.apply(saved);
+    } catch (e) {}
+
+    opts.handle.addEventListener('mousedown', function(e) {
+      e.preventDefault();
+      var startX = e.clientX;
+      var startW = opts.measure();
+      opts.handle.classList.add('dragging');
+      document.body.style.cursor = 'col-resize';
+      document.body.style.userSelect = 'none';
+      // The preview iframe swallows mouse events; disable them during the drag.
+      frame.style.pointerEvents = 'none';
+      function onMove(ev) {
+        var w = startW + (ev.clientX - startX) * opts.sign;
+        opts.apply(Math.max(opts.min, Math.min(opts.max, w)));
+      }
+      function onUp() {
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+        opts.handle.classList.remove('dragging');
+        document.body.style.cursor = '';
+        document.body.style.userSelect = '';
+        frame.style.pointerEvents = '';
+        try {
+          localStorage.setItem(opts.storageKey, String(Math.round(opts.measure())));
+        } catch (e) {}
+      }
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+    });
+  }
+
+  initColumnResizer({
+    handle: document.getElementById('notesResizer'),
+    storageKey: 'mdp-notes-width',
+    min: 240,
+    max: 560,
+    sign: -1,
+    apply: function(w) { sidePanel.style.setProperty('--notes-w', w + 'px'); },
+    measure: function() { return sidePanel.getBoundingClientRect().width; }
+  });
+
+  initColumnResizer({
+    handle: document.getElementById('fileTreeResizer'),
+    storageKey: 'mdp-tree-width',
+    min: 170,
+    max: 560,
+    sign: 1,
+    apply: function(w) { fileTreePanel.style.setProperty('--tree-w', w + 'px'); },
+    measure: function() { return fileTreePanel.getBoundingClientRect().width; }
+  });
+
+  // --- Init ---
+  loadAnnotations();
+  renderList();
+
+})();
+</script>
+</body>
+</html>

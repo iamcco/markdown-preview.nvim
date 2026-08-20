@@ -60,6 +60,21 @@ function! mkdp#util#open_browser() abort
   call mkdp#autocmd#init()
 endfunction
 
+function! mkdp#util#open_annotator() abort
+  call mkdp#rpc#open_annotator()
+  call mkdp#autocmd#init()
+endfunction
+
+function! mkdp#util#open_annotator_page() abort
+  let l:server_status = mkdp#rpc#get_server_status()
+  if l:server_status ==# -1
+    let g:mkdp_open_annotator_on_start = 1
+    call mkdp#rpc#start_server()
+  else
+    call mkdp#util#open_annotator()
+  endif
+endfunction
+
 function! mkdp#util#stop_preview() abort
   let g:mkdp_clients_active = 0
   " TODO: delete autocmd

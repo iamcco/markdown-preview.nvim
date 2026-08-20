@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = default_1;
 const tslib_1 = require("tslib");
 const neovim_1 = require("@chemzqm/neovim");
 const logger = require('../util/logger')('attach'); // tslint:disable-line
@@ -47,6 +48,11 @@ function default_1(options) {
                 bufnr
             });
         }
+        else if (method === 'open_annotator') {
+            app.openAnnotator({
+                bufnr
+            });
+        }
     }));
     nvim.on('request', (method, args, resp) => {
         if (method === 'close_all_pages') {
@@ -68,4 +74,3 @@ function default_1(options) {
         }
     };
 }
-exports.default = default_1;

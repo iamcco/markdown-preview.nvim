@@ -1,0 +1,465 @@
+/*
+ * Milkdown theme overrides for the annotator.
+ * Mirrors the cream/warm palette defined in annotator.html.
+ */
+
+/*
+ * The host (#sourceEditor) is also `.source-editor`, a flex child of `.source-pane`
+ * with `flex: 1; min-height: 0`. Don't set `height: 100%` here — let flex sizing
+ * resolve the height. We just claim the scroll viewport and the background.
+ */
+.mdp-editor-wrapper {
+  overflow: auto;
+  background: var(--bg-surface, #FEFDFB);
+  /* The host already has `position: relative` from `.source-editor`. */
+  /* Make this a flex container so .milkdown can fill it for click coverage. */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Make .milkdown fill the scroll viewport so its child .ProseMirror can flex
+   to full height — clicking blank space below the last paragraph lands in the
+   editor instead of doing nothing. */
+.mdp-editor-wrapper > .milkdown {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+.mdp-editor-wrapper > .milkdown > .ProseMirror {
+  flex: 1 0 auto;
+}
+
+.mdp-editor-wrapper .milkdown {
+  --crepe-color-background: var(--bg-surface, #FEFDFB);
+  --crepe-color-on-background: var(--text, #2D2A26);
+  --crepe-color-surface: var(--bg-surface, #FEFDFB);
+  --crepe-color-surface-low: var(--bg-warm, #F0EDE6);
+  --crepe-color-on-surface: var(--text, #2D2A26);
+  --crepe-color-on-surface-variant: var(--text-secondary, #6B6560);
+  --crepe-color-outline: var(--border, #DDD7CC);
+  --crepe-color-primary: var(--accent, #C4704B);
+  --crepe-color-secondary: var(--bg-warm, #F0EDE6);
+  --crepe-color-on-secondary: var(--text, #2D2A26);
+  --crepe-color-inverse: var(--text, #2D2A26);
+  --crepe-color-on-inverse: var(--bg, #F9F7F3);
+  --crepe-color-inline-code: var(--accent, #C4704B);
+  --crepe-color-error: var(--danger, #B85450);
+  --crepe-color-hover: var(--bg-hover, #EAE6DD);
+  --crepe-color-selected: var(--accent-wash, rgba(196,112,75,0.12));
+  --crepe-color-inline-area: var(--bg-warm, #F0EDE6);
+
+  --crepe-font-title: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --crepe-font-default: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --crepe-font-code: 'SF Mono', 'Cascadia Code', 'Fira Code', monospace;
+
+  --crepe-shadow-1:
+    0 1px 3px rgba(45,42,38,0.06),
+    0 1px 2px rgba(45,42,38,0.10);
+  --crepe-shadow-2:
+    0 8px 24px rgba(45,42,38,0.10),
+    0 2px 6px rgba(45,42,38,0.06);
+
+  outline: none;
+  background: transparent;
+}
+
+/* =============================================
+   Content container — centered with comfortable line length
+   ============================================= */
+.mdp-editor-wrapper .milkdown .ProseMirror {
+  max-width: 820px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 40px 48px 120px;
+  font-family: var(--crepe-font-default);
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text, #2D2A26);
+  word-wrap: break-word;
+  box-sizing: border-box;
+}
+
+@media (max-width: 720px) {
+  .mdp-editor-wrapper .milkdown .ProseMirror {
+    padding: 24px 20px 64px;
+  }
+}
+
+/* --- Headings --- */
+.mdp-editor-wrapper .milkdown .ProseMirror h1,
+.mdp-editor-wrapper .milkdown .ProseMirror h2,
+.mdp-editor-wrapper .milkdown .ProseMirror h3,
+.mdp-editor-wrapper .milkdown .ProseMirror h4,
+.mdp-editor-wrapper .milkdown .ProseMirror h5,
+.mdp-editor-wrapper .milkdown .ProseMirror h6 {
+  font-family: var(--crepe-font-title);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  margin: 1.8em 0 0.6em;
+  padding: 0;
+  color: var(--text, #2D2A26);
+}
+.mdp-editor-wrapper .milkdown .ProseMirror h1 {
+  font-size: 1.85em;
+  letter-spacing: -0.022em;
+  padding-bottom: 0.2em;
+  border-bottom: 1px solid var(--border-light, #E8E3D9);
+  margin-top: 0.6em;
+}
+.mdp-editor-wrapper .milkdown .ProseMirror h2 {
+  font-size: 1.45em;
+  padding-bottom: 0.18em;
+  border-bottom: 1px solid var(--border-light, #E8E3D9);
+}
+.mdp-editor-wrapper .milkdown .ProseMirror h3 { font-size: 1.2em; }
+.mdp-editor-wrapper .milkdown .ProseMirror h4 { font-size: 1.05em; }
+.mdp-editor-wrapper .milkdown .ProseMirror h5 { font-size: 1em; }
+.mdp-editor-wrapper .milkdown .ProseMirror h6 {
+  font-size: 0.95em;
+  color: var(--text-secondary, #6B6560);
+}
+
+/* --- Paragraphs & inline --- */
+.mdp-editor-wrapper .milkdown .ProseMirror p {
+  margin: 0 0 1em 0;
+}
+.mdp-editor-wrapper .milkdown .ProseMirror a {
+  color: var(--accent, #C4704B);
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--accent, #C4704B) 30%, transparent);
+  transition: border-color 180ms;
+}
+.mdp-editor-wrapper .milkdown .ProseMirror a:hover {
+  border-bottom-color: var(--accent, #C4704B);
+}
+.mdp-editor-wrapper .milkdown .ProseMirror strong { font-weight: 700; color: var(--text, #2D2A26); }
+.mdp-editor-wrapper .milkdown .ProseMirror em { font-style: italic; }
+.mdp-editor-wrapper .milkdown .ProseMirror del { text-decoration: line-through; color: var(--text-tertiary, #9B958C); }
+
+/* --- Lists --- */
+.mdp-editor-wrapper .milkdown .ProseMirror ul,
+.mdp-editor-wrapper .milkdown .ProseMirror ol {
+  padding-left: 1.7em;
+  margin: 0 0 1em 0;
+}
+.mdp-editor-wrapper .milkdown .ProseMirror ul { list-style-type: disc; }
+.mdp-editor-wrapper .milkdown .ProseMirror ol { list-style-type: decimal; }
+.mdp-editor-wrapper .milkdown .ProseMirror li { margin: 0.15em 0; }
+.mdp-editor-wrapper .milkdown .ProseMirror li p { margin: 0.15em 0; }
+.mdp-editor-wrapper .milkdown .ProseMirror li[data-item-type="task"] {
+  list-style-type: none;
+}
+.mdp-editor-wrapper .milkdown .ProseMirror input[type="checkbox"] {
+  margin: 0 0.35em 0.2em -1.4em;
+  vertical-align: middle;
+  accent-color: var(--accent, #C4704B);
+}
+
+/* --- Blockquote --- */
+.mdp-editor-wrapper .milkdown .ProseMirror blockquote {
+  margin: 0 0 1em 0;
+  padding: 0.2em 0 0.2em 1em;
+  color: var(--text-secondary, #6B6560);
+  border-left: 3px solid var(--border, #DDD7CC);
+}
+.mdp-editor-wrapper .milkdown .ProseMirror blockquote::before { display: none; }
+
+/* --- HR --- */
+.mdp-editor-wrapper .milkdown .ProseMirror hr {
+  margin: 2em 0;
+  border: 0;
+  border-top: 1px solid var(--border, #DDD7CC);
+  background: none;
+  height: 0;
+  padding: 0;
+}
+
+/* --- Code --- */
+.mdp-editor-wrapper .milkdown .ProseMirror code {
+  font-family: var(--crepe-font-code);
+  font-size: 0.88em;
+  padding: 0.15em 0.42em;
+  background: var(--bg-warm, #F0EDE6);
+  border: 1px solid var(--border-light, #E8E3D9);
+  border-radius: 4px;
+  color: var(--accent, #C4704B);
+  display: inline;
+}
+.mdp-editor-wrapper .milkdown .ProseMirror pre {
+  padding: 14px 18px;
+  margin: 0 0 1em 0;
+  background: var(--bg-warm, #F0EDE6);
+  border: 1px solid var(--border-light, #E8E3D9);
+  border-radius: 6px;
+  font-size: 0.88em;
+  line-height: 1.55;
+  overflow: auto;
+  font-family: var(--crepe-font-code);
+}
+.mdp-editor-wrapper .milkdown .ProseMirror pre code {
+  background: transparent;
+  padding: 0;
+  border: 0;
+  color: var(--text, #2D2A26);
+  font-size: 100%;
+  border-radius: 0;
+  white-space: pre;
+}
+
+/* --- Tables --- */
+.mdp-editor-wrapper .milkdown .milkdown-table-block { margin: 0 0 1.2em 0; }
+.mdp-editor-wrapper .milkdown .milkdown-table-block table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 15px;
+  line-height: 1.55;
+}
+.mdp-editor-wrapper .milkdown .milkdown-table-block tr {
+  background: var(--bg-surface, #FEFDFB);
+}
+.mdp-editor-wrapper .milkdown .milkdown-table-block tr:nth-child(2n) {
+  background: var(--bg-surface-warm, #FCFBF9);
+}
+.mdp-editor-wrapper .milkdown .milkdown-table-block th,
+.mdp-editor-wrapper .milkdown .milkdown-table-block td {
+  padding: 9px 14px;
+  border: 1px solid var(--border-light, #E8E3D9);
+  vertical-align: top;
+  text-align: left;
+  min-width: 80px;
+}
+.mdp-editor-wrapper .milkdown .milkdown-table-block table {
+  border: 1px solid var(--border, #DDD7CC);
+}
+.mdp-editor-wrapper .milkdown .milkdown-table-block th {
+  font-weight: 600;
+  background: var(--bg-warm, #F0EDE6);
+  border-bottom: 1px solid var(--border, #DDD7CC);
+}
+/* Inline code inside table cells: tighter so wrapped tokens read cleanly */
+.mdp-editor-wrapper .milkdown .milkdown-table-block code {
+  font-size: 0.85em;
+  padding: 0.1em 0.3em;
+  overflow-wrap: anywhere;
+}
+
+/* =============================================
+   Floating UI — selection toolbar / link tooltip / link editor
+   Crepe places these inside .milkdown, so .mdp-editor-wrapper .milkdown … wins
+   over the bundle's own .milkdown … on equal specificity (loaded later).
+   ============================================= */
+.mdp-editor-wrapper .milkdown .milkdown-toolbar,
+.mdp-editor-wrapper .milkdown .milkdown-link-preview > .link-preview,
+.mdp-editor-wrapper .milkdown .milkdown-link-edit > .link-edit {
+  background: var(--bg-surface, #FEFDFB);
+  border: 1px solid var(--border, #DDD7CC);
+  border-radius: 10px;
+  box-shadow:
+    0 10px 28px rgba(45,42,38,0.16),
+    0 2px 6px rgba(45,42,38,0.08);
+  z-index: 9999;
+  overflow: visible;
+}
+
+.mdp-editor-wrapper .milkdown .milkdown-toolbar {
+  padding: 2px;
+  gap: 2px;
+}
+.mdp-editor-wrapper .milkdown .milkdown-toolbar .toolbar-item {
+  width: 30px;
+  height: 30px;
+  margin: 2px;
+  padding: 4px;
+  border-radius: 6px;
+  transition: background 140ms;
+}
+.mdp-editor-wrapper .milkdown .milkdown-toolbar .toolbar-item svg {
+  width: 18px;
+  height: 18px;
+  color: var(--text-secondary, #6B6560);
+  fill: var(--text-secondary, #6B6560);
+}
+.mdp-editor-wrapper .milkdown .milkdown-toolbar .toolbar-item:hover {
+  background: var(--bg-hover, #EAE6DD);
+}
+.mdp-editor-wrapper .milkdown .milkdown-toolbar .toolbar-item:hover svg {
+  color: var(--text, #2D2A26);
+  fill: var(--text, #2D2A26);
+}
+.mdp-editor-wrapper .milkdown .milkdown-toolbar .toolbar-item.active svg {
+  color: var(--accent, #C4704B);
+  fill: var(--accent, #C4704B);
+}
+.mdp-editor-wrapper .milkdown .milkdown-toolbar .divider {
+  background: var(--border-light, #E8E3D9);
+  margin: 6px 2px;
+  height: 20px;
+}
+
+/* Link preview/edit popovers */
+.mdp-editor-wrapper .milkdown .milkdown-link-preview > .link-preview,
+.mdp-editor-wrapper .milkdown .milkdown-link-edit > .link-edit {
+  height: auto;
+  min-height: 36px;
+  padding: 6px 10px;
+  align-items: center;
+}
+.mdp-editor-wrapper .milkdown .milkdown-link-preview > .link-preview > .link-display {
+  font-size: 13px;
+  color: var(--text, #2D2A26);
+}
+.mdp-editor-wrapper .milkdown .milkdown-link-edit > .link-edit > .input-area {
+  color: var(--text, #2D2A26);
+  font-size: 13px;
+}
+
+/* =============================================
+   BlockEdit — slash menu + drag handle
+   ============================================= */
+.mdp-editor-wrapper .milkdown .milkdown-slash-menu {
+  z-index: 9999;
+  background: var(--bg-surface, #FEFDFB);
+  border: 1px solid var(--border, #DDD7CC);
+  border-radius: 10px;
+  box-shadow:
+    0 10px 28px rgba(45,42,38,0.16),
+    0 2px 6px rgba(45,42,38,0.08);
+}
+.mdp-editor-wrapper .milkdown .milkdown-block-handle {
+  z-index: 9999;
+}
+.mdp-editor-wrapper .milkdown .milkdown-block-handle .operation-item svg {
+  fill: var(--text-tertiary, #9B958C);
+}
+.mdp-editor-wrapper .milkdown .milkdown-block-handle .operation-item:hover {
+  background: var(--bg-hover, #EAE6DD);
+}
+
+/* =============================================
+   CodeMirror code blocks — Typora-style: quiet chrome, no gutters,
+   soft-wrapped lines, discoverable language/copy controls.
+   ============================================= */
+.mdp-editor-wrapper .milkdown .milkdown-code-block {
+  background: var(--bg-warm, #F0EDE6);
+  border: 1px solid var(--border-light, #E8E3D9);
+  border-radius: 8px;
+  margin: 0 0 1.2em 0;
+  padding: 6px 16px 12px;
+}
+.mdp-editor-wrapper .milkdown .milkdown-code-block .cm-editor,
+.mdp-editor-wrapper .milkdown .milkdown-code-block .cm-scroller {
+  background: transparent;
+}
+.mdp-editor-wrapper .milkdown .milkdown-code-block .cm-content {
+  font-family: var(--crepe-font-code);
+  font-size: 0.88em;
+  line-height: 1.6;
+  padding: 6px 0 2px;
+}
+.mdp-editor-wrapper .milkdown .milkdown-code-block .cm-line {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* basicSetup ships line numbers + fold arrows + an active-line gutter chip.
+   Typora shows none of that — hide the whole gutter. */
+.mdp-editor-wrapper .milkdown .milkdown-code-block .cm-gutters {
+  display: none;
+}
+/* …and the active-line / selection-match washes that read as gray bars. */
+.mdp-editor-wrapper .milkdown .milkdown-code-block .cm-activeLine {
+  background: transparent;
+}
+.mdp-editor-wrapper .milkdown .milkdown-code-block .cm-selectionMatch {
+  background: color-mix(in srgb, var(--accent, #C4704B) 14%, transparent);
+}
+.mdp-editor-wrapper .milkdown .milkdown-code-block .cm-cursor {
+  border-left-color: var(--accent, #C4704B);
+}
+.mdp-editor-wrapper .milkdown .milkdown-code-block .cm-editor .cm-selectionBackground,
+.mdp-editor-wrapper .milkdown .milkdown-code-block .cm-editor.cm-focused .cm-selectionBackground {
+  background: color-mix(in srgb, var(--accent, #C4704B) 22%, transparent);
+}
+
+/* Language picker: keep it softly visible instead of appearing only on
+   hover — otherwise blocks read as unlabeled beige slabs. */
+.mdp-editor-wrapper .milkdown .milkdown-code-block .tools .language-button {
+  opacity: 0.6;
+  background: transparent;
+  color: var(--text-tertiary, #9B958C);
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+.mdp-editor-wrapper .milkdown .milkdown-code-block:hover .tools .language-button,
+.mdp-editor-wrapper .milkdown .milkdown-code-block .tools .language-button:hover {
+  opacity: 1;
+  background: var(--bg-hover, #EAE6DD);
+  color: var(--text-secondary, #6B6560);
+}
+.mdp-editor-wrapper .milkdown .milkdown-code-block .tools .tools-button-group button {
+  background: transparent;
+  color: var(--text-tertiary, #9B958C);
+  font-weight: 500;
+}
+.mdp-editor-wrapper .milkdown .milkdown-code-block .tools .tools-button-group button:hover {
+  background: var(--bg-hover, #EAE6DD);
+  color: var(--text-secondary, #6B6560);
+}
+.mdp-editor-wrapper .milkdown .milkdown-code-block.selected {
+  outline: none;
+  border-color: color-mix(in srgb, var(--accent, #C4704B) 45%, transparent);
+}
+
+/* Language dropdown panel */
+.mdp-editor-wrapper .milkdown .milkdown-code-block .list-wrapper {
+  background: var(--bg-surface, #FEFDFB);
+  border: 1px solid var(--border, #DDD7CC);
+  border-radius: 10px;
+  box-shadow:
+    0 10px 28px rgba(45,42,38,0.16),
+    0 2px 6px rgba(45,42,38,0.08);
+}
+.mdp-editor-wrapper .milkdown .milkdown-code-block .language-list-item {
+  font-weight: 500;
+}
+
+/* Table cell handles */
+.mdp-editor-wrapper .milkdown .milkdown-table-block .cell-handle {
+  background: var(--bg-surface, #FEFDFB);
+  border: 1px solid var(--border, #DDD7CC);
+  box-shadow: 0 2px 6px rgba(45,42,38,0.08);
+}
+.mdp-editor-wrapper .milkdown .milkdown-table-block .cell-handle .button-group {
+  background: var(--bg-surface, #FEFDFB);
+  border: 1px solid var(--border, #DDD7CC);
+  box-shadow: 0 4px 12px rgba(45,42,38,0.10);
+}
+.mdp-editor-wrapper .milkdown .milkdown-table-block .line-handle {
+  background-color: var(--accent, #C4704B);
+}
+
+/* =============================================
+   Selection — must beat Crepe + virtual-cursor defaults
+   ============================================= */
+.mdp-editor-wrapper .milkdown .ProseMirror::selection,
+.mdp-editor-wrapper .milkdown .ProseMirror *::selection {
+  background: color-mix(in srgb, var(--accent, #C4704B) 35%, transparent) !important;
+  color: inherit !important;
+}
+.mdp-editor-wrapper .milkdown .ProseMirror::-moz-selection,
+.mdp-editor-wrapper .milkdown .ProseMirror *::-moz-selection {
+  background: color-mix(in srgb, var(--accent, #C4704B) 35%, transparent) !important;
+  color: inherit !important;
+}
+
+/* Virtual cursor color — Crepe hides native caret */
+.mdp-editor-wrapper .milkdown .ProseMirror-focused {
+  --prosemirror-virtual-cursor-color: var(--accent, #C4704B);
+}
+
+/* Placeholder (class renamed milkdown-placeholder → crepe-placeholder in Crepe 7.21) */
+.mdp-editor-wrapper .milkdown .milkdown-placeholder::before,
+.mdp-editor-wrapper .milkdown .crepe-placeholder::before {
+  color: var(--text-tertiary, #9B958C);
+}

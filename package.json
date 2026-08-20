@@ -10,8 +10,9 @@
   "scripts": {
     "watch": "tsc -w -p ./",
     "build-app": "cd app && rm -rf ./.next && next build && next export",
+    "build-annotator-editor": "esbuild app/annotator-editor/index.ts --bundle --format=iife --target=es2020 --outfile=app/_static/milkdown.bundle.js --loader:.css=css --global-name=MdpAnnotatorEditor --minify",
     "build-lib": "tsc -p ./",
-    "build": "tsc -p ./ && cd app && rm -rf ./.next && next build && next export && yarn && pkg --targets node16-linux-x64,node16-macos-x64,node16-win-x64 --out-path ./bin . && rm -rf ./node_modules ./.next"
+    "build": "tsc -p ./ && yarn build-annotator-editor && cd app && rm -rf ./.next && next build && next export && yarn && pkg --targets node16-linux-x64,node16-macos-x64,node16-win-x64 --out-path ./bin . && rm -rf ./node_modules ./.next"
   },
   "dependencies": {
     "@chemzqm/neovim": "^5.7.9",
@@ -36,7 +37,13 @@
     "socket.io-client": "^2.1.1"
   },
   "devDependencies": {
+    "@milkdown/core": "^7.21.1",
+    "@milkdown/crepe": "^7.21.1",
+    "@milkdown/exception": "^7.21.1",
+    "@milkdown/plugin-upload": "^7.21.1",
+    "@milkdown/prose": "^7.21.1",
     "@types/node": "16",
+    "esbuild": "^0.28.0",
     "pkg": "^5.6.0",
     "prettier": "^2.6.2",
     "tslint": "^6.1.3",

@@ -11,6 +11,9 @@ interface IApp {
     openBrowser: ((params: {
         bufnr: number | string;
     }) => void);
+    openAnnotator: ((params: {
+        bufnr: number | string;
+    }) => void);
 }
 interface IPlugin {
     init: ((app: IApp) => void);

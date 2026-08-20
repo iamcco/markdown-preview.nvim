@@ -20,6 +20,11 @@ interface IApp {
       bufnr: number | string
     }
   ) => void)
+  openAnnotator: ((
+    params: {
+      bufnr: number | string
+    }
+  ) => void)
 }
 
 interface IPlugin {
@@ -68,6 +73,10 @@ export default function(options: Attach): IPlugin {
       })
     } else if (method === 'open_browser') {
       app.openBrowser({
+        bufnr
+      })
+    } else if (method === 'open_annotator') {
+      app.openAnnotator({
         bufnr
       })
     }
