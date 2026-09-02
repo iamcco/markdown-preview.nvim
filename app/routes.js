@@ -16,6 +16,28 @@ use((req, res, next) => {
   next()
 })
 
+// Preserve compatibility with clients that rewrote /page/:number to /:number.
+use((req, res, next) => {
+  const match = req.asPath.match(/^\/(\d+)\/?$/)
+  if (match) {
+    res.statusCode = 302
+    res.setHeader('Location', `/page/${match[1]}`)
+    return res.end()
+  }
+  next()
+})
+
+// Redirect the server root to the current buffer's preview.
+use(async (req, res, next) => {
+  if (req.asPath === '/') {
+    const bufnr = await req.plugin.nvim.call('bufnr', '%')
+    res.statusCode = 302
+    res.setHeader('Location', `/page/${bufnr}`)
+    return res.end()
+  }
+  next()
+})
+
 // /_next/path
 use((req, res, next) => {
   if (/\/_next/.test(req.asPath)) {
